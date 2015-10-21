@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace Wander.Server.Wander.Tests
+namespace Wander.Tests
 {
     [TestFixture]
-    public class ServerConnectionTests
+    public class ConnectionTests
     {
         [Test]
-        public void TestClientConnectionWorks()
+        public void TestConnectionClientWorks()
         {
-            // To implement
-
+            // to do
             Assert.True(1==1);
         }
     }
