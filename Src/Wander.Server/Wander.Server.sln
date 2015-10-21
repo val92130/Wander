@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wander.Server", "Wander.Server\Wander.Server.csproj", "{4F904759-27CB-48E6-BDFF-696C3AE91E72}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wander.Tests", "Wander.Tests\Wander.Tests.csproj", "{C8743869-E058-4F45-8084-ACD819DDF662}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wander.Server", "Wander.Server\Wander.Server.csproj", "{4432C4E7-C8EB-41CB-AA9D-797477A3CB41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wander.Server.Tests", "Wander.Server.Tests\Wander.Server.Tests.csproj", "{B9B2EBDC-40FF-4331-9359-21D725839C1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +15,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4F904759-27CB-48E6-BDFF-696C3AE91E72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4F904759-27CB-48E6-BDFF-696C3AE91E72}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4F904759-27CB-48E6-BDFF-696C3AE91E72}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4F904759-27CB-48E6-BDFF-696C3AE91E72}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C8743869-E058-4F45-8084-ACD819DDF662}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C8743869-E058-4F45-8084-ACD819DDF662}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8743869-E058-4F45-8084-ACD819DDF662}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8743869-E058-4F45-8084-ACD819DDF662}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4432C4E7-C8EB-41CB-AA9D-797477A3CB41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4432C4E7-C8EB-41CB-AA9D-797477A3CB41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4432C4E7-C8EB-41CB-AA9D-797477A3CB41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4432C4E7-C8EB-41CB-AA9D-797477A3CB41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9B2EBDC-40FF-4331-9359-21D725839C1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9B2EBDC-40FF-4331-9359-21D725839C1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9B2EBDC-40FF-4331-9359-21D725839C1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9B2EBDC-40FF-4331-9359-21D725839C1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
