@@ -9,18 +9,6 @@ GO
 
 
 
-if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Users')
-begin
-drop table dbo.Users;
-end;
-GO
-
-
-if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Jobs')
-begin
-drop table dbo.Jobs;
-end;
-GO
 
 if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'PropertiesToSell')
 begin
@@ -51,6 +39,20 @@ begin
 drop table dbo.UserMessages;
 end;
 GO
+
+if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Jobs')
+begin
+drop table dbo.Jobs;
+end;
+GO
+
+if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Users')
+begin
+drop table dbo.Users;
+end;
+GO
+
+
 create table dbo.Jobs
 (
 JobId int identity(0,1),
@@ -70,11 +72,11 @@ UserId int identity(0,1),
 UserLogin nvarchar(32) not null,
 UserPassword nvarchar(32) not null,
 Email varchar(30) not null,
-sexe int,
-account int,
-points int,
-connected bit,
-activated bit,
+Sex int,
+Account int,
+Points int,
+Connected bit,
+Activated bit,
 JobId int
 
 

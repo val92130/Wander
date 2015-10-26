@@ -5,4 +5,13 @@
 
 <h2>Index</h2>
 
+@if (@Request.Params["error"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        @Request.Params["error"]
+    </div>
+}
+
 Welcome to Wander Game
