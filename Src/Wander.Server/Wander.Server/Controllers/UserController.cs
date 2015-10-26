@@ -33,12 +33,20 @@ namespace Wander.Server.Controllers
                 if (user.CheckLogin())
                 {
                     user.Connect();
+                    Session["Login"] = user.Login;
+                    Debug.Print(Session["Login"].ToString());
                     return RedirectToAction("Index", "Home");
                 }
                
             }
             return RedirectToAction("Index", "Home", new { error = "Error, wrong login / password" });
         }
-        
+        public ActionResult SignOut()
+        {
+            Session.Clear();
+            return RedirectToAction("Index", "Home");
+           
+        }
+
     }
 }
