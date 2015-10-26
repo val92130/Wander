@@ -3,22 +3,40 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Wander</title>
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <script src="~/Scripts/modernizr-2.6.2.js"></script>
 </head>
 <body>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Wander App</p>
-        </footer>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/Home">Wander</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li><a href="#" id="loginBtn">Login</a></li>
+                <li><a href="#" id="signUpBtn">Sign Up</a></li>
+            </ul>
+        </div>
     </div>
-    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
-    <script src="~/Scripts/App.js"></script>
+</nav>
+
+<!-- MODALS -->
+@Html.Partial("~/Views/Shared/_Modals.cshtml");
+
+<div class="container body-content">
+    @RenderBody()
+    <hr/>
+    <footer>
+        <p>&copy; @DateTime.Now.Year - Wander App</p>
+    </footer>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
+<script src="~/Scripts/DomInteraction.js"></script>
+<script src="~/Scripts/App.js"></script>
 </body>
 </html>

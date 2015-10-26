@@ -1,0 +1,32 @@
+﻿@model Wander.Server.Models.UserAccount
+
+@using (@Html.BeginForm("SignUp", "User", FormMethod.Post))
+{
+    <div class="form-group">
+        @Html.LabelFor(x => x.Login)
+        @Html.TextBoxFor(x => x.Login, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(x => x.Email)
+        @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(x => x.Password)
+        @Html.PasswordFor(x => x.Password, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(x => x.PasswordConfirm)
+        @Html.PasswordFor(x => x.PasswordConfirm, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.RadioButtonFor(x => x.Sex, 1) Male
+        @Html.RadioButtonFor(x => x.Sex, 0) Female
+    </div>
+    <button type="submit" class="btn btn-success">Sign Up</button>
+
+}
+
