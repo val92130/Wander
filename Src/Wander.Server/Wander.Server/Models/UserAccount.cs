@@ -78,6 +78,22 @@ namespace Wander.Server.Models
                 }
             }
         }
+        public void Connect()
+        {
+            using (SqlConnection conn = DatabaseConnection.GetConnection())
+            {
+                string query = "update dbo.Users set Connected = 1 where UserLogin = @Login";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    cmd.Parameters.AddWithValue("@Login", Login);
+                    cmd.ExecuteNonQuery();
+                }
+                conn.Close();
+                }
+
+        }
 
         public void Register()
         {

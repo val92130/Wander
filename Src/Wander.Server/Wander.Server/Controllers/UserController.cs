@@ -32,11 +32,13 @@ namespace Wander.Server.Controllers
             {
                 if (user.CheckLogin())
                 {
+                    user.Connect();
                     return RedirectToAction("Index", "Home");
                 }
                
             }
             return RedirectToAction("Index", "Home", new { error = "Error, wrong login / password" });
         }
+        
     }
 }

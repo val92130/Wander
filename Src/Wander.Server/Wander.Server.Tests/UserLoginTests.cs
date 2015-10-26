@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Wander.Server.Models;
+using System.Data.SqlClient;
 
 namespace Wander.Server.Tests
 {
@@ -42,6 +43,31 @@ namespace Wander.Server.Tests
 
             TestEnvironment.DeleteTestUser();
 
+        }
+        [TestMethod]
+        public void UserLoginSetConnectedToOne()
+        {
+            TestEnvironment.DeleteTestUser();
+            UserAccount user = TestEnvironment.GetTestUserAccount();
+            user.Register();
+            user.Connect();
+            string query = "select * from dbo.Users where UserLogin = @Login";
+            using (SqlConnection conn = DatabaseConnection.GetConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    cmd.Parameters.AddWithValue("@Login", user.Login);
+                    var data = cmd.ExecuteReader();
+                    while (data.Read())
+                    {
+                        Assert.AreEqual(data["Connected"], true);
+                    }
+                    conn.Close();
+                }
+            }
+            TestEnvironment.DeleteTestUser();
         }
     }
 }
