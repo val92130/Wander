@@ -10,7 +10,7 @@ namespace Wander.Server.Models
     {
         public static SqlConnection GetConnection()
         {
-            return new SqlConnection("connection string");
+            return new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=WanderDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
     }
 }

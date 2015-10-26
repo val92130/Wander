@@ -8,8 +8,8 @@ namespace Wander.Server.Models
 {
     public class UserAccount
     {
-        static int minPasswordLength = 4;
-        static int minLoginLength = 4;
+        private static int minPasswordLength = 4;
+        private static int minLoginLength = 4;
         public string Login { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
@@ -23,11 +23,16 @@ namespace Wander.Server.Models
                 if (!String.IsNullOrWhiteSpace(Login) && !String.IsNullOrWhiteSpace(Email) &&
                     !String.IsNullOrWhiteSpace(Password) && !String.IsNullOrWhiteSpace(PasswordConfirm))
                 {
-                    if (Login.Length >= minLoginLength && Email.Contains("@") && Password.Length >= minPasswordLength && Password == PasswordConfirm)
+                    if (Login.Length >= minLoginLength && Email.Contains("@") && Password.Length >= minPasswordLength &&
+                        Password == PasswordConfirm)
                     {
                         if (Sex == 1 || Sex == 0)
                         {
-                            return true;
+                            if (!CheckLoginAlreadyExists(Login))
+                            {
+                                return true;
+                            }
+                            
                         }
                     }
                 }
@@ -37,21 +42,67 @@ namespace Wander.Server.Models
 
         public bool CheckLogin()
         {
-            // TO DO : CHECK USER CREDENTIALS
-            return false;
-        }
-        public void Register()
-        {
             using (SqlConnection conn = DatabaseConnection.GetConnection())
             {
-                string query = "INSERT INTO dbo.Users ";
+                string query = "SELECT UserId from dbo.Users WHERE UserLogin = @Login AND UserPassword = @Password";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
+                    cmd.Parameters.AddWithValue("@Login", Login);
+                    cmd.Parameters.AddWithValue("@Password", Password);
+
+                    var data = cmd.ExecuteReader();
+                    bool value = data.HasRows;
+                    conn.Close();
+                    return value;
+                }
+            }
+        }
+
+        public bool CheckLoginAlreadyExists(string login)
+        {
+            using (SqlConnection conn = DatabaseConnection.GetConnection())
+            {
+                string query = "SELECT UserId from dbo.Users WHERE UserLogin = @Login";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    cmd.Parameters.AddWithValue("@Login", login);
+
+                    var data = cmd.ExecuteReader();
+                    bool value = data.HasRows;
+                    conn.Close();
+                    return value;
+                }
+            }
+        }
+
+        public void Register()
+        {
+            using (SqlConnection conn = DatabaseConnection.GetConnection())
+            {
+                string query =
+                    "INSERT INTO dbo.Users (UserLogin, Email, UserPassword, Sex, Account, Points, Connected, Activated) values ( @Login, @Email, @Password, @Sex, @Account, @Points, @Connected, @Activated) ";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    cmd.Parameters.Add("@Login", Login);
+                    cmd.Parameters.Add("@Email", Email);
+                    cmd.Parameters.Add("@Password", Password);
+                    cmd.Parameters.Add("@Sex", Sex);
+                    cmd.Parameters.AddWithValue("@Account", 0);
+                    cmd.Parameters.AddWithValue("@Points", 0);
+                    cmd.Parameters.AddWithValue("@Connected", 0);
+                    cmd.Parameters.AddWithValue("@Activated", 1);
+
+                    cmd.ExecuteNonQuery();
+
                     conn.Close();
                 }
-            // TO DO : REGISTER USER INTO BDD
+            }
         }
     }
 }
