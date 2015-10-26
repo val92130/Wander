@@ -8,8 +8,8 @@ namespace Wander.Server.Models
 {
     public class UserAccount
     {
-        private static int minPasswordLength = 4;
-        private static int minLoginLength = 4;
+        public static int MinPasswordLength = 4;
+        public static int MinLoginLength = 4;
         public string Login { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
@@ -23,7 +23,7 @@ namespace Wander.Server.Models
                 if (!String.IsNullOrWhiteSpace(Login) && !String.IsNullOrWhiteSpace(Email) &&
                     !String.IsNullOrWhiteSpace(Password) && !String.IsNullOrWhiteSpace(PasswordConfirm))
                 {
-                    if (Login.Length >= minLoginLength && Email.Contains("@") && Password.Length >= minPasswordLength &&
+                    if (Login.Length >= MinLoginLength && Email.Contains("@") && Password.Length >= MinPasswordLength &&
                         Password == PasswordConfirm)
                     {
                         if (Sex == 1 || Sex == 0)

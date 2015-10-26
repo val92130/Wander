@@ -88,6 +88,7 @@ namespace Wander.Server.Tests
         [TestMethod]
         public void UserWithCorrectFieldsReturnsTrue()
         {
+            TestEnvironment.DeleteTestUser();
             UserAccount user = new UserAccount();
             user.Login = "user";
             user.Password = "pass";
@@ -101,11 +102,8 @@ namespace Wander.Server.Tests
         [TestMethod]
         public void CreateUserWorksCorrectly()
         {
-            UserAccount user = new UserAccount();
-            user.Login = "user";
-            user.Password = "pass";
-            user.Email = "useremail@provider.fr";
-            user.PasswordConfirm = "pass";
+            TestEnvironment.DeleteTestUser();
+            UserAccount user = TestEnvironment.GetTestUserAccount();
 
             user.Register();
 
@@ -134,35 +132,23 @@ namespace Wander.Server.Tests
                     data.Close();
                 }
 
-                string deleteQuery = "DELETE FROM dbo.Users WHERE UserLogin = @User AND UserPassword = @Password ";
-                using (SqlCommand deleteCmd = new SqlCommand(deleteQuery, conn))
-                {
-                    deleteCmd.Parameters.AddWithValue("@User", "user");
-                    deleteCmd.Parameters.AddWithValue("@Password", "pass");
-                    deleteCmd.ExecuteNonQuery();
-                }
+                TestEnvironment.DeleteTestUser();
 
-               conn.Close();
+                conn.Close();
             }
         }
+
 
         [TestMethod]
         public void CreateUserAlreadyExistThrowError()
         {
-            UserAccount user = new UserAccount();
-            user.Login = "user";
-            user.Password = "pass";
-            user.Email = "useremail@provider.fr";
-            user.PasswordConfirm = "pass";
+            TestEnvironment.DeleteTestUser();
+
+            UserAccount user = TestEnvironment.GetTestUserAccount();
 
             user.Register();
 
-
-            UserAccount user2 = new UserAccount();
-            user2.Login = "user";
-            user2.Password = "pass";
-            user2.Email = "useremail@provider.fr";
-            user2.PasswordConfirm = "pass";
+            UserAccount user2 = TestEnvironment.GetTestUserAccount();
 
 
             Assert.IsTrue(user2.CheckLoginAlreadyExists(user2.Login));
