@@ -13,5 +13,7 @@ namespace Wander.Server.Services
         bool CheckLoginAlreadyExists(UserModel user);
         void Connect(UserModel user);
         void Register(UserModel user);
+
+        void LogOut(UserModel user);
     }
 }

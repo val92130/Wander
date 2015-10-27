@@ -71,6 +71,11 @@ $(document).ready(function () {
 
        
     });
+
+    hub.on("sendMessage", function(message) {
+        alert(message);
+
+    });
     function checkInput(input, minLength) {
         return (input != null && input != "" && input.length >= minLength);
     }

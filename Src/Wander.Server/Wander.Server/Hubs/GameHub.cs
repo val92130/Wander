@@ -20,6 +20,15 @@ namespace Wander.Server.Hubs
         {
             IUserRegistrationService userRegistrationService = new DbUserRegistrationService();
             Debug.Print(userRegistrationService.CheckRegisterForm(user).ToString());
+            if (userRegistrationService.CheckRegisterForm(user))
+            {
+                userRegistrationService.Register(user);
+                Clients.Caller.sendMessage("succefully registred");
+            }
+            else
+            {
+                Clients.Caller.sendMessage("error");
+            }
         }
     }
 }
