@@ -14,7 +14,24 @@ namespace Wander.Server.Hubs
         
         public void Connect(UserModel user)
         {
-            Debug.Print(Context.ConnectionId);
+            if (ServiceProvider.GetUserRegistrationService().CheckLogin(user))
+            {
+                ServiceProvider.GetUserRegistrationService().Connect(user);
+                Clients.Caller.sendMessage("you are Online");
+            }
+            else
+            {
+                Clients.Caller.sendMessage("connexion error");
+            }
+        }
+
+        public void LogOut(UserModel user)
+        {
+            
+                ServiceProvider.GetUserRegistrationService().LogOut(user);
+                Clients.Caller.sendMessage("see you soon");
+            
+           
         }
 
         public void RegisterUser(UserModel user)
