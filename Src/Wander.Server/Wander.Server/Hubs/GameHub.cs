@@ -24,6 +24,7 @@ namespace Wander.Server.Hubs
                     Clients.Caller.sendMessage("connexion error");
                     return;
                 }
+                Debug.Print("Client connected : " + idSignalR);
                ServiceProvider.GetPlayerService().AddPlayer(idSignalR, playerId);
                Debug.Print(idSignalR);
                Clients.Caller.sendMessage("you are Online");
@@ -58,6 +59,7 @@ namespace Wander.Server.Hubs
         public override Task OnDisconnected(bool stopCalled)
         {
             Debug.Print("Client disconnected : " + Context.ConnectionId);
+            ServiceProvider.GetPlayerService().RemovePlayer(Context.ConnectionId);
             return base.OnDisconnected(stopCalled);
         }
     }
