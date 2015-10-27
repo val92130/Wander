@@ -11,6 +11,7 @@ namespace Wander.Server.Hubs
 {
     public class GameHub : Hub
     {
+        
         public void Connect(UserModel user)
         {
             Debug.Print(Context.ConnectionId);
@@ -18,11 +19,10 @@ namespace Wander.Server.Hubs
 
         public void RegisterUser(UserModel user)
         {
-            IUserRegistrationService userRegistrationService = new DbUserRegistrationService();
-            Debug.Print(userRegistrationService.CheckRegisterForm(user).ToString());
-            if (userRegistrationService.CheckRegisterForm(user))
+            Debug.Print(ServiceProvider.GetUserRegistrationService().CheckRegisterForm(user).ToString());
+            if (ServiceProvider.GetUserRegistrationService().CheckRegisterForm(user))
             {
-                userRegistrationService.Register(user);
+                ServiceProvider.GetUserRegistrationService().Register(user);
                 Clients.Caller.sendMessage("succefully registred");
             }
             else

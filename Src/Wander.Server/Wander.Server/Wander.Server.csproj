@@ -134,6 +134,7 @@
     <Compile Include="Services\DbUserRegistrationService.cs" />
     <Compile Include="Services\Helper.cs" />
     <Compile Include="Services\IUserRegistrationService.cs" />
+    <Compile Include="Services\ServiceProvider.cs" />
     <Compile Include="Services\SqlConnectionService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
