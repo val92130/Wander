@@ -116,5 +116,22 @@ namespace Wander.Server.Services
                 }
             }
         }
+
+        public void LogOut(UserModel user)
+        {
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = "update dbo.Users set Connected = 0 where UserLogin = @Login";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    cmd.Parameters.AddWithValue("@Login", user.Login);
+                    cmd.ExecuteNonQuery();
+                }
+                conn.Close();
+            }
+
+        }
     }
 }
