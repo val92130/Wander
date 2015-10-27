@@ -24,6 +24,7 @@ namespace Wander.Server.Hubs
             {
                 ServiceProvider.GetUserRegistrationService().Register(user);
                 Clients.Caller.sendMessage("succefully registred");
+                Clients.Caller.onRegistered();
             }
             else
             {

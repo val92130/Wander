@@ -50,6 +50,9 @@ $(document).ready(function () {
     hub.on("sendMessage", function (message) {
         alert(message);
     });
+    hub.on("onRegistered", function () {
+        $('#signUpModal').modal('hide');
+    });
     function checkInput(input, minLength) {
         return (input != null && input != "" && input.length >= minLength);
     }
