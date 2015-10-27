@@ -17,6 +17,8 @@ namespace Wander.Server.Hubs
             if (ServiceProvider.GetUserRegistrationService().CheckLogin(user))
             {
                 ServiceProvider.GetUserRegistrationService().Connect(user);
+               string idSignalR = Context.ConnectionId;
+               Debug.Print(idSignalR);
                 Clients.Caller.sendMessage("you are Online");
             }
             else
