@@ -57,7 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Wander.Server\Wander.Server.csproj">
-      <Project>{4432C4E7-C8EB-41CB-AA9D-797477A3CB41}</Project>
+      <Project>{732b2bb2-d706-4de3-a3db-8a664fe3dd3a}</Project>
       <Name>Wander.Server</Name>
     </ProjectReference>
   </ItemGroup>

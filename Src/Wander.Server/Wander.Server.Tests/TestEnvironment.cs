@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Wander.Server.Models;
+﻿using System.Data.SqlClient;
+using Wander.Server.Model;
+using Wander.Server.Services;
 
 namespace Wander.Server.Tests
 {
     public class TestEnvironment
     {
+        private static IUserRegistrationService RegistrationService;
         internal static void DeleteTestUser()
         {
-            using (SqlConnection conn = DatabaseConnection.GetConnection())
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
                 conn.Open();
                 string deleteQuery = "DELETE FROM dbo.Users WHERE UserLogin = @User AND UserPassword = @Password ";
@@ -27,14 +24,22 @@ namespace Wander.Server.Tests
             }
         }
 
-        internal static UserAccount GetTestUserAccount()
+        internal static UserModel GetTestUserModel()
         {
-            UserAccount user = new UserAccount();
+            UserModel user = new UserModel();
             user.Login = "user";
             user.Password = "pass";
             user.Email = "useremail@provider.fr";
-            user.PasswordConfirm = "pass";
             return user;
+        }
+
+        internal static IUserRegistrationService GetUserRegistrationService()
+        {
+            if(RegistrationService == null)
+                RegistrationService = new DbUserRegistrationService();
+
+            return RegistrationService;
+            
         }
 
     }

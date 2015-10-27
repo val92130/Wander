@@ -4,9 +4,9 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
-namespace Wander.Server.Models
+namespace Wander.Server.Services
 {
-    public class DatabaseConnection
+    public class SqlConnectionService
     {
         public static SqlConnection GetConnection()
         {

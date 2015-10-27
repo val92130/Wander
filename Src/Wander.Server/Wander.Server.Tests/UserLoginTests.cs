@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Wander.Server.Models;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.SqlClient;
+using Wander.Server.Model;
+using Wander.Server.Services;
 
 namespace Wander.Server.Tests
 {
@@ -17,10 +13,11 @@ namespace Wander.Server.Tests
         {
             TestEnvironment.DeleteTestUser();
 
-            UserAccount user = TestEnvironment.GetTestUserAccount();
-            user.Register();
+            UserModel user = TestEnvironment.GetTestUserModel();
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+            registrationService.Register(user);
 
-            Assert.IsTrue(user.CheckLogin());
+            Assert.IsTrue(registrationService.CheckLogin(user));
 
             TestEnvironment.DeleteTestUser();
             
@@ -31,15 +28,16 @@ namespace Wander.Server.Tests
         {
             TestEnvironment.DeleteTestUser();
 
-            UserAccount user = TestEnvironment.GetTestUserAccount();
-            user.Register();
+            UserModel user = TestEnvironment.GetTestUserModel();
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+            registrationService.Register(user);
 
-            UserAccount testUser = new UserAccount();
+            UserModel testUser = new UserModel();
 
             testUser.Login = "wrongLogin";
             testUser.Password = "wrongPassword";
 
-            Assert.IsFalse(testUser.CheckLogin());
+            Assert.IsFalse(registrationService.CheckLogin(testUser));
 
             TestEnvironment.DeleteTestUser();
 
@@ -48,11 +46,13 @@ namespace Wander.Server.Tests
         public void UserLoginSetConnectedToOne()
         {
             TestEnvironment.DeleteTestUser();
-            UserAccount user = TestEnvironment.GetTestUserAccount();
-            user.Register();
-            user.Connect();
+            UserModel user = TestEnvironment.GetTestUserModel();
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+            registrationService.Register(user);
+            registrationService.Connect(user);
+
             string query = "select * from dbo.Users where UserLogin = @Login";
-            using (SqlConnection conn = DatabaseConnection.GetConnection())
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Wander.Server.Models;
+using Wander.Server.Model;
+using Wander.Server.Services;
 
 namespace Wander.Server.Tests
 {
@@ -15,87 +11,94 @@ namespace Wander.Server.Tests
         [TestMethod]
         public void UserWithNullFieldsReturnsFalse()
         {
-            UserAccount user = new UserAccount();
+            UserModel user = new UserModel();
             user.Login = null;
             user.Password = null;
             user.Email = null;
-            user.PasswordConfirm = null;
 
-            Assert.IsFalse(user.CheckRegisterForm());
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+
+            Assert.IsFalse(registrationService.CheckRegisterForm(user));
         }
 
         [TestMethod]
         public void UserWithOneNullFieldReturnsFalse()
         {
-            UserAccount user = new UserAccount();
+            UserModel user = new UserModel();
             user.Login = null;
             user.Password = "pass";
             user.Email = null;
-            user.PasswordConfirm = "pass";
 
-            Assert.IsFalse(user.CheckRegisterForm());
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+
+            Assert.IsFalse(registrationService.CheckRegisterForm(user));
         }
 
         [TestMethod]
         public void UserWithShortPasswordReturnsFalse()
         {
-            UserAccount user = new UserAccount();
+            UserModel user = new UserModel();
             user.Login = "user";
             user.Password = "000";
             user.Email = "useremail@provider.fr";
-            user.PasswordConfirm = "000";
 
-            Assert.IsFalse(user.CheckRegisterForm());
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+
+            Assert.IsFalse(registrationService.CheckRegisterForm(user));
         }
 
         [TestMethod]
         public void UserWithShortLoginReturnsFalse()
         {
-            UserAccount user = new UserAccount();
+            UserModel user = new UserModel();
             user.Login = "usr";
             user.Password = "pass";
             user.Email = "useremail@provider.fr";
-            user.PasswordConfirm = "pass";
 
-            Assert.IsFalse(user.CheckRegisterForm());
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+
+            Assert.IsFalse(registrationService.CheckRegisterForm(user));
         }
 
         [TestMethod]
         public void UserWithWrongSexReturnsFalse()
         {
-            UserAccount user = new UserAccount();
+            UserModel user = new UserModel();
             user.Login = "user";
             user.Password = "pass";
             user.Email = "useremail@provider.fr";
-            user.PasswordConfirm = "pass";
             user.Sex = 5;
 
-            Assert.IsFalse(user.CheckRegisterForm());
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+
+            Assert.IsFalse(registrationService.CheckRegisterForm(user));
         }
 
         [TestMethod]
         public void UserWithIncorrectEmailReturnsFalse()
         {
-            UserAccount user = new UserAccount();
+            UserModel user = new UserModel();
             user.Login = "user";
             user.Password = "pass";
             user.Email = "useremail.fr";
-            user.PasswordConfirm = "pass";
 
-            Assert.IsFalse(user.CheckRegisterForm());
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+
+            Assert.IsFalse(registrationService.CheckRegisterForm(user));
         }
 
         [TestMethod]
         public void UserWithCorrectFieldsReturnsTrue()
         {
             TestEnvironment.DeleteTestUser();
-            UserAccount user = new UserAccount();
+            UserModel user = new UserModel();
             user.Login = "user";
             user.Password = "pass";
             user.Email = "useremail@provider.fr";
-            user.PasswordConfirm = "pass";
 
-            Assert.IsTrue(user.CheckRegisterForm());
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+
+            Assert.IsTrue(registrationService.CheckRegisterForm(user));
         }
 
 
@@ -103,11 +106,13 @@ namespace Wander.Server.Tests
         public void CreateUserWorksCorrectly()
         {
             TestEnvironment.DeleteTestUser();
-            UserAccount user = TestEnvironment.GetTestUserAccount();
+            UserModel user = TestEnvironment.GetTestUserModel();
 
-            user.Register();
 
-            using (SqlConnection conn = DatabaseConnection.GetConnection())
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+            registrationService.Register(user);
+
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
                 conn.Open();
 
@@ -144,14 +149,16 @@ namespace Wander.Server.Tests
         {
             TestEnvironment.DeleteTestUser();
 
-            UserAccount user = TestEnvironment.GetTestUserAccount();
+            UserModel user = TestEnvironment.GetTestUserModel();
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+            registrationService.Register(user);
 
-            user.Register();
-
-            UserAccount user2 = TestEnvironment.GetTestUserAccount();
+            UserModel user2 = TestEnvironment.GetTestUserModel();
 
 
-            Assert.IsTrue(user2.CheckLoginAlreadyExists(user2.Login));
+            Assert.IsTrue(registrationService.CheckLoginAlreadyExists(user2));
+
+            TestEnvironment.DeleteTestUser();
 
         }
     }

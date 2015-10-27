@@ -3,36 +3,32 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.UI.WebControls;
+using Wander.Server.Model;
 
-namespace Wander.Server.Models
+namespace Wander.Server.Services
 {
-    public class UserAccount
+    public class DbUserRegistrationService : IUserRegistrationService
     {
         public static int MinPasswordLength = 4;
         public static int MinLoginLength = 4;
-        public string Login { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string PasswordConfirm { get; set; }
-        public int Sex { get; set; }
 
-        public bool CheckRegisterForm()
+        public bool CheckRegisterForm(UserModel user)
         {
-            if (Login != null && Email != null && Password != null && PasswordConfirm != null && Sex != null)
+            if (user.Login != null && user.Email != null && user.Password != null)
             {
-                if (!String.IsNullOrWhiteSpace(Login) && !String.IsNullOrWhiteSpace(Email) &&
-                    !String.IsNullOrWhiteSpace(Password) && !String.IsNullOrWhiteSpace(PasswordConfirm))
+                if (!String.IsNullOrWhiteSpace(user.Login) && !String.IsNullOrWhiteSpace(user.Email) &&
+                    !String.IsNullOrWhiteSpace(user.Password))
                 {
-                    if (Login.Length >= MinLoginLength && Email.Contains("@") && Password.Length >= MinPasswordLength &&
-                        Password == PasswordConfirm)
+                    if (user.Login.Length >= MinLoginLength && user.Email.Contains("@") && user.Password.Length >= MinPasswordLength)
                     {
-                        if (Sex == 1 || Sex == 0)
+                        if (user.Sex == 1 || user.Sex == 0)
                         {
-                            if (!CheckLoginAlreadyExists(Login))
+                            if (!CheckLoginAlreadyExists(user))
                             {
                                 return true;
                             }
-                            
+
                         }
                     }
                 }
@@ -40,17 +36,17 @@ namespace Wander.Server.Models
             return false;
         }
 
-        public bool CheckLogin()
+        public bool CheckLogin(UserModel user)
         {
-            using (SqlConnection conn = DatabaseConnection.GetConnection())
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
                 string query = "SELECT UserId from dbo.Users WHERE UserLogin = @Login AND UserPassword = @Password";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
-                    cmd.Parameters.AddWithValue("@Login", Login);
-                    cmd.Parameters.AddWithValue("@Password", Password);
+                    cmd.Parameters.AddWithValue("@Login", user.Login);
+                    cmd.Parameters.AddWithValue("@Password", user.Password);
 
                     var data = cmd.ExecuteReader();
                     bool value = data.HasRows;
@@ -60,16 +56,16 @@ namespace Wander.Server.Models
             }
         }
 
-        public bool CheckLoginAlreadyExists(string login)
+        public bool CheckLoginAlreadyExists(UserModel user)
         {
-            using (SqlConnection conn = DatabaseConnection.GetConnection())
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
                 string query = "SELECT UserId from dbo.Users WHERE UserLogin = @Login";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
-                    cmd.Parameters.AddWithValue("@Login", login);
+                    cmd.Parameters.AddWithValue("@Login", user.Login);
 
                     var data = cmd.ExecuteReader();
                     bool value = data.HasRows;
@@ -78,26 +74,26 @@ namespace Wander.Server.Models
                 }
             }
         }
-        public void Connect()
+
+        public void Connect(UserModel user)
         {
-            using (SqlConnection conn = DatabaseConnection.GetConnection())
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
                 string query = "update dbo.Users set Connected = 1 where UserLogin = @Login";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
-                    cmd.Parameters.AddWithValue("@Login", Login);
+                    cmd.Parameters.AddWithValue("@Login", user.Login);
                     cmd.ExecuteNonQuery();
                 }
                 conn.Close();
-                }
-
+            }
         }
 
-        public void Register()
+        public void Register(UserModel user)
         {
-            using (SqlConnection conn = DatabaseConnection.GetConnection())
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
                 string query =
                     "INSERT INTO dbo.Users (UserLogin, Email, UserPassword, Sex, Account, Points, Connected, Activated) values ( @Login, @Email, @Password, @Sex, @Account, @Points, @Connected, @Activated) ";
@@ -105,10 +101,10 @@ namespace Wander.Server.Models
                 {
                     conn.Open();
 
-                    cmd.Parameters.Add("@Login", Login);
-                    cmd.Parameters.Add("@Email", Email);
-                    cmd.Parameters.Add("@Password", Password);
-                    cmd.Parameters.Add("@Sex", Sex);
+                    cmd.Parameters.Add("@Login", user.Login);
+                    cmd.Parameters.Add("@Email", user.Email);
+                    cmd.Parameters.Add("@Password", user.Password);
+                    cmd.Parameters.Add("@Sex", user.Sex);
                     cmd.Parameters.AddWithValue("@Account", 0);
                     cmd.Parameters.AddWithValue("@Points", 0);
                     cmd.Parameters.AddWithValue("@Connected", 0);

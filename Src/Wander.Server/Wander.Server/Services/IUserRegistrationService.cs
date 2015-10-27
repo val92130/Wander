@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using Wander.Server.Model;
+
+namespace Wander.Server.Services
+{
+    public interface IUserRegistrationService
+    {
+        bool CheckRegisterForm(UserModel user);
+        bool CheckLogin(UserModel user);
+        bool CheckLoginAlreadyExists(UserModel user);
+        void Connect(UserModel user);
+        void Register(UserModel user);
+    }
+}
