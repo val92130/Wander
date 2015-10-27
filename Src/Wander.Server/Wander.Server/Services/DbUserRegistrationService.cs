@@ -15,10 +15,12 @@ namespace Wander.Server.Services
 
         public bool CheckRegisterForm(UserModel user)
         {
+            if (user == null)
+                return false;
             if (user.Login != null && user.Email != null && user.Password != null)
             {
                 if (!String.IsNullOrWhiteSpace(user.Login) && !String.IsNullOrWhiteSpace(user.Email) &&
-                    !String.IsNullOrWhiteSpace(user.Password))
+                    !String.IsNullOrWhiteSpace(user.Password) && Helper.IsValidEmail(user.Email))
                 {
                     if (user.Login.Length >= MinLoginLength && user.Email.Contains("@") && user.Password.Length >= MinPasswordLength)
                     {

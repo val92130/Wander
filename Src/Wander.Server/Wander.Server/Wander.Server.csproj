@@ -132,11 +132,13 @@
     <Compile Include="Model\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DbUserRegistrationService.cs" />
+    <Compile Include="Services\Helper.cs" />
     <Compile Include="Services\IUserRegistrationService.cs" />
     <Compile Include="Services\SqlConnectionService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\HubConnection.ts" />
     <TypeScriptCompile Include="Scripts\UserInteraction.ts" />
   </ItemGroup>
   <ItemGroup>

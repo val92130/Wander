@@ -21,7 +21,9 @@ $(document).ready(function () {
         e.preventDefault();
         var login = values["login"];
         var password = values["pwd"];
-        // TO DO LOGIN TO SIGNALR
+        hub.invoke("Connect", { Login: login, Password: password }).done(function () {
+            console.log("Successfuly connected");
+        });
     });
     $("#registerForm").submit(function (e) {
         var values;
@@ -36,7 +38,17 @@ $(document).ready(function () {
         var passwordConfirm = values["pwdConfirm"];
         var email = values["email"];
         e.preventDefault();
-        // TO DO REGISTER TO SIGNALR
+        if (checkInput(login, 4) && checkInput(password, 4) && password == passwordConfirm && checkInput(email, 3) && (sex == 0 || sex == 1)) {
+            hub.invoke("RegisterUser", { Login: login, Password: password, Email: email, Sex: sex }).done(function () {
+                console.log("registered");
+            });
+        }
+        else {
+            alert("incorrect form");
+        }
     });
+    function checkInput(input, minLength) {
+        return (input != null && input != "" && input.length >= minLength);
+    }
 });
 //# sourceMappingURL=UserInteraction.js.map
