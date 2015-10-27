@@ -25,6 +25,8 @@ namespace Wander.Server.Hubs
                     return;
                 }
                Debug.Print("Client connected : " + idSignalR);
+
+                Clients.Caller.onConnected();
                ServiceProvider.GetPlayerService().AddPlayer(idSignalR, playerId);
                Debug.Print(idSignalR);
                Clients.Caller.sendMessage(new ClientMessageModel() {Content = "you are Online", MessageType = EMessageType.Success.ToString()});

@@ -10,10 +10,7 @@ $(document).ready(function () {
     });
     $("#logoutBtn").click(function () {
         hub.invoke("Disconnect");
-        $("#loginBtn").show();
-        $("#registerBtn").show();
-        $("#logoutBtn").hide();
-        //logout
+        OnLogout();
     });
     $("#loginForm").submit(function (e) {
         console.log("clicked");
@@ -52,8 +49,22 @@ $(document).ready(function () {
             alert("incorrect form");
         }
     });
+    function OnLogin() {
+        $('#loginModal').modal('hide');
+        $("#loginBtn").hide();
+        $("#registerBtn").hide();
+        $("#logoutBtn").show();
+    }
+    function OnLogout() {
+        $("#loginBtn").show();
+        $("#registerBtn").show();
+        $("#logoutBtn").hide();
+    }
     hub.on("sendMessage", function (message) {
-        alert(message.Content + message.MessageType);
+        alert(message.Content);
+    });
+    hub.on("onConnected", function () {
+        OnLogin();
     });
     hub.on("onRegistered", function () {
         $('#signUpModal').modal('hide');
