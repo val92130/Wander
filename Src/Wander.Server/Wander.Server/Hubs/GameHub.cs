@@ -17,14 +17,20 @@ namespace Wander.Server.Hubs
         {
             if (ServiceProvider.GetUserRegistrationService().CheckLogin(user))
             {
-                ServiceProvider.GetUserRegistrationService().Connect(user);
+               int playerId = ServiceProvider.GetUserRegistrationService().Connect(user);
                string idSignalR = Context.ConnectionId;
+                if (playerId == -1)
+                {
+                    Clients.Caller.sendMessage("connexion error");
+                    return;
+                }
+               ServiceProvider.GetPlayerService().AddPlayer(idSignalR, playerId);
                Debug.Print(idSignalR);
-                Clients.Caller.sendMessage("you are Online");
+               Clients.Caller.sendMessage("you are Online");
             }
             else
             {
-                Clients.Caller.sendMessage("connexion error");
+                Clients.Caller.sendMessage("connexion error, wrong login/password");
             }
         }
 

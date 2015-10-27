@@ -77,7 +77,7 @@ namespace Wander.Server.Services
             }
         }
 
-        public void Connect(UserModel user)
+        public int Connect(UserModel user)
         {
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
@@ -89,7 +89,22 @@ namespace Wander.Server.Services
                     cmd.Parameters.AddWithValue("@Login", user.Login);
                     cmd.ExecuteNonQuery();
                 }
+                
+
+                query = "select UserId from dbo.Users WHERE UserLogin = @Login";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+
+                    cmd.Parameters.AddWithValue("@Login", user.Login);
+                    var data = cmd.ExecuteReader();
+
+                    while (data.Read())
+                    {
+                        return Int32.Parse(data["UserId"].ToString());
+                    }
+                }
                 conn.Close();
+                return -1;               
             }
         }
 

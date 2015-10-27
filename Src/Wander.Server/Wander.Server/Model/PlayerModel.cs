@@ -7,7 +7,7 @@ namespace Wander.Server.Model
 {
     public class PlayerModel
     {
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         public string SignalRId { get; set; }
     }
 }
