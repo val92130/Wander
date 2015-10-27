@@ -16,7 +16,11 @@ namespace Wander.Server.Services
         }
         public void RemovePlayer(string SignalRId)
         {
-
+            PlayerModel p = Players.FirstOrDefault(x => x.SignalRId == SignalRId);
+            if (p != null)
+            {
+                Players.Remove(p);
+            }
         }
 
 
