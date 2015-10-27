@@ -56,10 +56,15 @@ namespace Wander.Server.Hubs
             }
         }
 
-        public override Task OnDisconnected(bool stopCalled)
+        public void Disconnect()
         {
             Debug.Print("Client disconnected : " + Context.ConnectionId);
             ServiceProvider.GetPlayerService().RemovePlayer(Context.ConnectionId);
+        }
+
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            Disconnect();
             return base.OnDisconnected(stopCalled);
         }
     }

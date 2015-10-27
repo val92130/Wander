@@ -1,6 +1,7 @@
 console.log("loaded");
 var $;
 $(document).ready(function () {
+    $("#logoutBtn").hide();
     $("#loginBtn").click(function () {
         $("#loginModal").modal();
     });
@@ -8,6 +9,10 @@ $(document).ready(function () {
         $("#signUpModal").modal();
     });
     $("#logoutBtn").click(function () {
+        hub.invoke("Disconnect");
+        $("#loginBtn").show();
+        $("#registerBtn").show();
+        $("#logoutBtn").hide();
         //logout
     });
     $("#loginForm").submit(function (e) {
