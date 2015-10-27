@@ -34,7 +34,11 @@ $(document).ready(function () {
         var login: any = values["login"];
         var password: any = values["pwd"];
 
-        // TO DO LOGIN TO SIGNALR
+
+        hub.invoke("Connect", { Login: login, Password: password }).done(function () {
+            console.log("Successfuly connected");
+        });
+
     });
 
 
@@ -56,7 +60,20 @@ $(document).ready(function () {
 
         e.preventDefault();
 
-        // TO DO REGISTER TO SIGNALR
+        if (checkInput(login, 4) && checkInput(password, 4) && password == passwordConfirm && checkInput(email, 3) && (sex == 0 || sex == 1)) {
+            hub.invoke("RegisterUser", { Login: login, Password: password, Email: email, Sex: sex }).done(function() {
+                console.log("registered");
+            });
+        } else {
+            alert("incorrect form");
+        }
+
+
+       
     });
+    function checkInput(input, minLength) {
+        return (input != null && input != "" && input.length >= minLength);
+    }
+
 
 });
