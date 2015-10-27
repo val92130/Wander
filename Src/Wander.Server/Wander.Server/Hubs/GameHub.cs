@@ -21,24 +21,24 @@ namespace Wander.Server.Hubs
                string idSignalR = Context.ConnectionId;
                 if (playerId == -1)
                 {
-                    Clients.Caller.sendMessage("connexion error");
+                    Clients.Caller.sendMessage(new ClientMessageModel() { Content = "Connection error", MessageType = EMessageType.Error.ToString() });
                     return;
                 }
-                Debug.Print("Client connected : " + idSignalR);
+               Debug.Print("Client connected : " + idSignalR);
                ServiceProvider.GetPlayerService().AddPlayer(idSignalR, playerId);
                Debug.Print(idSignalR);
-               Clients.Caller.sendMessage("you are Online");
+               Clients.Caller.sendMessage(new ClientMessageModel() {Content = "you are Online", MessageType = EMessageType.Success.ToString()});
             }
             else
             {
-                Clients.Caller.sendMessage("connexion error, wrong login/password");
+                Clients.Caller.sendMessage(new ClientMessageModel() { Content = "Connection error, wrong login/password", MessageType = EMessageType.Error.ToString() });
             }
         }
 
         public void LogOut(UserModel user)
         {
                 ServiceProvider.GetUserRegistrationService().LogOut(user);
-                Clients.Caller.sendMessage("see you soon");                  
+            Clients.Caller.sendMessage(new ClientMessageModel() { Content = "See you soon", MessageType = EMessageType.Information.ToString() });
         }
 
         public void RegisterUser(UserModel user)
@@ -47,7 +47,7 @@ namespace Wander.Server.Hubs
             if (ServiceProvider.GetUserRegistrationService().CheckRegisterForm(user))
             {
                 ServiceProvider.GetUserRegistrationService().Register(user);
-                Clients.Caller.sendMessage("succefully registred");
+                Clients.Caller.sendMessage(new ClientMessageModel() { Content = "Successfuly registered", MessageType = EMessageType.Success.ToString() });
                 Clients.Caller.onRegistered();
             }
             else

@@ -24,6 +24,11 @@ namespace Wander.Server.Tests
             }
         }
 
+        internal static PlayerModel GetTestPlayerModel()
+        {
+            return new PlayerModel() {SignalRId = "testId", UserId = 1};
+        }
+
         internal static UserModel GetTestUserModel()
         {
             UserModel user = new UserModel();

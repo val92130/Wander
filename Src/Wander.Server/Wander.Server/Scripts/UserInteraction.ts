@@ -72,8 +72,9 @@ $(document).ready(function () {
        
     });
 
-    hub.on("sendMessage", function(message) {
-        alert(message);
+    hub.on("sendMessage", function (message) {
+
+        alert(message.Content + message.MessageType);
     });
 
     hub.on("onRegistered", function() {

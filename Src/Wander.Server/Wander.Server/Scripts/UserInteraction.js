@@ -48,7 +48,7 @@ $(document).ready(function () {
         }
     });
     hub.on("sendMessage", function (message) {
-        alert(message);
+        alert(message.Content + message.MessageType);
     });
     hub.on("onRegistered", function () {
         $('#signUpModal').modal('hide');

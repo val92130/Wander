@@ -32,9 +32,12 @@ namespace Wander.Server.Services
             }
         }
 
-        public void Disconnect(string SignalRId)
+        public PlayerModel GetPlayer(string signalRId)
         {
-            
+            lock (Players)
+            {
+                return Players.FirstOrDefault(x => x.SignalRId == signalRId);   
+            }           
         }
 
     }

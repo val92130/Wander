@@ -129,6 +129,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Hubs\GameHub.cs" />
+    <Compile Include="Model\ClientMessageModel.cs" />
+    <Compile Include="Model\EMessageType.cs" />
     <Compile Include="Model\PlayerModel.cs" />
     <Compile Include="Model\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
