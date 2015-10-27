@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
+using Wander.Server.Model;
 namespace Wander.Server.Services
 {
+   
+
     public class PlayerService
     {
-        static List<playerModel> = new List<PlayerModel>(); 
+        static List<PlayerModel> Players = new List<PlayerModel>(); 
         public void AddPlayer(string SignalRId)
         {
             
