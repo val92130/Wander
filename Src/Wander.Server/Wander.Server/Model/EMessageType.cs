@@ -7,9 +7,10 @@ namespace Wander.Server.Model
 {
     public enum EMessageType
     {
-        Success,
-        Error,
-        Information
+        success,
+        error,
+        info,
+        warn
 
 
     }

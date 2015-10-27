@@ -85,8 +85,8 @@ $(document).ready(function () {
         $("#logoutBtn").hide();
     }
 
-    hub.on("sendMessage", function (message) {
-        alert(message.Content);
+    hub.on("notify", function (message) {
+        $.notify(message.Content, message.MessageType);
     });
 
     hub.on("onConnected", function() {

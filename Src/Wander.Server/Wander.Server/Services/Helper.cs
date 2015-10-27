@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
+using Wander.Server.Model;
 
 namespace Wander.Server.Services
 {
     public class Helper
     {
+        /// <summary>
+        /// Checks whether an email is valid or not
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns>Return True if the email is valid, otherwise returns false</returns>
         public static bool IsValidEmail(string email)
         {
             try
@@ -19,6 +25,11 @@ namespace Wander.Server.Services
             {
                 return false;
             }
+        }
+
+        public static ClientMessageModel CreateMessage(string content, EMessageType type)
+        {
+            return new ClientMessageModel() { Content = content, MessageType = type.ToString() };
         }
     }
 }

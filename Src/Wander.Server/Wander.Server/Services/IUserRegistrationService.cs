@@ -15,5 +15,6 @@ namespace Wander.Server.Services
         void Register(UserModel user);
 
         void LogOut(UserModel user);
+        void LogOut(PlayerModel user);
     }
 }

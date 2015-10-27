@@ -69,5 +69,68 @@ namespace Wander.Server.Tests
             }
             TestEnvironment.DeleteTestUser();
         }
+
+        [TestMethod]
+        public void UserLogoutSetConnectedToFalse()
+        {
+            TestEnvironment.DeleteTestUser();
+            UserModel user = TestEnvironment.GetTestUserModel();
+
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+            registrationService.Register(user);
+            registrationService.Connect(user);
+
+            registrationService.LogOut(user);
+
+            string query = "select * from dbo.Users where UserLogin = @Login";
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    cmd.Parameters.AddWithValue("@Login", user.Login);
+                    var data = cmd.ExecuteReader();
+                    while (data.Read())
+                    {
+                        Assert.AreEqual(data["Connected"], false);
+                    }
+                    conn.Close();
+                }
+            }
+            TestEnvironment.DeleteTestUser();
+        }
+
+        [TestMethod]
+        public void UserLogoutSetConnectedToFalseWithPlayerModel()
+        {
+            TestEnvironment.DeleteTestUser();
+            UserModel user = TestEnvironment.GetTestUserModel();
+
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+            registrationService.Register(user);
+            int userId = registrationService.Connect(user);
+
+            PlayerModel player = new PlayerModel() { UserId = userId };
+            registrationService.LogOut(player);
+
+            string query = "select * from dbo.Users where UserId = @Id";
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    cmd.Parameters.AddWithValue("@Id", player.UserId);
+                    var data = cmd.ExecuteReader();
+                    while (data.Read())
+                    {
+                        Assert.AreEqual(data["Connected"], false);
+                    }
+                    conn.Close();
+                }
+            }
+            TestEnvironment.DeleteTestUser();
+        }
     }
 }

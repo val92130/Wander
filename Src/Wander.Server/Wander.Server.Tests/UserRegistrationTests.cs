@@ -2,12 +2,41 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Wander.Server.Model;
 using Wander.Server.Services;
+using System;
 
 namespace Wander.Server.Tests
 {
     [TestClass]
     public class UserRegistrationTests
     {
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void NullUserRegistrationThrowsException()
+        {
+            UserModel user = null;
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+            registrationService.Register(user);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void NullUserLoginCheckThrowsException()
+        {
+            UserModel user = null;
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+            registrationService.CheckLogin(user);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void NullUserFormCheckThrowsException()
+        {
+            UserModel user = null;
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+            registrationService.CheckRegisterForm(user);
+        }
+
         [TestMethod]
         public void UserWithNullFieldsReturnsFalse()
         {
