@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.SignalR;
 using Wander.Server.Model;
@@ -29,11 +30,8 @@ namespace Wander.Server.Hubs
 
         public void LogOut(UserModel user)
         {
-            
                 ServiceProvider.GetUserRegistrationService().LogOut(user);
-                Clients.Caller.sendMessage("see you soon");
-            
-           
+                Clients.Caller.sendMessage("see you soon");                  
         }
 
         public void RegisterUser(UserModel user)
@@ -49,6 +47,12 @@ namespace Wander.Server.Hubs
             {
                 Clients.Caller.sendMessage("error");
             }
+        }
+
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            Debug.Print("Client disconnected : " + Context.ConnectionId);
+            return base.OnDisconnected(stopCalled);
         }
     }
 }
