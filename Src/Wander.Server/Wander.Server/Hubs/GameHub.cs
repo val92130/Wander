@@ -25,19 +25,29 @@ namespace Wander.Server.Hubs
                 string idSignalR = Context.ConnectionId;
                 if (playerId == -1)
                 {
-                    Clients.Caller.notify(Helper.CreateMessage("Connection error", EMessageType.error));
+                    Clients.Caller.notify(Helper.CreateNotificationMessage("Connection error", EMessageType.error));
                     return;
                 }
+
+                // we check if the user isnt already connected somewhere else
+                PlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(playerId);
+                if(candidate != null)
+                {
+                    Clients.Client(candidate.SignalRId).notify(Helper.CreateNotificationMessage("Someone else is connected from another computer", EMessageType.error));
+                    Clients.Client(candidate.SignalRId).forceDisconnect();
+                    ServiceProvider.GetPlayerService().RemovePlayer(candidate.SignalRId);
+                }
+
                 Debug.Print("Client connected : " + idSignalR);
 
-                Clients.Caller.onConnected();
+                Clients.Caller.onConnected(user.Login);
                 ServiceProvider.GetPlayerService().AddPlayer(idSignalR, playerId);
                 Debug.Print(idSignalR);
-                Clients.Caller.notify(Helper.CreateMessage("Welcome ! You are now online", EMessageType.success));
+                Clients.Caller.notify(Helper.CreateNotificationMessage("Welcome ! You are now online", EMessageType.success));
             }
             else
             {
-                Clients.Caller.notify(Helper.CreateMessage("Wrong username/password", EMessageType.error));
+                Clients.Caller.notify(Helper.CreateNotificationMessage("Wrong username/password", EMessageType.error));
             }
         }
 
@@ -51,12 +61,12 @@ namespace Wander.Server.Hubs
             if (ServiceProvider.GetUserRegistrationService().CheckRegisterForm(user))
             {
                 ServiceProvider.GetUserRegistrationService().Register(user);
-                Clients.Caller.notify(Helper.CreateMessage("Successfuly registered", EMessageType.success));
+                Clients.Caller.notify(Helper.CreateNotificationMessage("Successfuly registered", EMessageType.success));
                 Clients.Caller.onRegistered();
             }
             else
             {
-                Clients.Caller.notify(Helper.CreateMessage("Error while registering", EMessageType.error));
+                Clients.Caller.notify(Helper.CreateNotificationMessage("Error while registering", EMessageType.error));
             }
         }
 
@@ -65,10 +75,16 @@ namespace Wander.Server.Hubs
         /// </summary>
         public void Disconnect()
         {
+            PlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            // If the disconnected client is logged in the database, we log him out
+            if (candidate == null)
+            {
+                return;
+            }
             Debug.Print("Client disconnected : " + Context.ConnectionId);
             ServiceProvider.GetUserRegistrationService().LogOut(ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId));
             ServiceProvider.GetPlayerService().RemovePlayer(Context.ConnectionId);
-            Clients.Caller.notify(Helper.CreateMessage("See you soon !", EMessageType.info));
+            Clients.Caller.notify(Helper.CreateNotificationMessage("See you soon !", EMessageType.info));
         }
 
         /// <summary>
@@ -101,7 +117,7 @@ namespace Wander.Server.Hubs
             PlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
             if (candidate == null)
             {
-                Clients.Caller.notify(Helper.CreateMessage(
+                Clients.Caller.notify(Helper.CreateNotificationMessage(
                     "You have to be connected before trying to send a message ! ", EMessageType.error));
                 return;
             }
@@ -113,7 +129,8 @@ namespace Wander.Server.Hubs
             List<PlayerModel> ids = ServiceProvider.GetPlayerService().GetAllPlayers();
             for (int i = 0; i < ids.Count;i++)
             {
-                Clients.Client(ids[i].SignalRId).MessageReceived(msg, caller);
+                //Clients.Client(ids[i].SignalRId).MessageReceived(msg, caller);
+                Clients.Client(ids[i].SignalRId).MessageReceived(Helper.CreateChatMessage(caller, msg, ServiceProvider.GetUserService().GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString()));
             }
         }
     }

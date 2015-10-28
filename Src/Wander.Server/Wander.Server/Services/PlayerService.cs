@@ -59,6 +59,23 @@ namespace Wander.Server.Services
             }           
         }
 
+        /// <summary>
+        /// Gets a player from a specified user id if it exists
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public PlayerModel GetPlayer(int userId)
+        {
+            lock (Players)
+            {
+                return Players.FirstOrDefault(x => x.UserId == userId);
+            }
+        }
+
+        /// <summary>
+        /// Gets a copy of all the connected players'id
+        /// </summary>
+        /// <returns>Returns a List of connection Id of every connected Players</returns>
         public List<string> GetAllPlayersConnectionId()
         {
             List<String> players = new List<string>();
@@ -72,6 +89,10 @@ namespace Wander.Server.Services
             return players;
         }
 
+        /// <summary>
+        /// Gets a copy of all the connected players
+        /// </summary>
+        /// <returns>Returns a List of PlayerModel of every connected Players</returns>
         public List<PlayerModel> GetAllPlayers()
         {
             List<PlayerModel> players = new List<PlayerModel>();

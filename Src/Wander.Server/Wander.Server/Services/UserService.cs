@@ -13,14 +13,9 @@ namespace Wander.Server.Services
     public class UserService : IUserService
     {
 
-        private void ExecuteUpdate(string field, string value, string table)
-        {
-            
-
-        }
         private string ExecuteQuery(string value, PlayerModel user)
         {
-            
+
             if (user == null) throw new ArgumentException("parameter user is null");
 
             using (SqlConnection conn = SqlConnectionService.GetConnection())
@@ -31,10 +26,10 @@ namespace Wander.Server.Services
                     conn.Open();
 
                     cmd.Parameters.AddWithValue("@ConnectionId", user.UserId);
-                    
+
 
                     string data = (string)cmd.ExecuteScalar();
-                    
+
                     conn.Close();
 
                     return data;
@@ -164,7 +159,7 @@ namespace Wander.Server.Services
             if (ConnectionId == null) throw new ArgumentException("there is no id");
             PlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
-            return(ExecuteQueryInt("JobId", user));
+            return (ExecuteQueryInt("JobId", user));
         }
     }
-    }
+}

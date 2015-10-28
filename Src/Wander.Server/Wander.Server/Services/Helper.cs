@@ -27,11 +27,15 @@ namespace Wander.Server.Services
             }
         }
 
-        public static ClientMessageModel CreateMessage(string content, EMessageType type)
+        public static ClientMessageModel CreateNotificationMessage(string content, EMessageType type)
         {
             return new ClientMessageModel() { Content = content, MessageType = type.ToString() };
         }
 
+        public static ChatMessageModel CreateChatMessage(string username, string content, int sex, string hour)
+        {
+            return new ChatMessageModel() { UserName = username, Content = content, Sex = sex, Hour = hour };
+        }
 
     }
 }

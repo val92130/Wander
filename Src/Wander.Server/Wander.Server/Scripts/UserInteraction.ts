@@ -43,6 +43,7 @@ $(document).ready(function () {
 
         hub.invoke("Connect", { Login: login, Password: password }).done(function () {
             console.log("Successfuly connected");
+            
         });
 
     });
@@ -90,18 +91,24 @@ $(document).ready(function () {
         $("#logoutBtn").hide();
         $("#msgFooter").fadeOut("slow");
         $("#infoFooter").fadeOut("slow");
+        $("#labelPseudo").text("");
     }
 
     hub.on("notify", function (message) {
         $.notify(message.Content, message.MessageType);
     });
 
-    hub.on("onConnected", function() {
+    hub.on("onConnected", function(pseudo) {
         OnLogin();
+        $("#labelPseudo").text(pseudo);
     });
 
     hub.on("onRegistered", function() {
         $('#signUpModal').modal('hide');
+    });
+
+    hub.on("forceDisconnect", function () {
+        OnLogout();
     });
 
     function checkInput(input, minLength) {

@@ -96,7 +96,10 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\background.jpg" />
     <Content Include="Content\Style.css" />
+    <Content Include="Content\user-boy.png" />
+    <Content Include="Content\user-girl.png" />
     <Content Include="packages.config" />
     <Content Include="Scripts\jquery-1.9.1.min.map" />
     <None Include="Web.Debug.config">
@@ -131,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Hubs\GameHub.cs" />
+    <Compile Include="Model\ChatMessageModel.cs" />
     <Compile Include="Model\ClientMessageModel.cs" />
     <Compile Include="Model\EMessageType.cs" />
     <Compile Include="Model\PlayerModel.cs" />

@@ -14,6 +14,25 @@ namespace Wander.Server.Tests
     [TestClass]
     public class PlayerServiceTests
     {
+
+        [TestMethod]
+        public void GetPlayerReturnsEveryPlayers()
+        {
+            ServiceProvider.GetPlayerService().AddPlayer("signId1", 1);
+            ServiceProvider.GetPlayerService().AddPlayer("signId2", 2);
+
+            List<PlayerModel> players = ServiceProvider.GetPlayerService().GetAllPlayers();
+
+            Assert.AreEqual(players.Count, 2);
+
+            PlayerModel player1 = players.FirstOrDefault(x => (x.SignalRId == "signId1" && x.UserId == 1));
+            PlayerModel player2 = players.FirstOrDefault(x => (x.SignalRId == "signId2" && x.UserId == 2));
+
+            Assert.IsNotNull(player1);
+            Assert.IsNotNull(player2);
+        }
+
+
         [TestMethod]
         public void AddPlayerWorksCorrectly()
         {
