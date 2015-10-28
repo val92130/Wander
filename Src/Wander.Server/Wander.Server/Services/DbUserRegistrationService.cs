@@ -34,7 +34,7 @@ namespace Wander.Server.Services
                     {
                         if (user.Sex == 1 || user.Sex == 0)
                         {
-                            if (!CheckLoginAlreadyExists(user))
+                            if (!CheckLoginAlreadyExists(user) && !CheckEmailAlreadyExists(user))
                             {
                                 return true;
                             }
@@ -92,6 +92,33 @@ namespace Wander.Server.Services
                     conn.Open();
 
                     cmd.Parameters.AddWithValue("@Login", user.Login);
+
+                    var data = cmd.ExecuteReader();
+                    bool value = data.HasRows;
+                    conn.Close();
+                    return value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Check if the provided UserModel's email already exists in the database
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>Returns true if the UserModel's email already exists, otherwise return false</returns>
+        public bool CheckEmailAlreadyExists(UserModel user)
+        {
+            if (user == null)
+                throw new ArgumentException("parameter user is null");
+
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = "SELECT UserId from dbo.Users WHERE Email = @Email";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    cmd.Parameters.AddWithValue("@Email", user.Email);
 
                     var data = cmd.ExecuteReader();
                     bool value = data.HasRows;

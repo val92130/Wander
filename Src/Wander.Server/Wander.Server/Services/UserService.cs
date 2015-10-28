@@ -12,6 +12,12 @@ namespace Wander.Server.Services
 
     public class UserService : IUserService
     {
+
+        private void ExecuteUpdate(string field, string value, string table)
+        {
+            
+
+        }
         private string ExecuteQuery(string value, PlayerModel user)
         {
             

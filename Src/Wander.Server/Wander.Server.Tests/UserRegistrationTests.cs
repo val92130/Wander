@@ -190,5 +190,23 @@ namespace Wander.Server.Tests
             TestEnvironment.DeleteTestUser();
 
         }
+
+        [TestMethod]
+        public void CreateUserEmailAlreadyExistThrowError()
+        {
+            TestEnvironment.DeleteTestUser();
+
+            UserModel user = TestEnvironment.GetTestUserModel();
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+            registrationService.Register(user);
+
+            UserModel user2 = TestEnvironment.GetTestUserModel();
+
+
+            Assert.IsTrue(registrationService.CheckEmailAlreadyExists(user2));
+
+            TestEnvironment.DeleteTestUser();
+
+        }
     }
 }

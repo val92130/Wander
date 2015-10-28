@@ -11,9 +11,9 @@ namespace Wander.Server.Services
         bool CheckRegisterForm(UserModel user);
         bool CheckLogin(UserModel user);
         bool CheckLoginAlreadyExists(UserModel user);
+        bool CheckEmailAlreadyExists(UserModel user);
         int Connect(UserModel user);
         void Register(UserModel user);
-
         void LogOut(UserModel user);
         void LogOut(PlayerModel user);
     }

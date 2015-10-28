@@ -105,9 +105,9 @@ namespace Wander.Server.Hubs
                     "You have to be connected before trying to send a message ! ", EMessageType.error));
                 return;
             }
-                
 
-            string caller = candidate.UserId.ToString();
+
+            string caller = ServiceProvider.GetUserService().GetUserLogin(candidate.SignalRId);
 
             string msg = HttpUtility.HtmlEncode(message);
             List<PlayerModel> ids = ServiceProvider.GetPlayerService().GetAllPlayers();

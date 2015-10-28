@@ -80,6 +80,7 @@ JobId int DEFAULT(0)
 
 constraint PK_UserId primary key(UserId),
 constraint UK_Users_UserLogin unique(UserLogin, UserPassword),
+constraint UK_Users_UserEmail unique(Email),
 constraint CK_Users_UserLogin check(UserLogin <> N''),
 constraint CK_Users_UserPassword check(UserPassword <> N''),
 constraint FK_Users_JobId foreign key(JobId) references dbo.Jobs(JobId),
