@@ -62,9 +62,7 @@ Threshold int not null
 
 
 constraint PK_JobId primary key(JobId),
-constraint CK_Jobs_JobDescription check(JobDescription <> N''),
-constraint CK_Jobs_JobSalary check(Salary <> N''),
-constraint CK_Jobs_JobThreshold check(Threshold <> N'')
+constraint CK_Jobs_JobDescription check(JobDescription <> N'')
 );
 create table dbo.Users
 (
@@ -77,14 +75,14 @@ Account int,
 Points int,
 Connected bit,
 Activated bit,
-JobId int
+JobId int DEFAULT(0)
 
 
 constraint PK_UserId primary key(UserId),
 constraint UK_Users_UserLogin unique(UserLogin, UserPassword),
 constraint CK_Users_UserLogin check(UserLogin <> N''),
 constraint CK_Users_UserPassword check(UserPassword <> N''),
-constraint FK_Users_JobId foreign key(JobId) references dbo.Jobs(JobId)
+constraint FK_Users_JobId foreign key(JobId) references dbo.Jobs(JobId),
 
 );
 
@@ -142,3 +140,7 @@ MessageDate datetime2 not null
 constraint PK_UserMessagesId primary key(UserMessageId),
 constraint FK_UserMessages_UserId foreign key(UserId) references dbo.Users(UserId)
 );
+
+INSERT INTO dbo.Jobs(JobDescription, Salary, Threshold) values('unemployed', 0, 0);
+
+

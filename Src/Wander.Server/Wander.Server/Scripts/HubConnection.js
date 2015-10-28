@@ -3,3 +3,4 @@ var hub = connection.createHubProxy('GameHub');
 connection.start(function () {
     console.log("connected to hub");
 });
+//# sourceMappingURL=HubConnection.js.map
