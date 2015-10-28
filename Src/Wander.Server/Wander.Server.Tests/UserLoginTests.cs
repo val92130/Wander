@@ -132,5 +132,19 @@ namespace Wander.Server.Tests
             }
             TestEnvironment.DeleteTestUser();
         }
+
+        [TestMethod]
+        public void IncorrectEmailReturnsFalse()
+        {
+            string incorrectEmail = "ttttt.fr";
+            Assert.IsFalse(Helper.IsValidEmail(incorrectEmail));
+        }
+
+        [TestMethod]
+        public void CorrectEmailReturnTrue()
+        {
+            string correctEmail = "val@live.fr";
+            Assert.IsTrue(Helper.IsValidEmail(correctEmail));
+        }
     }
 }

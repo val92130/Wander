@@ -6,109 +6,125 @@
     <script src="Scripts/jquery.signalR-2.2.0.min.js"></script>
     <link href="Content/bootstrap.min.css" rel="stylesheet" />
     <link href="Content/bootstrap-theme.min.css" rel="stylesheet" />
+    <link href="Content/Style.css" rel="stylesheet" />
     <script src="Scripts/bootstrap.js"></script>
     <script src="Scripts/notify.min.js"></script>
     <meta charset="utf-8" />
 </head>
 <body>
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Wander</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a href="#login" id="loginBtn">Login</a></li>
-                    <li><a href="#register" id="registerBtn">Register</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#logout" id="logoutBtn">Logout</a></li>
-                </ul>
-            </div><!--/.nav-collapse -->
-        </div>
-    </nav>
-
+<!-- Fixed navbar -->
+<nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
-        <div class="jumbotron">
-            <h1>Wander Game</h1>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Wander</a>
         </div>
-    </div> <!-- /container -->
-    <!-- LOGIN MODAL-->
-    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Login</h4>
-                </div>
-                <div class="modal-body">
-                    <form id="loginForm">
-                        <div class="form-group">
-                            <label for="login">Login:</label>
-                            <input type="text" class="form-control" id="login" name="login" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="pwd">Password:</label>
-                            <input type="password" class="form-control" id="pwd" name="pwd" required>
-                        </div>
-                        <button id="loginFormBtn" type="submit">Login</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="#login" id="loginBtn">Login</a></li>
+                <li><a href="#register" id="registerBtn">Register</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#logout" id="logoutBtn">Logout</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container">
+    <div class="jumbotron">
+        <h1>Wander Game</h1>
+    </div>
+</div> <!-- /container -->
+<!-- LOGIN MODAL-->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Login</h4>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="login">Login:</label>
+                        <input type="text" class="form-control" id="login" name="login" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Password:</label>
+                        <input type="password" class="form-control" id="pwd" name="pwd" required>
+                    </div>
+                    <button id="loginFormBtn" type="submit">Login</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
-    <!-- SIGN UP MODAL-->
-    <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Sign Up</h4>
-                </div>
-                <div class="modal-body">
-                    <form id="registerForm">
-                        <div class="form-group">
-                            <label for="login">Login:</label>
-                            <input type="text" class="form-control" id="login" name="login" required minlength="4">
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email:</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="pwd">Password:</label>
-                            <input type="password" class="form-control" id="pwd" name="pwd" required minlength="4">
-                        </div>
-                        <div class="form-group">
-                            <label for="pwdConfirm">Password Confirmation:</label>
-                            <input type="password" class="form-control" id="pwdConfirm" name="pwdConfirm" required minlength="4">
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" name="sex" value="1" required>Male</label>
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" name="sex" value="0" required>Female</label>
-                        </div>
-                        <button id="registerFormBtn">Register</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button"  class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
+</div>
+<!-- SIGN UP MODAL-->
+<div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Sign Up</h4>
+            </div>
+            <div class="modal-body">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="login">Login:</label>
+                        <input type="text" class="form-control" id="login" name="login" required minlength="4">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Password:</label>
+                        <input type="password" class="form-control" id="pwd" name="pwd" required minlength="4">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwdConfirm">Password Confirmation:</label>
+                        <input type="password" class="form-control" id="pwdConfirm" name="pwdConfirm" required minlength="4">
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" name="sex" value="1" required>Male</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" name="sex" value="0" required>Female</label>
+                    </div>
+                    <button id="registerFormBtn">Register</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
+</div>
 </body>
+<div id="msgFooter">
+    <div id="chatBox">
+    </div>
+    <form id="msgForm">
+        <input type="text" class="form-control" name="message" id="sendMsgInput"/>
+        <button type="submit" class="btn btn-default">Send</button>
+    </form>
+</div>
+
+<div id="infoFooter">
+
+</div>
+
+
 <script src="Scripts/HubConnection.js"></script>
 <script src="Scripts/UserInteraction.js"></script>
+<script src="Scripts/Messaging.js"></script>
 </html>

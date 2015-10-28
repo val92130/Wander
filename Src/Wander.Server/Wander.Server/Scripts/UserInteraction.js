@@ -2,6 +2,8 @@ console.log("loaded");
 var $;
 $(document).ready(function () {
     $("#logoutBtn").hide();
+    $("#msgFooter").hide();
+    $("#infoFooter").hide();
     $("#loginBtn").click(function () {
         $("#loginModal").modal();
     });
@@ -54,11 +56,15 @@ $(document).ready(function () {
         $("#loginBtn").hide();
         $("#registerBtn").hide();
         $("#logoutBtn").show();
+        $("#msgFooter").fadeIn("slow");
+        $("#infoFooter").fadeIn("slow");
     }
     function OnLogout() {
         $("#loginBtn").show();
         $("#registerBtn").show();
         $("#logoutBtn").hide();
+        $("#msgFooter").fadeOut("slow");
+        $("#infoFooter").fadeOut("slow");
     }
     hub.on("notify", function (message) {
         $.notify(message.Content, message.MessageType);
@@ -73,4 +79,3 @@ $(document).ready(function () {
         return (input != null && input != "" && input.length >= minLength);
     }
 });
-//# sourceMappingURL=UserInteraction.js.map

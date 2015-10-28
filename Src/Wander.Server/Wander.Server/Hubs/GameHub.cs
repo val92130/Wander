@@ -13,6 +13,10 @@ namespace Wander.Server.Hubs
     public class GameHub : Hub
     {
 
+        /// <summary>
+        /// Connect the user to the game and into the database
+        /// </summary>
+        /// <param name="user"></param>
         public void Connect(UserModel user)
         {
             if (ServiceProvider.GetUserRegistrationService().CheckLogin(user))
@@ -37,7 +41,10 @@ namespace Wander.Server.Hubs
             }
         }
 
-
+        /// <summary>
+        /// Register the User in the database if its valid
+        /// </summary>
+        /// <param name="user">Form fields represented by the UserModel</param>
         public void RegisterUser(UserModel user)
         {
             Debug.Print(ServiceProvider.GetUserRegistrationService().CheckRegisterForm(user).ToString());
@@ -53,6 +60,9 @@ namespace Wander.Server.Hubs
             }
         }
 
+        /// <summary>
+        /// Disconnect the Player related to the Caller ConnectionId
+        /// </summary>
         public void Disconnect()
         {
             Debug.Print("Client disconnected : " + Context.ConnectionId);
@@ -61,6 +71,11 @@ namespace Wander.Server.Hubs
             Clients.Caller.notify(Helper.CreateMessage("See you soon !", EMessageType.info));
         }
 
+        /// <summary>
+        /// Called whenever a Client disconnects from SignalR
+        /// </summary>
+        /// <param name="stopCalled"></param>
+        /// <returns></returns>
         public override Task OnDisconnected(bool stopCalled)
         {
             PlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
@@ -71,6 +86,35 @@ namespace Wander.Server.Hubs
             }
 
             return base.OnDisconnected(stopCalled);
+        }
+
+
+        /// <summary>
+        /// Broadcast the Caller's message to all the Clients connected to the game
+        /// </summary>
+        /// <param name="message"></param>
+        public void SendPublicMessage(string message)
+        {
+            if (String.IsNullOrWhiteSpace(message))
+                return;
+
+            PlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            if (candidate == null)
+            {
+                Clients.Caller.notify(Helper.CreateMessage(
+                    "You have to be connected before trying to send a message ! ", EMessageType.error));
+                return;
+            }
+                
+
+            string caller = candidate.UserId.ToString();
+
+            string msg = HttpUtility.HtmlEncode(message);
+            List<PlayerModel> ids = ServiceProvider.GetPlayerService().GetAllPlayers();
+            for (int i = 0; i < ids.Count;i++)
+            {
+                Clients.Client(ids[i].SignalRId).MessageReceived(msg, caller);
+            }
         }
     }
 }
