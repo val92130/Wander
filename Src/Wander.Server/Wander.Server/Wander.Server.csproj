@@ -96,6 +96,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Style.css" />
     <Content Include="packages.config" />
     <Content Include="Scripts\jquery-1.9.1.min.map" />
     <None Include="Web.Debug.config">
@@ -148,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\HubConnection.ts" />
+    <TypeScriptCompile Include="Scripts\Messaging.ts" />
     <TypeScriptCompile Include="Scripts\UserInteraction.ts" />
   </ItemGroup>
   <ItemGroup>

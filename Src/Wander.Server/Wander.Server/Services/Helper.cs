@@ -31,5 +31,7 @@ namespace Wander.Server.Services
         {
             return new ClientMessageModel() { Content = content, MessageType = type.ToString() };
         }
+
+
     }
 }

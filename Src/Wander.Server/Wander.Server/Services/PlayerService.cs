@@ -59,5 +59,29 @@ namespace Wander.Server.Services
             }           
         }
 
+        public List<string> GetAllPlayersConnectionId()
+        {
+            List<String> players = new List<string>();
+            lock (Players)
+            {                
+                for (int i = 0; i < Players.Count; i++)
+                {
+                    players.Add(Players[i].SignalRId);
+                }
+            }
+            return players;
+        }
+
+        public List<PlayerModel> GetAllPlayers()
+        {
+            List<PlayerModel> players = new List<PlayerModel>();
+            lock (Players)
+            {
+                players = Players.ToList();
+
+            }
+            return players;
+        }
+
     }
 }

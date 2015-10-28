@@ -1,2 +1,61 @@
-﻿body {
+﻿#msgFooter {
+    position: fixed;
+    bottom: 0;
+    width: 50%;
+    height: 200px;
+    background-color: #bdc3c7;
+    border-style: solid;
+    border-right:  black;
+}
+
+#infoFooter {
+    position: fixed;
+    bottom: 0;
+    width: 50%;
+    height: 200px;
+    background-color: #bdc3c7;
+    right: 0px;
+    border-style: solid;
+    border-right:  black;
+}
+
+#msgForm {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+#chatBox {
+    background-color: white;
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    height: 80%;
+    overflow-y: scroll;
+}
+
+#msgBox {
+    display: table;
+    width: 100%;
+    height: 30px;
+
+    border-style: solid;
+    border-width: 1px;
+}
+
+#msgContent {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#msgForm input {
+    width: 80%;
+}
+
+#sendMsgInput {
+    display: inline-block;
+}
+
+body {
+    background-color: #34495e;
 }
