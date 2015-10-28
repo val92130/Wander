@@ -18,8 +18,7 @@ namespace Wander.Server.Services
         int GetUserBankAccount(string ConnectionId);
         int GetUserPoints(PlayerModel user);
         int GetUserPoints(string ConnectionId);
-        bool GetUserConnectedStatus(PlayerModel user);
-        bool GetUserConnectedStatus(string ConnectionId);
+        
         bool GetUserActivatedStatus(PlayerModel user);
         bool GetUserActivatedStatus(string ConnectionId);
         int GetUserJobId(PlayerModel user);

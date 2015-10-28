@@ -143,6 +143,7 @@
     <Compile Include="Services\PlayerService.cs" />
     <Compile Include="Services\ServiceProvider.cs" />
     <Compile Include="Services\SqlConnectionService.cs" />
+    <Compile Include="Services\UserService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
