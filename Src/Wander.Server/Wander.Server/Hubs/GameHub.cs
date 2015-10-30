@@ -127,9 +127,12 @@ namespace Wander.Server.Hubs
 
             string msg = HttpUtility.HtmlEncode(message);
             List<ServerPlayerModel> ids = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            ChatMessageModel messageModel = Helper.CreateChatMessage(caller, candidate.UserId, msg,
+                ServiceProvider.GetUserService().GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString());
+            ServiceProvider.GetLogService().LogMessage(messageModel);
             for (int i = 0; i < ids.Count;i++)
             {
-                Clients.Client(ids[i].SignalRId).MessageReceived(Helper.CreateChatMessage(caller, msg, ServiceProvider.GetUserService().GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString()));
+                Clients.Client(ids[i].SignalRId).MessageReceived(Helper.CreateChatMessage(caller, candidate.UserId, msg, ServiceProvider.GetUserService().GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString()));
             }
         }
 

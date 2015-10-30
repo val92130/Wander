@@ -11,5 +11,6 @@ namespace Wander.Server.Model
         public int Sex { get; set; }
         public string Hour { get; set; }
         public string Content { get; set; }
+        public int UserId { get; set; }
     }
 }

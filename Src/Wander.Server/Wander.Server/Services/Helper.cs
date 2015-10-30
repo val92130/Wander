@@ -32,9 +32,9 @@ namespace Wander.Server.Services
             return new ClientMessageModel() { Content = content, MessageType = type.ToString() };
         }
 
-        public static ChatMessageModel CreateChatMessage(string username, string content, int sex, string hour)
+        public static ChatMessageModel CreateChatMessage(string username, int userId, string content, int sex, string hour)
         {
-            return new ChatMessageModel() { UserName = username, Content = content, Sex = sex, Hour = hour };
+            return new ChatMessageModel() { UserName = username, Content = content, Sex = sex, Hour = hour, UserId = userId};
         }
 
         public static ClientPlayerModel CreateClientPlayerModel(string username, int sex, Vector2 position)

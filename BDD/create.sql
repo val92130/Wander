@@ -52,6 +52,12 @@ drop table dbo.Users;
 end;
 GO
 
+if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'MessageLogs')
+begin
+drop table dbo.MessageLogs;
+end;
+GO
+
 
 create table dbo.Jobs
 (
@@ -141,6 +147,19 @@ MessageDate datetime2 not null
 constraint PK_UserMessagesId primary key(UserMessageId),
 constraint FK_UserMessages_UserId foreign key(UserId) references dbo.Users(UserId)
 );
+
+
+create table dbo.MessageLogs
+(
+		MessageId int identity(0,1),
+		UserId int not null,
+		Message nvarchar(1000) not null,
+		Time datetime2
+
+constraint PK_MessageId primary key(MessageId),
+constraint FK_UserIdMessage foreign key(UserId) references dbo.Users(UserId) 
+)
+
 
 INSERT INTO dbo.Jobs(JobDescription, Salary, Threshold) values('unemployed', 0, 0);
 

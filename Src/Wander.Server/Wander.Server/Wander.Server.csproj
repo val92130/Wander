@@ -148,6 +148,7 @@
     <Compile Include="Services\IPlayerService.cs" />
     <Compile Include="Services\IUserRegistrationService.cs" />
     <Compile Include="Services\IUserService.cs" />
+    <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\PlayerService.cs" />
     <Compile Include="Services\ServiceProvider.cs" />
     <Compile Include="Services\SqlConnectionService.cs" />
