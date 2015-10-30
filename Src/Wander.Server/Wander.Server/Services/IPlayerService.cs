@@ -10,6 +10,6 @@ namespace Wander.Server.Services
     {
         void AddPlayer(string ConnectionId, int UserId);
         void RemovePlayer(string ConnectionId);
-        PlayerModel GetPlayer(string ConnectionId);
+        ServerPlayerModel GetPlayer(string ConnectionId);
     }
 }

@@ -15,6 +15,6 @@ namespace Wander.Server.Services
         int Connect(UserModel user);
         void Register(UserModel user);
         void LogOut(UserModel user);
-        void LogOut(PlayerModel user);
+        void LogOut(ServerPlayerModel user);
     }
 }

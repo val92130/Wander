@@ -55,6 +55,7 @@
     <Compile Include="TestEnvironment.cs" />
     <Compile Include="UserLoginTests.cs" />
     <Compile Include="UserRegistrationTests.cs" />
+    <Compile Include="VectorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Wander.Server\Wander.Server.csproj">

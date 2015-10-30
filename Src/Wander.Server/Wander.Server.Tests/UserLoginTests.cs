@@ -111,8 +111,8 @@ namespace Wander.Server.Tests
             registrationService.Register(user);
             int userId = registrationService.Connect(user);
 
-            PlayerModel player = new PlayerModel() { UserId = userId };
-            registrationService.LogOut(player);
+            ServerPlayerModel serverPlayer = new ServerPlayerModel() { UserId = userId };
+            registrationService.LogOut(serverPlayer);
 
             string query = "select * from dbo.Users where UserId = @Id";
             using (SqlConnection conn = SqlConnectionService.GetConnection())
@@ -121,7 +121,7 @@ namespace Wander.Server.Tests
                 {
                     conn.Open();
 
-                    cmd.Parameters.AddWithValue("@Id", player.UserId);
+                    cmd.Parameters.AddWithValue("@Id", serverPlayer.UserId);
                     var data = cmd.ExecuteReader();
                     while (data.Read())
                     {

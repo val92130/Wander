@@ -11,7 +11,7 @@ namespace Wander.Server.Services
 
     public class PlayerService : IPlayerService
     {
-        static List<PlayerModel> Players = new List<PlayerModel>(); 
+        static List<ServerPlayerModel> Players = new List<ServerPlayerModel>(); 
 
         /// <summary>
         /// Add a new player to the Players list if it doesnt already exists
@@ -22,10 +22,10 @@ namespace Wander.Server.Services
         {
             lock (Players)
             {
-                PlayerModel p = Players.FirstOrDefault(x => x.SignalRId == signalRId);
+                ServerPlayerModel p = Players.FirstOrDefault(x => x.SignalRId == signalRId);
                 if (p == null)
                 {
-                    Players.Add(new PlayerModel() {SignalRId = signalRId, UserId = userId});
+                    Players.Add(new ServerPlayerModel() {SignalRId = signalRId, UserId = userId, Position = new Vector2()});
                 }
             }
         }
@@ -38,7 +38,7 @@ namespace Wander.Server.Services
         {
             lock (Players)
             {
-                PlayerModel p = Players.FirstOrDefault(x => x.SignalRId == SignalRId);
+                ServerPlayerModel p = Players.FirstOrDefault(x => x.SignalRId == SignalRId);
                 if (p != null)
                 {
                     Players.Remove(p);
@@ -51,7 +51,7 @@ namespace Wander.Server.Services
         /// </summary>
         /// <param name="signalRId"></param>
         /// <returns></returns>
-        public PlayerModel GetPlayer(string signalRId)
+        public ServerPlayerModel GetPlayer(string signalRId)
         {
             lock (Players)
             {
@@ -64,13 +64,47 @@ namespace Wander.Server.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public PlayerModel GetPlayer(int userId)
+        public ServerPlayerModel GetPlayer(int userId)
         {
             lock (Players)
             {
                 return Players.FirstOrDefault(x => x.UserId == userId);
             }
         }
+
+
+        /// <summary>
+        /// Move a given user to the specified destination
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="to"></param>
+        public void MovePlayerTo(ServerPlayerModel player, Vector2 to)
+        {
+            lock (Players)
+            {
+                ServerPlayerModel p = Players.FirstOrDefault(x => x.SignalRId == player.SignalRId);
+                if (p == null)
+                    return;
+                p.Position = to;
+            }
+        }
+
+        /// <summary>
+        /// Move a given user to the specified destination (using the signalR connection Id)
+        /// </summary>
+        /// <param name="connectionId"></param>
+        /// <param name="to"></param>
+        public void MovePlayerTo(string connectionId, Vector2 to)
+        {
+            lock (Players)
+            {
+                ServerPlayerModel p = Players.FirstOrDefault(x => x.SignalRId == connectionId);
+                if (p == null)
+                    return;
+                p.Position = to;
+            }
+        }
+
 
         /// <summary>
         /// Gets a copy of all the connected players'id
@@ -90,18 +124,34 @@ namespace Wander.Server.Services
         }
 
         /// <summary>
-        /// Gets a copy of all the connected players
+        /// Gets a copy of all the connected players, this list should NOT be communicated to the client
         /// </summary>
-        /// <returns>Returns a List of PlayerModel of every connected Players</returns>
-        public List<PlayerModel> GetAllPlayers()
+        /// <returns>Returns a List of ServerPlayerModel of every connected Players</returns>
+        public List<ServerPlayerModel> GetAllPlayersServer()
         {
-            List<PlayerModel> players = new List<PlayerModel>();
+            List<ServerPlayerModel> players = new List<ServerPlayerModel>();
             lock (Players)
             {
                 players = Players.ToList();
 
             }
             return players;
+        }
+
+        /// <summary>
+        /// Gets a copy of all the connected players
+        /// </summary>
+        /// <returns>Returns a List of ClientPlayerModel of every connected Players</returns>
+        public List<ClientPlayerModel> GetAllPlayersClient()
+        {
+            List<ServerPlayerModel> players = GetAllPlayersServer();
+            List<ClientPlayerModel> clientPlayers = new List<ClientPlayerModel>();
+
+            for (int i = 0; i < players.Count; i++)
+            {
+                clientPlayers.Add(Helper.CreateClientPlayerModel(ServiceProvider.GetUserService().GetUserLogin(players[i]), ServiceProvider.GetUserService().GetUserSex(players[i]), players[i].Position));
+            }
+            return clientPlayers;
         }
 
     }

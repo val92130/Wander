@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Web;
 using Microsoft.AspNet.SignalR;
 using Wander.Server.Model;
@@ -30,7 +30,7 @@ namespace Wander.Server.Hubs
                 }
 
                 // we check if the user isnt already connected somewhere else
-                PlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(playerId);
+                ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(playerId);
                 if(candidate != null)
                 {
                     Clients.Client(candidate.SignalRId).notify(Helper.CreateNotificationMessage("Someone else is connected from another computer", EMessageType.error));
@@ -75,7 +75,7 @@ namespace Wander.Server.Hubs
         /// </summary>
         public void Disconnect()
         {
-            PlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
             // If the disconnected client is logged in the database, we log him out
             if (candidate == null)
             {
@@ -94,7 +94,7 @@ namespace Wander.Server.Hubs
         /// <returns></returns>
         public override Task OnDisconnected(bool stopCalled)
         {
-            PlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
             // If the disconnected client is logged in the database, we log him out
             if (candidate != null)
             {
@@ -114,7 +114,7 @@ namespace Wander.Server.Hubs
             if (String.IsNullOrWhiteSpace(message))
                 return;
 
-            PlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
             if (candidate == null)
             {
                 Clients.Caller.notify(Helper.CreateNotificationMessage(
@@ -126,12 +126,35 @@ namespace Wander.Server.Hubs
             string caller = ServiceProvider.GetUserService().GetUserLogin(candidate.SignalRId);
 
             string msg = HttpUtility.HtmlEncode(message);
-            List<PlayerModel> ids = ServiceProvider.GetPlayerService().GetAllPlayers();
+            List<ServerPlayerModel> ids = ServiceProvider.GetPlayerService().GetAllPlayersServer();
             for (int i = 0; i < ids.Count;i++)
             {
-                //Clients.Client(ids[i].SignalRId).MessageReceived(msg, caller);
                 Clients.Client(ids[i].SignalRId).MessageReceived(Helper.CreateChatMessage(caller, msg, ServiceProvider.GetUserService().GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString()));
             }
+        }
+
+        /// <summary>
+        /// Sends to the caller a list of every connected players
+        /// </summary>
+        public void GetConnectedPlayers()
+        {
+            Clients.Caller.showConnectedPlayers(ServiceProvider.GetPlayerService().GetAllPlayersClient());
+        }
+
+        /// <summary>
+        /// Move the caller to the specified position
+        /// </summary>
+        /// <param name="position"></param>
+        public void MoveTo(Vector2 position)
+        {
+            ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            // If the caller is not logged into the game, we dont do anything
+            if (candidate == null)
+            {
+                return;
+            }
+
+            ServiceProvider.GetPlayerService().MovePlayerTo(Context.ConnectionId, position);
         }
     }
 }

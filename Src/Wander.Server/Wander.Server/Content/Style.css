@@ -111,8 +111,9 @@ body {
     background-color: #555;
 }
 
-
-
+.panel-primary > .panel-heading {
+    background-color: rgb(43, 43, 43);
+}
 
 
 @import url(http://fonts.googleapis.com/css?family=Lato:300,400);

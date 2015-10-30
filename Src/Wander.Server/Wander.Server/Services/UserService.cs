@@ -13,7 +13,29 @@ namespace Wander.Server.Services
     public class UserService : IUserService
     {
 
-        private string ExecuteQuery(string value, PlayerModel user)
+        private bool ExecuteUpdate( string field, string value, ServerPlayerModel user)
+        {
+
+            if (user == null) throw new ArgumentException("parameter user is null");
+
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = string.Format("UPDATE dbo.Users SET {0} = {1}  WHERE UserId = @ConnectionId", field, value );
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    cmd.Parameters.AddWithValue("@ConnectionId", user.UserId);
+
+                    
+                    int lines = cmd.ExecuteNonQuery();
+                    conn.Close();
+                    return lines != 0;
+                }
+            }
+        }
+
+        private string ExecuteQuery(string value, ServerPlayerModel user)
         {
 
             if (user == null) throw new ArgumentException("parameter user is null");
@@ -37,7 +59,7 @@ namespace Wander.Server.Services
             }
         }
 
-        private int ExecuteQueryInt(string value, PlayerModel user)
+        private int ExecuteQueryInt(string value, ServerPlayerModel user)
         {
 
             if (user == null) throw new ArgumentException("parameter user is null");
@@ -64,19 +86,19 @@ namespace Wander.Server.Services
         public string GetUserLogin(string ConnectionId)
         {
             if (ConnectionId == null) throw new ArgumentException("there is no id");
-            PlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
+            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
 
             return ExecuteQuery("UserLogin", user);
         }
 
-        public string GetUserLogin(PlayerModel user)
+        public string GetUserLogin(ServerPlayerModel user)
         {
             if (user == null) throw new ArgumentException("parameter user is null");
             return ExecuteQuery("UserLogin", user);
         }
 
-        public string GetUserEmail(PlayerModel user)
+        public string GetUserEmail(ServerPlayerModel user)
         {
             if (user == null) throw new ArgumentException("parameter user is null");
             return ExecuteQuery("Email", user);
@@ -85,13 +107,13 @@ namespace Wander.Server.Services
         public string GetUserEmail(string ConnectionId)
         {
             if (ConnectionId == null) throw new ArgumentException("there is no id");
-            PlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
+            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
 
             return ExecuteQuery("Email", user);
         }
 
-        public int GetUserSex(PlayerModel user)
+        public int GetUserSex(ServerPlayerModel user)
         {
             if (user == null) throw new ArgumentException("parameter user is null");
             return (ExecuteQueryInt("Sex", user));
@@ -100,12 +122,12 @@ namespace Wander.Server.Services
         public int GetUserSex(string ConnectionId)
         {
             if (ConnectionId == null) throw new ArgumentException("there is no id");
-            PlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
+            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
             return (ExecuteQueryInt("Sex", user));
         }
 
-        public int GetUserBankAccount(PlayerModel user)
+        public int GetUserBankAccount(ServerPlayerModel user)
         {
             if (user == null) throw new ArgumentException("parameter user is null");
             return (ExecuteQueryInt("Account", user));
@@ -114,12 +136,12 @@ namespace Wander.Server.Services
         public int GetUserBankAccount(string ConnectionId)
         {
             if (ConnectionId == null) throw new ArgumentException("there is no id");
-            PlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
+            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
             return (ExecuteQueryInt("Account", user));
         }
 
-        public int GetUserPoints(PlayerModel user)
+        public int GetUserPoints(ServerPlayerModel user)
         {
             if (user == null) throw new ArgumentException("parameter user is null");
             return (ExecuteQueryInt("Points", user));
@@ -128,12 +150,12 @@ namespace Wander.Server.Services
         public int GetUserPoints(string ConnectionId)
         {
             if (ConnectionId == null) throw new ArgumentException("there is no id");
-            PlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
+            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
             return (ExecuteQueryInt("Points", user));
         }
 
-        public bool GetUserActivatedStatus(PlayerModel user)
+        public bool GetUserActivatedStatus(ServerPlayerModel user)
         {
             if (user == null) throw new ArgumentException("parameter user is null");
             return Convert.ToBoolean(ExecuteQueryInt("Activated", user));
@@ -142,12 +164,12 @@ namespace Wander.Server.Services
         public bool GetUserActivatedStatus(string ConnectionId)
         {
             if (ConnectionId == null) throw new ArgumentException("there is no id");
-            PlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
+            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
             return Convert.ToBoolean(this.ExecuteQueryInt("Activated", user));
         }
 
-        public int GetUserJobId(PlayerModel user)
+        public int GetUserJobId(ServerPlayerModel user)
         {
 
             if (user == null) throw new ArgumentException("parameter user is null");
@@ -157,9 +179,51 @@ namespace Wander.Server.Services
         public int GetUserJobId(string ConnectionId)
         {
             if (ConnectionId == null) throw new ArgumentException("there is no id");
-            PlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
+            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
             return (ExecuteQueryInt("JobId", user));
+        }
+
+        public bool SetUserBankAccount(ServerPlayerModel user, int ammount)
+        {
+            if (user == null) throw new ArgumentException("parameter user is null");
+            return ExecuteUpdate("Account", ammount.ToString(), user);
+        }
+
+        public bool SetUserBankAccount(string ConnectionId, int ammount)
+        {
+            if (ConnectionId == null) throw new ArgumentException("there is no id");
+            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
+            if (user == null) throw new ArgumentException("parameter user is null");
+            return ExecuteUpdate("Account", ammount.ToString(), user);
+        }
+
+        public bool SetUserPoints(ServerPlayerModel user, int ammount)
+        {
+            if (user == null) throw new ArgumentException("parameter user is null");
+            return ExecuteUpdate("Points", ammount.ToString(), user);
+        }
+
+        public bool SetUserPoints(string ConnectionId, int ammount)
+        {
+            if (ConnectionId == null) throw new ArgumentException("there is no id");
+            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
+            if (user == null) throw new ArgumentException("parameter user is null");
+            return ExecuteUpdate("Points", ammount.ToString(), user);
+        }
+
+        public bool SetUserActivatedStatus(ServerPlayerModel user, bool value)
+        {
+            if (user == null) throw new ArgumentException("parameter user is null");
+            return ExecuteUpdate("Activated", (value ? 1 : 0).ToString(), user);
+        }
+
+        public bool SetUserActivatedStatus(string ConnectionId, bool value)
+        {
+            if (ConnectionId == null) throw new ArgumentException("there is no id");
+            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
+            if (user == null) throw new ArgumentException("parameter user is null");
+            return ExecuteUpdate("Activated", (value ? 1 : 0).ToString(), user);
         }
     }
 }

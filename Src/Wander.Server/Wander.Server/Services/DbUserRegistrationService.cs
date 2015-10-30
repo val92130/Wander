@@ -223,10 +223,10 @@ namespace Wander.Server.Services
         }
 
         /// <summary>
-        /// Change the Connected state of the provided PlayerModel to 0
+        /// Change the Connected state of the provided ServerPlayerModel to 0
         /// </summary>
         /// <param name="user"></param>
-        public void LogOut(PlayerModel user)
+        public void LogOut(ServerPlayerModel user)
         {
             if (user == null)
                 throw new ArgumentException("parameter user is null, cannot log him out");

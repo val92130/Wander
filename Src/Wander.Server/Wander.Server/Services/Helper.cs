@@ -37,5 +37,10 @@ namespace Wander.Server.Services
             return new ChatMessageModel() { UserName = username, Content = content, Sex = sex, Hour = hour };
         }
 
+        public static ClientPlayerModel CreateClientPlayerModel(string username, int sex, Vector2 position)
+        {
+            return new ClientPlayerModel() {Position =  position, Sex = sex, UserName = username};
+        }
+
     }
 }

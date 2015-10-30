@@ -51,6 +51,9 @@ $(document).ready(function () {
             alert("incorrect form");
         }
     });
+    $("#playersBtn").click(function () {
+        hub.invoke("GetConnectedPlayers");
+    });
     function OnLogin() {
         $('#loginModal').modal('hide');
         $("#loginBtn").hide();
@@ -79,6 +82,13 @@ $(document).ready(function () {
     });
     hub.on("forceDisconnect", function () {
         OnLogout();
+    });
+    hub.on("showConnectedPlayers", function (players) {
+        $("#playersModalBody").text("");
+        for (var i = 0; i < players.length; i++) {
+            $("#playersModalBody").append('<tr class="success"> <td>' + players[i].UserName + '</td> <td>' + (players[i].Sex == 1 ? "male" : "female") + '</td> <td>' + "X : " + players[i].Position.X + " Y : " + players[i].Position.Y + '</td> </tr>');
+        }
+        $("#playersModal").modal();
     });
     function checkInput(input, minLength) {
         return (input != null && input != "" && input.length >= minLength);
