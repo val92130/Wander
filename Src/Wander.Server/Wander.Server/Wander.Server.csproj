@@ -136,7 +136,7 @@
   <ItemGroup>
     <Compile Include="Hubs\GameHub.cs" />
     <Compile Include="Model\ChatMessageModel.cs" />
-    <Compile Include="Model\ClientMessageModel.cs" />
+    <Compile Include="Model\ClientNotificationMessageModel.cs" />
     <Compile Include="Model\Players\ClientPlayerModel.cs" />
     <Compile Include="Model\EMessageType.cs" />
     <Compile Include="Model\Players\ServerPlayerModel.cs" />
@@ -148,7 +148,7 @@
     <Compile Include="Services\IPlayerService.cs" />
     <Compile Include="Services\IUserRegistrationService.cs" />
     <Compile Include="Services\IUserService.cs" />
-    <Compile Include="Services\LogService.cs" />
+    <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\PlayerService.cs" />
     <Compile Include="Services\ServiceProvider.cs" />
     <Compile Include="Services\SqlConnectionService.cs" />

@@ -11,7 +11,7 @@ namespace Wander.Server.Services
         private static IUserRegistrationService RegistrationService;
         private static PlayerService PlayerService;
         private static UserService UserService;
-        private static LogService LogService;
+        private static MessageService MessageService;
 
         public static IUserRegistrationService GetUserRegistrationService()
         {
@@ -37,12 +37,12 @@ namespace Wander.Server.Services
             return UserService;
         }
 
-        public static LogService GetLogService()
+        public static MessageService GetMessageService()
         {
-            if (LogService == null)
-                LogService = new LogService();
+            if (MessageService == null)
+                MessageService = new MessageService();
 
-            return LogService;
+            return MessageService;
         }
 
 

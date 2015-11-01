@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Wander.Server.Model
 {
-    public class ClientMessageModel
+    public class ClientNotificationMessageModel
     {
         public string MessageType { get; set; }
         public string Content { get; set; }

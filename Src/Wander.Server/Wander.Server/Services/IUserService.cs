@@ -23,5 +23,11 @@ namespace Wander.Server.Services
         bool GetUserActivatedStatus(string ConnectionId);
         int GetUserJobId(ServerPlayerModel user);
         int GetUserJobId(string ConnectionId);
+        bool SetUserBankAccount(ServerPlayerModel user, int ammount);
+        bool SetUserBankAccount(string ConnectionId, int ammount);
+        bool SetUserPoints(ServerPlayerModel user, int ammount);
+        bool SetUserPoints(string ConnectionId, int ammount);
+        bool SetUserActivatedStatus(ServerPlayerModel user, bool value);
+        bool SetUserActivatedStatus(string ConnectionId, bool value);
     }
 }
