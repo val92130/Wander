@@ -184,6 +184,42 @@ namespace Wander.Server.Services
             return (ExecuteQueryInt("JobId", user));
         }
 
+        public ClientPlayerModel GetAllUserInfos(string ConnectionId)
+        {
+            if (ConnectionId == null) throw new ArgumentException("there is no id");
+            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
+            if (user == null) throw new ArgumentException("parameter user is null");
+
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = "SELECT * FROM USERS WHERE UserId = @Id";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    cmd.Parameters.AddWithValue("@Id", user.UserId);
+
+                    ClientPlayerModel client = new ClientPlayerModel();
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        client.Sex = Convert.ToInt32(reader["Sex"]);
+                        client.Account = Convert.ToInt32(reader["Account"]);
+                        client.Points = Convert.ToInt32(reader["Points"]);
+                        client.Points = Convert.ToInt32(reader["Points"]);
+                        client.UserName = reader["UserLogin"].ToString();
+                        client.Email = reader["Email"].ToString();    
+                        break;                    
+                    }
+
+                    conn.Close();
+
+                    return client;
+                }
+            }
+
+        }
+
         public bool SetUserBankAccount(ServerPlayerModel user, int ammount)
         {
             if (user == null) throw new ArgumentException("parameter user is null");

@@ -12,6 +12,7 @@ namespace Wander.Server.Services
         private static PlayerService PlayerService;
         private static UserService UserService;
         private static MessageService MessageService;
+        private static JobService JobService;
 
         public static IUserRegistrationService GetUserRegistrationService()
         {
@@ -43,6 +44,14 @@ namespace Wander.Server.Services
                 MessageService = new MessageService();
 
             return MessageService;
+        }
+
+        public static JobService GetJobService()
+        {
+            if (JobService == null)
+                JobService = new JobService();
+
+            return JobService;
         }
 
 
