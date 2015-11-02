@@ -65,7 +65,7 @@ namespace Wander.Server.Services
 
                     cmd.Parameters.AddWithValue("@Login", user.Login);
                     cmd.Parameters.AddWithValue("@Password", user.Password);
-
+                    
                     var data = cmd.ExecuteReader();
                     bool value = data.HasRows;
                     conn.Close();
