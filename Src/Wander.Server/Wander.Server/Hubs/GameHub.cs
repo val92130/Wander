@@ -119,6 +119,13 @@ namespace Wander.Server.Hubs
             if (String.IsNullOrWhiteSpace(message))
                 return;
 
+            if (message.Length >= 95)
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage(
+                    "Message too long ! Your message length should be < 95 ", EMessageType.error));
+                return;
+            }
+
             ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
             if (candidate == null)
             {
