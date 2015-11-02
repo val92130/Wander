@@ -157,6 +157,22 @@ namespace Wander.Server.Hubs
         }
 
         /// <summary>
+        /// Sends to the Caller his infos
+        /// </summary>
+        public void GetPlayerInfo()
+        {
+            ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            if (candidate == null)
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage(
+                    "You have to be connected ! ", EMessageType.error));
+                return;
+            }            
+
+            Clients.Caller.getInfos(ServiceProvider.GetPlayerService().GetPlayerInfos(Context.ConnectionId));
+        }
+
+        /// <summary>
         /// Move the caller to the specified position
         /// </summary>
         /// <param name="position"></param>

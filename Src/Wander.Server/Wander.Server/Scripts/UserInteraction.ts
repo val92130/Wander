@@ -87,6 +87,7 @@ $(document).ready(function () {
         $("#logoutBtn").show();
         $("#msgFooter").fadeIn("slow");
         $("#infoFooter").fadeIn("slow");
+        GetInfos();
     }
 
     function OnLogout() {
@@ -96,6 +97,10 @@ $(document).ready(function () {
         $("#msgFooter").fadeOut("slow");
         $("#infoFooter").fadeOut("slow");
         $("#labelPseudo").text("");
+    }
+
+    function GetInfos() {
+        hub.invoke("GetPlayerInfo");
     }
 
     hub.on("notify", function (message) {
@@ -115,6 +120,16 @@ $(document).ready(function () {
         OnLogout();
     });
 
+    hub.on("getInfos", function (user) {
+        $("#jobLabel").text(user.Job.JobDescription);
+        $("#salaryLabel").text(user.Job.Salary + " €");
+        $("#userNameLabel").text(user.UserName);
+        $("#sexLabel").text(user.Sex == 1 ? "Male" : "Female");
+        $("#accountLabel").text(user.Account + " €");
+        $("#pointsLabel").text(user.Points);
+    });
+
+
     hub.on("showConnectedPlayers", function (players) {
         $("#playersModalBody").text("");
         for (var i = 0; i < players.length; i++) {
@@ -127,5 +142,6 @@ $(document).ready(function () {
         return (input != null && input != "" && input.length >= minLength);
     }
 
+    setInterval(function () { GetInfos() }, 15000);
 
 });
