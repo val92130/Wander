@@ -53,6 +53,7 @@
     <Compile Include="MessageServiceTests.cs" />
     <Compile Include="PlayerServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyServiceTest.cs" />
     <Compile Include="TestEnvironment.cs" />
     <Compile Include="UserLoginTests.cs" />
     <Compile Include="UserRegistrationTests.cs" />

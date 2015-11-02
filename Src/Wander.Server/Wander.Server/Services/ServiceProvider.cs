@@ -12,6 +12,7 @@ namespace Wander.Server.Services
         private static PlayerService PlayerService;
         private static UserService UserService;
         private static MessageService MessageService;
+        private static PropertyService PropertyService;
 
         public static IUserRegistrationService GetUserRegistrationService()
         {
@@ -35,6 +36,13 @@ namespace Wander.Server.Services
                 UserService = new UserService();
 
             return UserService;
+        }
+        public static PropertyService GetPropertiesService()
+        {
+            if (PropertyService == null)
+                PropertyService = new PropertyService();
+
+            return PropertyService;
         }
 
         public static MessageService GetMessageService()

@@ -98,6 +98,7 @@ constraint FK_Users_JobId foreign key(JobId) references dbo.Jobs(JobId),
 create table dbo.ListProperties
 (
 ListPropertyId int identity(0,1),
+NameProperty nvarchar(60) not null,
 PropertyDescription nvarchar(255) not null,
 Threshold int not null,
 Price int not null
