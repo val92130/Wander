@@ -153,7 +153,7 @@ create table dbo.MessageLogs
 (
 		MessageId int identity(0,1),
 		UserId int not null,
-		Message nvarchar(1000) not null,
+		Message nvarchar(100) not null,
 		Time datetime2
 
 constraint PK_MessageId primary key(MessageId),
