@@ -131,7 +131,7 @@ $(document).ready(function () {
         $("#pointsLabel").text(user.Points);
 
         $("#propertyListOption").empty();
-        for (var i = 0; i < user.Properties; i++) {
+        for (var i = 0; i < user.Properties.length; i++) {
             $("#propertyListOption").append('<option value="' + user.Properties[i].PropertyName + '">' + user.Properties[i].PropertyName + '</option>');
         }
     });

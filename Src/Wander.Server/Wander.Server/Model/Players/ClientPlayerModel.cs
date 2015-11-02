@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Wander.Server.Model.Players;
 
 namespace Wander.Server.Model
 {
@@ -14,5 +15,6 @@ namespace Wander.Server.Model
         public int Account { get; set; }
         public int Points { get; set; }
         public JobModel Job { get; set; }
+        public List<ServerPropertyModel> Properties { get; set; } 
     }
 }

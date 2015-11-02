@@ -164,6 +164,7 @@ namespace Wander.Server.Services
             ClientPlayerModel model = ServiceProvider.GetUserService().GetAllUserInfos(connectionId);
             model.Position = Players.FirstOrDefault(x => x.SignalRId == connectionId).Position;
             model.Job = ServiceProvider.GetJobService().GetUserJobInfos(connectionId);
+            model.Properties = ServiceProvider.GetPropertiesService().GetUserProperties(connectionId);
             return model;
         }
 
