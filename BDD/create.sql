@@ -133,7 +133,7 @@ ListPropertyId int not null
 
 
 constraint PK_UserPropertiesId primary key(UserPropertyId),
-constraint FK_UserProperties_UserId foreign key(UserId) references dbo.Users(UserId),
+constraint FK_UserProperties_UserId foreign key(UserId) references dbo.Users(UserId)  ON UPDATE CASCADE ON DELETE CASCADE,
 constraint FK_UserProperties_ListPropertyId foreign key(ListPropertyId) references dbo.ListProperties(ListPropertyId)
 );
 
