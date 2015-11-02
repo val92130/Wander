@@ -175,10 +175,12 @@
                         <!-- Chat content-->
                     </ul>
                 </div>
-                <div class="panel-footer" style="height: 60px;">
+                <div class="panel-footer" >
                     <form id="msgForm">
-                        <input type="text" class="form-control" name="message" id="sendMsgInput" maxlength="95" />
-                        <button type="submit" class="btn btn-default">Send</button>
+                        <div class="well well-sm">
+                            <input type="text" class="form-control" name="message" id="sendMsgInput" maxlength="95" />
+                            <button type="submit" class="btn btn-default">Send</button>
+                        </div>
                     </form>
 
                 </div>
@@ -214,16 +216,26 @@
                         <div class="col-md-6"><div class="well well-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> Job : <span class="label label-primary" id="jobLabel"></span></div></div>
                     </div>
                     <div class="row">
-                            <div class="col-md-6"><div class="well well-sm"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span> Sex : <span class="label label-primary" id="sexLabel"></span></div></div>
-                            <div class="col-md-6"><div class="well well-sm"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Points : <span class="label label-primary" id="pointsLabel"></span></div></div>
+                        <div class="col-md-6"><div class="well well-sm"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span> Sex : <span class="label label-primary" id="sexLabel"></span></div></div>
+                        <div class="col-md-6"><div class="well well-sm"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Points : <span class="label label-primary" id="pointsLabel"></span></div></div>
                     </div>
                     <div class="row">
                         <div class="col-md-6"><div class="well well-sm"><span class="glyphicon glyphicon-euro" aria-hidden="true"></span> Account : <span class="label label-primary" id="accountLabel"></span></div></div>
                         <div class="col-md-6"><div class="well well-sm"><span class="glyphicon glyphicon-euro" aria-hidden="true"></span> Salary : <span class="label label-primary" id="salaryLabel"></span></div></div>
                     </div>
                 </div>
-                <div class="panel-footer" style="height: 60px;">
-
+                <div class="panel-footer">
+                    <div class="well well-sm">
+                        <span class="glyphicon glyphicon-home"></span> My properties :
+                        <select class="form-control" style="width: 50%;display: inline-block; " id="propertyListOption">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+                        <button type="button" class="btn btn-success" id="refreshPropertyBtn">Refresh</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -231,7 +243,7 @@
     </div>
 </div>
 
-        <script src="Scripts/HubConnection.js"></script>
-        <script src="Scripts/UserInteraction.js"></script>
-        <script src="Scripts/Messaging.js"></script>
+<script src="Scripts/HubConnection.js"></script>
+<script src="Scripts/UserInteraction.js"></script>
+<script src="Scripts/Messaging.js"></script>
 </html>

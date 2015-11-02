@@ -1,5 +1,6 @@
 console.log("loaded");
 var $;
+var isConnected = false;
 $(document).ready(function () {
     $("#logoutBtn").hide();
     $("#msgFooter").hide();
@@ -79,6 +80,7 @@ $(document).ready(function () {
     });
     hub.on("onConnected", function (pseudo) {
         OnLogin();
+        isConnected = true;
         $("#labelPseudo").text(pseudo);
     });
     hub.on("onRegistered", function () {
@@ -94,6 +96,10 @@ $(document).ready(function () {
         $("#sexLabel").text(user.Sex == 1 ? "Male" : "Female");
         $("#accountLabel").text(user.Account + " €");
         $("#pointsLabel").text(user.Points);
+        $("#propertyListOption").empty();
+        for (var i = 0; i < user.Properties; i++) {
+            $("#propertyListOption").append('<option value="' + user.Properties[i].PropertyName + '">' + user.Properties[i].PropertyName + '</option>');
+        }
     });
     hub.on("showConnectedPlayers", function (players) {
         $("#playersModalBody").text("");
@@ -105,5 +111,13 @@ $(document).ready(function () {
     function checkInput(input, minLength) {
         return (input != null && input != "" && input.length >= minLength);
     }
-    setInterval(function () { GetInfos(); }, 15000);
+    $("#refreshPropertyBtn").click(function () {
+        GetInfos();
+        console.log("refreshing");
+    });
+    setInterval(function () {
+        if (isConnected) {
+            GetInfos();
+        }
+    }, 15000);
 });

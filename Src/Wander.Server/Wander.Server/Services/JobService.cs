@@ -9,6 +9,11 @@ namespace Wander.Server.Services
 {
     public class JobService : IJobService
     {
+        /// <summary>
+        /// Gets all the info relating the job of the User corresponding to the connectionId
+        /// </summary>
+        /// <param name="connectionId"></param>
+        /// <returns>Returns a job model containing all the infos</returns>
         public JobModel GetUserJobInfos(string connectionId)
         {
             if (connectionId == null) throw new ArgumentException("there is no id");
@@ -42,12 +47,21 @@ namespace Wander.Server.Services
             }
         }
 
+        /// <summary>
+        /// Gets all the info relating the job of the User corresponding to the provided ServerPlayerModel
+        /// </summary>
+        /// <param name="connectionId"></param>
+        /// <returns>Returns a job model containing all the infos</returns>
         public JobModel GetUserJobInfos(ServerPlayerModel user)
         {
             if (user == null) throw new ArgumentException("parameter user is null");
             return GetUserJobInfos(user.SignalRId);
         }
 
+        /// <summary>
+        /// Gets a list of every possible jobs
+        /// </summary>
+        /// <returns></returns>
         public List<JobModel> GetAllJobs()
         {
             List<JobModel> jobs = new List<JobModel>();
@@ -74,6 +88,12 @@ namespace Wander.Server.Services
             }
         }
 
+        /// <summary>
+        /// Change the Job of a User
+        /// </summary>
+        /// <param name="jobId">The new job Id</param>
+        /// <param name="connectionId">The connection id of the user</param>
+        /// <returns>True if success, else false</returns>
         public bool ChangeUserJob(int jobId, string connectionId)
         {
             if(connectionId == null)
@@ -120,6 +140,13 @@ namespace Wander.Server.Services
 
         }
 
+
+        /// <summary>
+        /// Change the Job of a User
+        /// </summary>
+        /// <param name="jobId">The new job Id</param>
+        /// <param name="user">The user</param>
+        /// <returns>True if success, else false</returns>
         public bool ChangeUserJob(int jobId, ServerPlayerModel user)
         {
             if (user == null) throw new ArgumentException("parameter user is null");
@@ -150,6 +177,11 @@ namespace Wander.Server.Services
 
         }
 
+        /// <summary>
+        /// Delete the job corresponding to the specified JobModel
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public bool DeleteJob(JobModel model)
         {
             if (model == null) throw new ArgumentException("parameter model is null");
@@ -157,6 +189,11 @@ namespace Wander.Server.Services
             return DeleteJob(model.JobId);
         }
 
+        /// <summary>
+        /// Delete the job corresponding to the specified JobId
+        /// </summary>
+        /// <param name="jobId"></param>
+        /// <returns></returns>
         public bool DeleteJob(int jobId)
         {
             // We put the user unemployed if he currently has the job we wish to delete

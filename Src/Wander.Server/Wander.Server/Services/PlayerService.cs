@@ -154,6 +154,11 @@ namespace Wander.Server.Services
             return clientPlayers;
         }
 
+        /// <summary>
+        /// Get a ClientPlayerModel containing every informations about the specified connectionId
+        /// </summary>
+        /// <param name="connectionId"></param>
+        /// <returns></returns>
         public ClientPlayerModel GetPlayerInfos(string connectionId)
         {
             ClientPlayerModel model = ServiceProvider.GetUserService().GetAllUserInfos(connectionId);

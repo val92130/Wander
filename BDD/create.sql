@@ -162,6 +162,9 @@ constraint FK_UserIdMessage foreign key(UserId) references dbo.Users(UserId)
 )
 
 
+
 INSERT INTO dbo.Jobs(JobDescription, Salary, Threshold) values('unemployed', 0, 0);
+
+
 
 
