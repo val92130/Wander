@@ -78,7 +78,7 @@ namespace Wander.Server.Services
         {
             if (connectionId == null) throw new ArgumentException("parameter user is null");
             if (property == null) throw new ArgumentException("parameter property is null");
-            int count = 0, threshold = 0;
+            int count = 0, threshold = -1;
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
                 string query = string.Format("SELECT COUNT (u.ListPropertyId) as count, l.Threshold FROM dbo.ListProperties l JOIN UserProperties u ON u.ListPropertyId = l.ListPropertyId WHERE u.ListPropertyId = @PropertyId GROUP BY Threshold");
@@ -98,7 +98,7 @@ namespace Wander.Server.Services
                 }
             }
 
-            if  (count < threshold || (count == 0 && threshold == 0))
+            if  (count < threshold || (count == 0 && threshold == -1) || threshold == 0)
             {
                 var properties = GetUserProperties(connectionId);
 
