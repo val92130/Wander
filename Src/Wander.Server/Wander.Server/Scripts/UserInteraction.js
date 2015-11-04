@@ -2,6 +2,7 @@
 console.log("loaded");
 var $;
 var isConnected = false;
+var userPseudo;
 $(document).ready(function () {
     $("#logoutBtn").hide();
     $("#msgFooter").hide();
@@ -65,7 +66,6 @@ $(document).ready(function () {
         $("#infoFooter").fadeIn("slow");
         GetInfos();
         createGame();
-        hub.invoke("GetAllPlayers");
     }
     function OnLogout() {
         $("#loginBtn").show();
@@ -87,6 +87,7 @@ $(document).ready(function () {
         OnLogin();
         isConnected = true;
         $("#labelPseudo").text(pseudo);
+        userPseudo = pseudo;
     });
     hub.on("onRegistered", function () {
         $('#signUpModal').modal('hide');

@@ -123,5 +123,39 @@ namespace Wander.Server.Tests {
 
 
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void GetUserJobInfoNullConnectionIdThrowsException()
+        {
+            string t = null;
+            ServiceProvider.GetJobService().GetUserJobInfos(t);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void GetUserJobInfoNullPlayerModelThrowsException()
+        {
+            ServerPlayerModel t = null;
+            ServiceProvider.GetJobService().GetUserJobInfos(t);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ChangeUserJobNullConnectionIdThrowsException()
+        {
+            string t = null;
+            ServiceProvider.GetJobService().ChangeUserJob(10,t);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ChangeUserJobNullUserThrowsException()
+        {
+            ServerPlayerModel t = null;
+            ServiceProvider.GetJobService().ChangeUserJob(10, t);
+        }
+
+
     }
 }

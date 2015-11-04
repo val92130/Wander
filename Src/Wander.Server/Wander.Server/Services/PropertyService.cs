@@ -42,14 +42,64 @@ namespace Wander.Server.Services
             }
         }
 
-       
+        public int AddProperty(ServerPropertyModel model)
+        {
+            if (model == null) throw new ArgumentException("parameter model is null");
+            if(model.PropertyName == null || model.PropertyDescription == null) throw new ArgumentException("an attribute of the property model is null");
+
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = "INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) OUTPUT INSERTED.ListPropertyId values (@Name, @Des, @Thres, @Price)";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+                    cmd.Parameters.AddWithValue("@Name", model.PropertyName);
+                    cmd.Parameters.AddWithValue("@Des", model.PropertyDescription);
+                    cmd.Parameters.AddWithValue("@Thres", model.Threshold);
+                    cmd.Parameters.AddWithValue("@Price", model.Price);
+
+                    int lgn = (int)cmd.ExecuteScalar();
+
+                    conn.Close();
+
+                    return lgn;
+                }
+            }
+
+        }
+
+        public bool DeleteProperty(int id)
+        {
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = "DELETE from dbo.ListProperties WHERE ListPropertyId = @Id";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+                    cmd.Parameters.AddWithValue("@Id", id);
+
+                    int lgn = cmd.ExecuteNonQuery();
+                    conn.Close();
+
+                    return lgn != 0;
+                }
+            }
+        }
+
+        public bool DeleteProperty(ServerPropertyModel model)
+        {
+            if (model == null) throw new ArgumentException("parameter model is null");
+            return DeleteProperty(model.PropertyId);
+        }
+
+
 
         public List<ServerPropertyModel> GetUserProperties( ServerPlayerModel user)
         {
             if (user == null) throw new ArgumentException("parameter user is null");
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
-                string query = ("SELECT l.ListPropertyId, l.NameProperty, l.PropertyDescription, l.Threshold, l.Price from dbo.UserProperties p JOIN dbo.Users u on p.UserId = u.UserId JOIN dbo.ListProperties l ON l.ListPropertyId = p.UserPropertyId WHERE u.UserId = @id");
+                string query = ("SELECT l.ListPropertyId, l.NameProperty, l.PropertyDescription, l.Threshold, l.Price from dbo.UserProperties p JOIN dbo.Users u on p.UserId = u.UserId JOIN dbo.ListProperties l ON l.ListPropertyId = p.ListPropertyId WHERE p.UserId = @id");
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     List<ServerPropertyModel> Properties = new List<ServerPropertyModel>();

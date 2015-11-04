@@ -16,7 +16,7 @@ class GameLauncher {
     game: Phaser.Game;
 
     constructor() {
-        this.game = new Phaser.Game("100%", 500, Phaser.AUTO, 'main', { preload: this.preload, create: this.create, update: this.update, render:this.render });
+        this.game = new Phaser.Game(800, 500, Phaser.AUTO, 'main', { preload: this.preload, create: this.create, update: this.update, render:this.render });
 
     }
 
@@ -27,6 +27,7 @@ class GameLauncher {
 
     create = () => {
         this.mainGame = new MainGame(this.game);
+        
     }
 
     update = () =>  {
@@ -50,6 +51,10 @@ class Player {
     pseudo: string;
     texture: Phaser.Sprite;
 
+    style :any ;
+
+    text :any;
+
     startTime: any;
     endTime: any;
 
@@ -57,7 +62,8 @@ class Player {
         this.texture = game.add.sprite(200, 200, "player");
         this.pseudo = pseudo;
         this.position = position;
-
+        this.style = { font: "16px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.texture.width, align: "center" };
+        this.text = game.add.text(0, 0, pseudo, this.style);
         this.startTime = new Date().getTime();
 
         this.endTime = new Date().getTime();
@@ -66,9 +72,13 @@ class Player {
     update = () => {
         this.texture.x = this.position.x;
         this.texture.y = this.position.y;
+
+        this.text.x = this.texture.x;
+        this.text.y = this.texture.y - 20;
     }
 
     remove = () => {
+        this.text.kill();
         this.texture.kill();
         
     }
@@ -76,10 +86,9 @@ class Player {
     updatePosition = () => {
         this.startTime = new Date().getTime();
         var time = this.startTime - this.endTime;
-        if (time >= 50) {
+        if (time >= 15) {
             this.endTime = this.startTime;
             hub.invoke("MoveTo", { X: this.position.x, Y: this.position.y });
-            console.log(time);
         }
         
        
@@ -94,10 +103,11 @@ class MainGame {
     currentPlayer: Player;
 
     constructor(game: Phaser.Game) {
+        hub.invoke("GetAllPlayers");
         this.game = game;
         this.players = new Array<Player>();
 
-        this.currentPlayer = new Player(game, "val", new Phaser.Point(10, 10));
+        this.currentPlayer = new Player(game, userPseudo, new Phaser.Point(10, 10));
     }
 
     addPlayer = (pseudo: string, position: Phaser.Point) => {

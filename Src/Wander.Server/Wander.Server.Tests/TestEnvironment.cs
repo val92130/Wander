@@ -28,6 +28,7 @@ namespace Wander.Server.Tests
             }
         }
 
+
         internal static ServerPlayerModel GetTestPlayerModel()
         {
             return new ServerPlayerModel() {SignalRId = "testId", UserId = 1};

@@ -4,6 +4,7 @@ console.log("loaded");
 
 var $: any;
 var isConnected = false;
+var userPseudo: any;
 
 $(document).ready(function () {
 
@@ -93,8 +94,6 @@ $(document).ready(function () {
         GetInfos();
 
         createGame();
-
-        hub.invoke("GetAllPlayers");
     }
 
     function OnLogout() {
@@ -121,6 +120,7 @@ $(document).ready(function () {
         OnLogin();
         isConnected = true;
         $("#labelPseudo").text(pseudo);
+        userPseudo = pseudo;
     });
 
     hub.on("onRegistered", function() {

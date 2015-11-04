@@ -41,6 +41,29 @@ namespace Wander.Server.Tests
         }
 
         [TestMethod]
+        public void AddAndDeletePropertyWorksCorrectly()
+        {
+            ServerPropertyModel model = new ServerPropertyModel();
+            model.PropertyName = "TestProperty";
+            model.Price = 10000;
+            model.PropertyDescription = "TestDes";
+            model.Threshold = 1000;
+
+            int createdId = ServiceProvider.GetPropertiesService().AddProperty(model);
+            List<ServerPropertyModel> properties = ServiceProvider.GetPropertiesService().GetProperties();
+
+            Assert.IsTrue(properties.Count != 0);
+            ServerPropertyModel candidate = properties.FirstOrDefault(x => x.PropertyId == createdId);
+            Assert.IsNotNull(candidate);
+            Assert.AreEqual(candidate.PropertyName, model.PropertyName);
+            Assert.AreEqual(candidate.PropertyDescription, model.PropertyDescription);
+
+            ServiceProvider.GetPropertiesService().DeleteProperty(createdId);
+
+            Assert.IsNull(ServiceProvider.GetPropertiesService().GetProperties().FirstOrDefault(x => x.PropertyId == createdId));
+        }
+
+        [TestMethod]
         public void BuyPropertyTest()
         {
             TestEnvironment.DeleteTestUser();
@@ -49,20 +72,34 @@ namespace Wander.Server.Tests
             int id = ServiceProvider.GetUserRegistrationService().Connect(user);
             ServiceProvider.GetPlayerService().AddPlayer("signalrId", id);
             ServerPlayerModel player = ServiceProvider.GetPlayerService().GetPlayer("signalrId");
+
+            ServerPropertyModel model = new ServerPropertyModel();
+            model.PropertyName = "TestProperty";
+            model.Price = 100;
+            model.PropertyDescription = "TestDes";
+            model.Threshold = 1000;
+
+            int createdId = ServiceProvider.GetPropertiesService().AddProperty(model);
+            
+
             List<ServerPropertyModel> allProperties = ServiceProvider.GetPropertiesService().GetProperties();
-            List<ServerPropertyModel> property = ServiceProvider.GetPropertiesService().GetUserProperties(player);
+            ServerPropertyModel createdProperty = allProperties.FirstOrDefault(x => x.PropertyId == createdId);
+
+
+            List <ServerPropertyModel> playerProperties = ServiceProvider.GetPropertiesService().GetUserProperties(player);
             ServiceProvider.GetUserService().SetUserBankAccount(player, 2000);
 
-            Assert.AreEqual(property.Count, 0);
-            ServiceProvider.GetPropertiesService().BuyProperty("signalrId", allProperties[0]);
+            Assert.AreEqual(playerProperties.Count, 0);
+            ServiceProvider.GetPropertiesService().BuyProperty("signalrId", createdProperty);
             List<ServerPropertyModel> propertyUpdated = ServiceProvider.GetPropertiesService().GetUserProperties(player);
             Assert.AreEqual(propertyUpdated.Count, 1);
             int remainedMoney = ServiceProvider.GetUserService().GetUserBankAccount(player);
-            int price = ServiceProvider.GetPropertiesService().GetProperties()[0].Price;
+            int price = createdProperty.Price;
             Assert.AreEqual((2000 -price), remainedMoney);
 
             ServiceProvider.GetPlayerService().RemovePlayer("signalrId");
             TestEnvironment.DeleteTestUser();
+            ServiceProvider.GetPropertiesService().DeleteProperty(createdId);
         }
     }
 }
