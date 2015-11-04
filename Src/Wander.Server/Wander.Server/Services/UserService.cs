@@ -98,6 +98,26 @@ namespace Wander.Server.Services
             return ExecuteQuery("UserLogin", user);
         }
 
+        public string GetUserLoginById(int userId)
+        {
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = "SELECT UserLogin from dbo.Users WHERE UserId = @Id";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    cmd.Parameters.AddWithValue("@Id", userId);
+
+                    string data = (string)cmd.ExecuteScalar();
+
+                    conn.Close();
+
+                    return data;
+                }
+            }
+        }
+
         public string GetUserEmail(ServerPlayerModel user)
         {
             if (user == null) throw new ArgumentException("parameter user is null");

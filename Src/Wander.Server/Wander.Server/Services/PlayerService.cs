@@ -25,7 +25,7 @@ namespace Wander.Server.Services
                 ServerPlayerModel p = Players.FirstOrDefault(x => x.SignalRId == signalRId);
                 if (p == null)
                 {
-                    Players.Add(new ServerPlayerModel() {SignalRId = signalRId, UserId = userId, Position = new Vector2()});
+                    Players.Add(new ServerPlayerModel() {SignalRId = signalRId, UserId = userId, Position = new Vector2(), Pseudo = ServiceProvider.GetUserService().GetUserLoginById(userId)});
                 }
             }
         }

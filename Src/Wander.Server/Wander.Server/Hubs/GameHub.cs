@@ -188,18 +188,22 @@ namespace Wander.Server.Hubs
         /// <param name="position"></param>
         public void MoveTo(Vector2 position)
         {
+            Stopwatch s = new Stopwatch();
+            s.Start();
             if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return;
 
             ServiceProvider.GetPlayerService().MovePlayerTo(Context.ConnectionId, position);
-            string login = ServiceProvider.GetUserService().GetUserLogin(Context.ConnectionId);
+            string login = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId).Pseudo;
 
             var players = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            object newPos = new {Pseudo = login, Position = position};
             for (int i = 0; i < players.Count; i++)
             {
                 if (players[i].SignalRId == Context.ConnectionId) continue;
 
-                Clients.Client(players[i].SignalRId).playerMoved(new { Pseudo = login, Position = position });
+                Clients.Client(players[i].SignalRId).playerMoved(newPos);
             }
+            Debug.Print(s.ElapsedMilliseconds.ToString());
         }
 
         public void GetAllPlayers()
