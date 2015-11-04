@@ -130,6 +130,17 @@ namespace Wander.Server.Services
             
 
         }
+
+        public void MakePropertyInSell(string connectionId, ServerPropertyModel property)
+        {
+
+        }
+
+        public void BuyPropertyFromUser(string connectionId, ServerPropertyModel property)
+        {
+
+        }
+
         public List<ServerPropertyModel> GetUserProperties(string ConnectionId)
         {
             if (ConnectionId == null) throw new ArgumentException("there is no id");
@@ -139,6 +150,7 @@ namespace Wander.Server.Services
 
             return property;
         }
+
     }
     
 }
