@@ -31,6 +31,16 @@ namespace Wander.Server.Services
         }
 
         /// <summary>
+        /// Checks whether a player exists
+        /// </summary>
+        /// <param name="signalRId"></param>
+        /// <returns>Returns true if the player exists and is connected, otherwise return false</returns>
+        public bool Exists(string signalRId)
+        {
+            return Players.FirstOrDefault(x => x.SignalRId == signalRId) != null;
+        }
+
+        /// <summary>
         /// Remove a specified player using the SignalRId if it exists
         /// </summary>
         /// <param name="SignalRId">User's Connection Id</param>
@@ -38,7 +48,7 @@ namespace Wander.Server.Services
         {
             lock (Players)
             {
-                ServerPlayerModel p = Players.FirstOrDefault(x => x.SignalRId == SignalRId);
+                ServerPlayerModel p = GetPlayer(SignalRId);
                 if (p != null)
                 {
                     Players.Remove(p);
@@ -80,13 +90,7 @@ namespace Wander.Server.Services
         /// <param name="to"></param>
         public void MovePlayerTo(ServerPlayerModel player, Vector2 to)
         {
-            lock (Players)
-            {
-                ServerPlayerModel p = Players.FirstOrDefault(x => x.SignalRId == player.SignalRId);
-                if (p == null)
-                    return;
-                p.Position = to;
-            }
+            MovePlayerTo(player.SignalRId, to);
         }
 
         /// <summary>
@@ -98,7 +102,7 @@ namespace Wander.Server.Services
         {
             lock (Players)
             {
-                ServerPlayerModel p = Players.FirstOrDefault(x => x.SignalRId == connectionId);
+                ServerPlayerModel p = GetPlayer(connectionId);
                 if (p == null)
                     return;
                 p.Position = to;
@@ -161,11 +165,15 @@ namespace Wander.Server.Services
         /// <returns></returns>
         public ClientPlayerModel GetPlayerInfos(string connectionId)
         {
-            ClientPlayerModel model = ServiceProvider.GetUserService().GetAllUserInfos(connectionId);
-            model.Position = Players.FirstOrDefault(x => x.SignalRId == connectionId).Position;
-            model.Job = ServiceProvider.GetJobService().GetUserJobInfos(connectionId);
-            model.Properties = ServiceProvider.GetPropertiesService().GetUserProperties(connectionId);
-            return model;
+            lock (Players)
+            {
+                ClientPlayerModel model = ServiceProvider.GetUserService().GetAllUserInfos(connectionId);
+                model.Position = GetPlayer(connectionId).Position;
+                model.Job = ServiceProvider.GetJobService().GetUserJobInfos(connectionId);
+                model.Properties = ServiceProvider.GetPropertiesService().GetUserProperties(connectionId);
+                return model;
+            }
+
         }
 
     }

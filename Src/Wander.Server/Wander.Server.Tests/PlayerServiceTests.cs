@@ -492,5 +492,24 @@ namespace Wander.Server.Tests
             ServiceProvider.GetPlayerService().RemovePlayer("signalrId");
             TestEnvironment.DeleteTestUser();
         }
+
+        [TestMethod]
+        public void TestPlayerExistReturnFalseIfTheUserDoesntExist()
+        {
+            Assert.IsFalse(ServiceProvider.GetPlayerService().Exists("randomId"));
+        }
+
+        [TestMethod]
+        public void TestPlayerExistReturnTrueIfTheUserExist()
+        {
+            TestEnvironment.DeleteTestUser();
+            UserModel user = TestEnvironment.GetTestUserModel();
+            ServiceProvider.GetUserRegistrationService().Register(user);
+            int id = ServiceProvider.GetUserRegistrationService().Connect(user);
+            ServiceProvider.GetPlayerService().AddPlayer("signalrId", id);
+            Assert.IsTrue(ServiceProvider.GetPlayerService().Exists("signalrId"));
+            ServiceProvider.GetPlayerService().RemovePlayer("signalrId");
+            TestEnvironment.DeleteTestUser();
+        }
     }
 }

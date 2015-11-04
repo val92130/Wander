@@ -1,3 +1,4 @@
+/// <reference path="Game.ts"/>
 console.log("loaded");
 var $;
 var isConnected = false;
@@ -63,6 +64,8 @@ $(document).ready(function () {
         $("#msgFooter").fadeIn("slow");
         $("#infoFooter").fadeIn("slow");
         GetInfos();
+        createGame();
+        hub.invoke("GetAllPlayers");
     }
     function OnLogout() {
         $("#loginBtn").show();
@@ -71,6 +74,8 @@ $(document).ready(function () {
         $("#msgFooter").fadeOut("slow");
         $("#infoFooter").fadeOut("slow");
         $("#labelPseudo").text("");
+        isConnected = false;
+        deleteGame();
     }
     function GetInfos() {
         hub.invoke("GetPlayerInfo");

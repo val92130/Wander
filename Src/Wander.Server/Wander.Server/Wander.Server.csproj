@@ -97,9 +97,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\background.jpg" />
+    <Content Include="Content\Game\player.png" />
     <Content Include="Content\Style.css" />
     <Content Include="Content\user-boy.png" />
     <Content Include="Content\user-girl.png" />
+    <Content Include="Content\wander-logo2.png" />
     <Content Include="packages.config" />
     <Content Include="Scripts\jquery-1.9.1.min.map" />
     <None Include="Properties\PublishProfiles\FTP.pubxml" />
@@ -131,6 +133,8 @@
     <Content Include="Scripts\jquery.signalR-2.2.0.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="Scripts\notify.min.js" />
+    <Content Include="Scripts\phaser.js" />
+    <Content Include="Scripts\phaser.min.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -162,8 +166,10 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\Game.ts" />
     <TypeScriptCompile Include="Scripts\HubConnection.ts" />
     <TypeScriptCompile Include="Scripts\Messaging.ts" />
+    <TypeScriptCompile Include="Scripts\phaser.d.ts" />
     <TypeScriptCompile Include="Scripts\UserInteraction.ts" />
   </ItemGroup>
   <ItemGroup>

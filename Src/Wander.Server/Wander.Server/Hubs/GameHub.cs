@@ -47,6 +47,12 @@ namespace Wander.Server.Hubs
 
                 Clients.Caller.onConnected(user.Login);
                 ServiceProvider.GetPlayerService().AddPlayer(idSignalR, playerId);
+
+                foreach (ServerPlayerModel players in ServiceProvider.GetPlayerService().GetAllPlayersServer())
+                {
+                    if (players.SignalRId == Context.ConnectionId) continue;
+                    Clients.Client(players.SignalRId).playerConnected(new { Pseudo = user.Login, Position = new Vector2() });
+                }
                 Debug.Print(idSignalR);
                 Clients.Caller.notify(Helper.CreateNotificationMessage("Welcome ! You are now online", EMessageType.success));
             }
@@ -80,13 +86,18 @@ namespace Wander.Server.Hubs
         /// </summary>
         public void Disconnect()
         {
-            ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
-            // If the disconnected client is logged in the database, we log him out
-            if (candidate == null)
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId))
             {
                 return;
             }
             Debug.Print("Client disconnected : " + Context.ConnectionId);
+            foreach (ServerPlayerModel players in ServiceProvider.GetPlayerService().GetAllPlayersServer())
+            {
+                if(players.SignalRId == Context.ConnectionId) continue;
+                Clients.Client(players.SignalRId).playerDisconnected(
+                new { Pseudo = ServiceProvider.GetUserService().GetUserLogin(Context.ConnectionId) });
+            }
+
             ServiceProvider.GetUserRegistrationService().LogOut(ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId));
             ServiceProvider.GetPlayerService().RemovePlayer(Context.ConnectionId);
             Clients.Caller.notify(Helper.CreateNotificationMessage("See you soon !", EMessageType.info));
@@ -161,8 +172,7 @@ namespace Wander.Server.Hubs
         /// </summary>
         public void GetPlayerInfo()
         {
-            ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
-            if (candidate == null)
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId))
             {
                 Clients.Caller.notify(Helper.CreateNotificationMessage(
                     "You have to be connected ! ", EMessageType.error));
@@ -178,14 +188,28 @@ namespace Wander.Server.Hubs
         /// <param name="position"></param>
         public void MoveTo(Vector2 position)
         {
-            ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
-            // If the caller is not logged into the game, we dont do anything
-            if (candidate == null)
-            {
-                return;
-            }
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return;
 
             ServiceProvider.GetPlayerService().MovePlayerTo(Context.ConnectionId, position);
+            string login = ServiceProvider.GetUserService().GetUserLogin(Context.ConnectionId);
+
+            var players = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            for (int i = 0; i < players.Count; i++)
+            {
+                if (players[i].SignalRId == Context.ConnectionId) continue;
+
+                Clients.Client(players[i].SignalRId).playerMoved(new { Pseudo = login, Position = position });
+            }
+        }
+
+        public void GetAllPlayers()
+        {
+            foreach (ServerPlayerModel players in ServiceProvider.GetPlayerService().GetAllPlayersServer())
+            {
+                if (players.SignalRId == Context.ConnectionId) continue;
+                
+                Clients.Caller.playerConnected(new { Pseudo = ServiceProvider.GetUserService().GetUserLogin(players.SignalRId), Position = players.Position });
+            }
         }
     }
 }
