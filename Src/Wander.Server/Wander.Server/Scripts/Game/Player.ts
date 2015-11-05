@@ -1,0 +1,59 @@
+﻿
+class Player {
+
+    position: Phaser.Point;
+    pseudo: string;
+    texture: Phaser.Sprite;
+    newPosition: Phaser.Point;
+
+    style: any;
+
+    text: any;
+
+    startTime: any;
+    endTime: any;
+
+    constructor(game: Phaser.Game, pseudo: string, position: Phaser.Point) {
+        this.texture = game.add.sprite(200, 200, "player");
+        this.pseudo = pseudo;
+        this.position = position;
+        this.newPosition = new Phaser.Point(this.position.x, this.position.y);
+        this.style = { font: "16px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.texture.width, align: "center" };
+        this.text = game.add.text(0, 0, pseudo, this.style);
+        this.startTime = new Date().getTime();
+
+        this.endTime = new Date().getTime();
+    }
+
+    update = () => {
+        this.texture.x = this.position.x;
+        this.texture.y = this.position.y;
+
+        this.text.x = this.texture.x;
+        this.text.y = this.texture.y - 20;
+
+
+    }
+
+    updateServer = () => {
+        this.position.x = Lerp(this.newPosition.x, this.position.x, 3);
+        this.position.y = Lerp(this.newPosition.y, this.position.y, 3);
+    }
+
+    remove = () => {
+        this.text.kill();
+        this.texture.kill();
+
+    }
+
+    updatePosition = () => {
+        this.startTime = new Date().getTime();
+        var time = this.startTime - this.endTime;
+        if (time >= 50) {
+            this.endTime = this.startTime;
+            hub.invoke("MoveTo", { X: this.position.x, Y: this.position.y });
+        }
+
+    }
+
+}

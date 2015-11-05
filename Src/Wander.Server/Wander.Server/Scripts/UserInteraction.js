@@ -1,4 +1,4 @@
-/// <reference path="Game.ts"/>
+/// <reference path="Game/Game.ts"/>
 console.log("loaded");
 var $;
 var isConnected = false;

@@ -45,6 +45,10 @@ namespace Wander.Server.Tests
             ServerPlayerModel result = playerService.GetPlayer(serverPlayer.SignalRId);
 
             Assert.IsTrue((serverPlayer.SignalRId == result.SignalRId && serverPlayer.UserId == result.UserId));
+
+            playerService.RemovePlayer(serverPlayer.SignalRId);
+
+            TestEnvironment.DeleteTestUser();
         }
 
         [TestMethod]
@@ -615,12 +619,70 @@ namespace Wander.Server.Tests
 
         }
 
+
+
         [TestMethod]
-        [ExpectedException(typeof (ArgumentException))]
-        public void GetPlayerInfosNullConnectionIdThrowsException()
+        public void DeliverPayWorks()
         {
-            string t = null;
-            ServiceProvider.GetPlayerService().GetPlayerInfos(t);
+            TestEnvironment.DeleteTestUser();
+            UserModel user = TestEnvironment.GetTestUserModel();
+            ServiceProvider.GetUserRegistrationService().Register(user);
+            int id = ServiceProvider.GetUserRegistrationService().Connect(user);
+            ServiceProvider.GetPlayerService().AddPlayer("signalrId", id);
+
+            int oldAccount = ServiceProvider.GetUserService().GetUserBankAccount("signalrId");
+
+
+            int newJobId =
+                ServiceProvider.GetJobService()
+                    .AddJob(new JobModel() { JobDescription = "Des1", Threshold = 10, Salary = 2000, EarningPoints = 100, NecessaryPoints = 0 });
+
+
+            JobModel job = ServiceProvider.GetJobService().GetAllJobs().FirstOrDefault(x => x.JobId == newJobId);
+
+            ServiceProvider.GetJobService().ChangeUserJob(job.JobId, "signalrId");
+            ServiceProvider.GetUserService().DeliverPay("signalrId");
+
+            int newAccount = ServiceProvider.GetUserService().GetUserBankAccount("signalrId");
+
+            Assert.AreEqual(newAccount, oldAccount + job.Salary);
+
+            ServiceProvider.GetJobService().ChangeUserJob(0, "signalrId");
+            ServiceProvider.GetPlayerService().RemovePlayer("signalrId");
+            ServiceProvider.GetJobService().DeleteJob(job);
+            TestEnvironment.DeleteTestUser();
+        }
+
+        [TestMethod]
+        public void DeliveryPointsWorks()
+        {
+            TestEnvironment.DeleteTestUser();
+            UserModel user = TestEnvironment.GetTestUserModel();
+            ServiceProvider.GetUserRegistrationService().Register(user);
+            int id = ServiceProvider.GetUserRegistrationService().Connect(user);
+            ServiceProvider.GetPlayerService().AddPlayer("signalrId", id);
+
+            int oldPoints = ServiceProvider.GetUserService().GetUserPoints("signalrId");
+
+
+            int newJobId =
+                ServiceProvider.GetJobService()
+                    .AddJob(new JobModel() { JobDescription = "Des1", Threshold = 10, Salary = 2000, EarningPoints = 100, NecessaryPoints = 0 });
+
+
+            JobModel job = ServiceProvider.GetJobService().GetAllJobs().FirstOrDefault(x => x.JobId == newJobId);
+
+            ServiceProvider.GetJobService().ChangeUserJob(job.JobId, "signalrId");
+            ServiceProvider.GetUserService().DeliverPoints("signalrId");
+
+            int newPoints = ServiceProvider.GetUserService().GetUserPoints("signalrId");
+
+            Assert.AreEqual(newPoints, oldPoints + job.EarningPoints);
+
+            ServiceProvider.GetJobService().ChangeUserJob(0, "signalrId");
+            ServiceProvider.GetPlayerService().RemovePlayer("signalrId");
+            ServiceProvider.GetJobService().DeleteJob(job);
+            TestEnvironment.DeleteTestUser();
         }
 
 

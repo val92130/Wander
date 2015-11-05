@@ -38,6 +38,8 @@ namespace Wander.Server.Services
                         model.JobId = Convert.ToInt32(reader["JobId"]);
                         model.Salary = Convert.ToInt32(reader["Salary"]);
                         model.Threshold = Convert.ToInt32(reader["Threshold"]);
+                        model.EarningPoints = Convert.ToInt32(reader["EarningPoints"]);
+                        model.NecessaryPoints = Convert.ToInt32(reader["NecessaryPoints"]);
                     }
 
                     conn.Close();
@@ -79,6 +81,8 @@ namespace Wander.Server.Services
                         model.JobId = Convert.ToInt32(reader["JobId"]);
                         model.Salary = Convert.ToInt32(reader["Salary"]);
                         model.Threshold = Convert.ToInt32(reader["Threshold"]);
+                        model.EarningPoints = Convert.ToInt32(reader["EarningPoints"]);
+                        model.NecessaryPoints = Convert.ToInt32(reader["NecessaryPoints"]);
                         jobs.Add(model);
                     }
 
@@ -102,23 +106,17 @@ namespace Wander.Server.Services
             ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(connectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
 
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            JobModel job = GetAllJobs().FirstOrDefault(x => x.JobId == jobId);
+
+            if (job == null)
             {
-                string query = "SELECT JobDescription from dbo.Jobs WHERE JobId = @Id";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    conn.Open();
-                    cmd.Parameters.AddWithValue("@Id", jobId);
+                return false;
+            }
 
-                    int lgn = cmd.ExecuteNonQuery();
-                    
-                    conn.Close();
 
-                    if (lgn == 0)
-                    {
-                        return false;
-                    }
-                }
+            if (job.NecessaryPoints > ServiceProvider.GetUserService().GetUserPoints(user))
+            {
+                return false;
             }
 
             using (SqlConnection conn = SqlConnectionService.GetConnection())
@@ -159,13 +157,15 @@ namespace Wander.Server.Services
 
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
-                string query = "INSERT INTO dbo.Jobs (JobDescription, Salary, Threshold) OUTPUT INSERTED.JobId values (@Des, @Salary, @Thres)";
+                string query = "INSERT INTO dbo.Jobs (JobDescription, Salary, Threshold, EarningPoints, NecessaryPoints) OUTPUT INSERTED.JobId values (@Des, @Salary, @Thres, @Earn, @Necessary)";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
                     cmd.Parameters.AddWithValue("@Des", model.JobDescription);
                     cmd.Parameters.AddWithValue("@Salary", model.Salary);
                     cmd.Parameters.AddWithValue("@Thres", model.Threshold);
+                    cmd.Parameters.AddWithValue("@Earn", model.EarningPoints);
+                    cmd.Parameters.AddWithValue("@Necessary", model.NecessaryPoints);
 
                     int lgn = (int)cmd.ExecuteScalar();
 

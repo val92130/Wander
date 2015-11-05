@@ -166,7 +166,9 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\Game.ts" />
+    <TypeScriptCompile Include="Scripts\Game\Game.ts" />
+    <TypeScriptCompile Include="Scripts\Game\GameLauncher.ts" />
+    <TypeScriptCompile Include="Scripts\Game\Player.ts" />
     <TypeScriptCompile Include="Scripts\HubConnection.ts" />
     <TypeScriptCompile Include="Scripts\Messaging.ts" />
     <TypeScriptCompile Include="Scripts\phaser.d.ts" />

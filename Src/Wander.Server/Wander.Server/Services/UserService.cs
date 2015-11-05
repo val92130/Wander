@@ -281,5 +281,43 @@ namespace Wander.Server.Services
             if (user == null) throw new ArgumentException("parameter user is null");
             return ExecuteUpdate("Activated", (value ? 1 : 0).ToString(), user);
         }
+
+        public void DeliverPay(ServerPlayerModel user)
+        {
+            if (user == null) throw new ArgumentException("parameter user is null");
+            if(!ServiceProvider.GetPlayerService().Exists(user.SignalRId)) throw new ArgumentException("parameter user is not connected");
+
+            int currentPlayerAccount = GetUserBankAccount(user);
+            int salary = ServiceProvider.GetJobService().GetUserJobInfos(user).Salary;
+            int newAccount = currentPlayerAccount + salary;
+            SetUserBankAccount(user, newAccount);
+
+        }
+
+        public void DeliverPay(string ConnectionId)
+        {
+            if (ConnectionId == null) throw new ArgumentException("there is no id");
+            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
+            if (user == null) throw new ArgumentException("parameter user is null");
+            DeliverPay(user);
+        }
+
+        public void DeliverPoints(ServerPlayerModel user)
+        {
+            if (user == null) throw new ArgumentException("parameter user is null");
+            if (!ServiceProvider.GetPlayerService().Exists(user.SignalRId)) throw new ArgumentException("parameter user is not connected");
+
+            int currentPlayerPoints = GetUserPoints(user);
+            int points = ServiceProvider.GetJobService().GetUserJobInfos(user).EarningPoints;
+            SetUserPoints(user, points + currentPlayerPoints);
+        }
+
+        public void DeliverPoints(string ConnectionId)
+        {
+            if (ConnectionId == null) throw new ArgumentException("there is no id");
+            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
+            if (user == null) throw new ArgumentException("parameter user is null");
+            DeliverPoints(user);
+        }
     }
 }

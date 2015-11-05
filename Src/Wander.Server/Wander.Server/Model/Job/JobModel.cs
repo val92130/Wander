@@ -11,5 +11,7 @@ namespace Wander.Server.Model
         public string JobDescription { get; set; }
         public int Salary { get; set; }
         public int Threshold { get; set; }
+        public int NecessaryPoints { get; set; }
+        public int EarningPoints { get; set; }
     }
 }

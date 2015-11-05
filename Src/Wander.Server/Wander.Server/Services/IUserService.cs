@@ -29,5 +29,10 @@ namespace Wander.Server.Services
         bool SetUserPoints(string ConnectionId, int ammount);
         bool SetUserActivatedStatus(ServerPlayerModel user, bool value);
         bool SetUserActivatedStatus(string ConnectionId, bool value);
+
+        void DeliverPay(ServerPlayerModel user);
+        void DeliverPay(string ConnectionId);
+        void DeliverPoints(ServerPlayerModel user);
+        void DeliverPoints(string ConnectionId);
     }
 }

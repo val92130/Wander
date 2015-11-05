@@ -63,6 +63,8 @@ create table dbo.Jobs
 (
 JobId int identity(0,1),
 JobDescription nvarchar(255) not null,
+EarningPoints int DEFAULT(0),
+NecessaryPoints int DEFAULT(0),
 Salary int not null,
 Threshold int not null
 
