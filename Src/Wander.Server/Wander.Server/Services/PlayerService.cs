@@ -25,7 +25,7 @@ namespace Wander.Server.Services
                 ServerPlayerModel p = Players.FirstOrDefault(x => x.SignalRId == signalRId);
                 if (p == null)
                 {
-                    Players.Add(new ServerPlayerModel() {SignalRId = signalRId, UserId = userId, Position = new Vector2()});
+                    Players.Add(new ServerPlayerModel() {SignalRId = signalRId, UserId = userId, Position = new Vector2(), Pseudo = ServiceProvider.GetUserService().GetUserLoginById(userId)});
                 }
             }
         }
@@ -133,13 +133,13 @@ namespace Wander.Server.Services
         /// <returns>Returns a List of ServerPlayerModel of every connected Players</returns>
         public List<ServerPlayerModel> GetAllPlayersServer()
         {
-            List<ServerPlayerModel> players = new List<ServerPlayerModel>();
             lock (Players)
             {
+                List<ServerPlayerModel> players = new List<ServerPlayerModel>();
                 players = Players.ToList();
-
+                return players;
             }
-            return players;
+            
         }
 
         /// <summary>
@@ -165,6 +165,8 @@ namespace Wander.Server.Services
         /// <returns></returns>
         public ClientPlayerModel GetPlayerInfos(string connectionId)
         {
+            if(connectionId == null)
+                throw new ArgumentException("Connection id is null ! ");
             lock (Players)
             {
                 ClientPlayerModel model = ServiceProvider.GetUserService().GetAllUserInfos(connectionId);

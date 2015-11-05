@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -511,5 +512,117 @@ namespace Wander.Server.Tests
             ServiceProvider.GetPlayerService().RemovePlayer("signalrId");
             TestEnvironment.DeleteTestUser();
         }
+
+        [TestMethod]
+        public void GetAllPlayersConnectionIdWorks()
+        {
+            TestEnvironment.DeleteTestUser();
+            UserModel user = TestEnvironment.GetTestUserModel();
+            ServiceProvider.GetUserRegistrationService().Register(user);
+            int id = ServiceProvider.GetUserRegistrationService().Connect(user);
+            ServiceProvider.GetPlayerService().AddPlayer("signalrId", id);
+
+            UserModel user2 = new UserModel() {Login = "user2", Email = "tt@mail.com", Password = "1234", Sex = 0};
+            ServiceProvider.GetUserRegistrationService().Register(user2);
+            int id2 = ServiceProvider.GetUserRegistrationService().Connect(user2);
+            ServiceProvider.GetPlayerService().AddPlayer("signalrId2", id2);
+
+            Assert.IsTrue(ServiceProvider.GetPlayerService().GetAllPlayersConnectionId().Contains("signalrId"));
+            Assert.IsTrue(ServiceProvider.GetPlayerService().GetAllPlayersConnectionId().Contains("signalrId2"));
+
+
+            ServiceProvider.GetPlayerService().RemovePlayer("signalrId");
+            ServiceProvider.GetPlayerService().RemovePlayer("signalrId2");
+
+            TestEnvironment.DeleteTestUser();
+
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                conn.Open();
+                string deleteQuery = "DELETE FROM dbo.Users WHERE UserLogin = @User ";
+                using (SqlCommand deleteCmd = new SqlCommand(deleteQuery, conn))
+                {
+                    deleteCmd.Parameters.AddWithValue("@User", "user2");
+                    deleteCmd.ExecuteNonQuery();
+                }
+
+                conn.Close();
+            }
+
+        }
+
+        [TestMethod]
+        public void GetPlayerInfoWorks()
+        {
+            TestEnvironment.DeleteTestUser();
+            UserModel user = TestEnvironment.GetTestUserModel();
+            ServiceProvider.GetUserRegistrationService().Register(user);
+            int id = ServiceProvider.GetUserRegistrationService().Connect(user);
+            ServiceProvider.GetPlayerService().AddPlayer("signalrId", id);
+
+            ClientPlayerModel model = ServiceProvider.GetPlayerService().GetPlayerInfos("signalrId");
+
+            Assert.IsNotNull(model);
+            Assert.AreEqual(model.UserName, user.Login);
+            Assert.AreEqual(model.Sex, user.Sex);
+            Assert.AreEqual(model.Email, user.Email);
+            Assert.IsTrue(model.Properties.Count == 0);
+            Assert.AreEqual(model.Job.JobDescription, "unemployed");
+
+            ServiceProvider.GetPlayerService().RemovePlayer("signalrId");
+
+            TestEnvironment.DeleteTestUser();
+        }
+
+        [TestMethod]
+        public void GetAllPlayersClientWorks()
+        {
+            TestEnvironment.DeleteTestUser();
+            UserModel user = TestEnvironment.GetTestUserModel();
+            ServiceProvider.GetUserRegistrationService().Register(user);
+            int id = ServiceProvider.GetUserRegistrationService().Connect(user);
+            ServiceProvider.GetPlayerService().AddPlayer("signalrId", id);
+
+            UserModel user2 = new UserModel() { Login = "user2", Email = "tt@mail.com", Password = "1234", Sex = 0 };
+            ServiceProvider.GetUserRegistrationService().Register(user2);
+            int id2 = ServiceProvider.GetUserRegistrationService().Connect(user2);
+            ServiceProvider.GetPlayerService().AddPlayer("signalrId2", id2);
+
+            List<ClientPlayerModel> clients = ServiceProvider.GetPlayerService().GetAllPlayersClient();
+
+
+            Assert.IsTrue(clients.FirstOrDefault(x => x.UserName == "user") != null);
+            Assert.IsTrue(clients.FirstOrDefault(x => x.UserName == "user2") != null);
+
+
+            ServiceProvider.GetPlayerService().RemovePlayer("signalrId");
+            ServiceProvider.GetPlayerService().RemovePlayer("signalrId2");
+
+            TestEnvironment.DeleteTestUser();
+
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                conn.Open();
+                string deleteQuery = "DELETE FROM dbo.Users WHERE UserLogin = @User ";
+                using (SqlCommand deleteCmd = new SqlCommand(deleteQuery, conn))
+                {
+                    deleteCmd.Parameters.AddWithValue("@User", "user2");
+                    deleteCmd.ExecuteNonQuery();
+                }
+
+                conn.Close();
+            }
+
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof (ArgumentException))]
+        public void GetPlayerInfosNullConnectionIdThrowsException()
+        {
+            string t = null;
+            ServiceProvider.GetPlayerService().GetPlayerInfos(t);
+        }
+
+
     }
 }

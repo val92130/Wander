@@ -22,7 +22,7 @@ var GameLauncher = (function () {
                 _this.mainGame.render();
             }
         };
-        this.game = new Phaser.Game("100%", 500, Phaser.AUTO, 'main', { preload: this.preload, create: this.create, update: this.update, render: this.render });
+        this.game = new Phaser.Game(800, 500, Phaser.AUTO, 'main', { preload: this.preload, create: this.create, update: this.update, render: this.render });
     }
     GameLauncher.prototype.preload = function () {
         this.game.load.image('player', 'Content/Game/player.png');
@@ -36,22 +36,26 @@ var Player = (function () {
         this.update = function () {
             _this.texture.x = _this.position.x;
             _this.texture.y = _this.position.y;
+            _this.text.x = _this.texture.x;
+            _this.text.y = _this.texture.y - 20;
         };
         this.remove = function () {
+            _this.text.kill();
             _this.texture.kill();
         };
         this.updatePosition = function () {
             _this.startTime = new Date().getTime();
             var time = _this.startTime - _this.endTime;
-            if (time >= 50) {
+            if (time >= 15) {
                 _this.endTime = _this.startTime;
                 hub.invoke("MoveTo", { X: _this.position.x, Y: _this.position.y });
-                console.log(time);
             }
         };
         this.texture = game.add.sprite(200, 200, "player");
         this.pseudo = pseudo;
         this.position = position;
+        this.style = { font: "16px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.texture.width, align: "center" };
+        this.text = game.add.text(0, 0, pseudo, this.style);
         this.startTime = new Date().getTime();
         this.endTime = new Date().getTime();
     }
@@ -113,9 +117,10 @@ var MainGame = (function () {
         };
         this.render = function () {
         };
+        hub.invoke("GetAllPlayers");
         this.game = game;
         this.players = new Array();
-        this.currentPlayer = new Player(game, "val", new Phaser.Point(10, 10));
+        this.currentPlayer = new Player(game, userPseudo, new Phaser.Point(10, 10));
     }
     return MainGame;
 })();

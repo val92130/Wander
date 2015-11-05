@@ -25,7 +25,6 @@ namespace Wander.Server.Hubs
                 Clients.Caller.LoadMessages(lastMessages);
                 
 
-
                 int playerId = ServiceProvider.GetUserRegistrationService().Connect(user);
                 string idSignalR = Context.ConnectionId;
                 if (playerId == -1)
@@ -48,6 +47,7 @@ namespace Wander.Server.Hubs
                 Clients.Caller.onConnected(user.Login);
                 ServiceProvider.GetPlayerService().AddPlayer(idSignalR, playerId);
 
+                //Notify all connected users that someone just connected
                 foreach (ServerPlayerModel players in ServiceProvider.GetPlayerService().GetAllPlayersServer())
                 {
                     if (players.SignalRId == Context.ConnectionId) continue;
@@ -146,7 +146,7 @@ namespace Wander.Server.Hubs
             }
 
 
-            string caller = ServiceProvider.GetUserService().GetUserLogin(candidate.SignalRId);
+            string caller = candidate.Pseudo;
 
             string msg = HttpUtility.HtmlEncode(message);
             List<ServerPlayerModel> ids = ServiceProvider.GetPlayerService().GetAllPlayersServer();
@@ -191,25 +191,29 @@ namespace Wander.Server.Hubs
             if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return;
 
             ServiceProvider.GetPlayerService().MovePlayerTo(Context.ConnectionId, position);
-            string login = ServiceProvider.GetUserService().GetUserLogin(Context.ConnectionId);
+            string login = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId).Pseudo;
 
+            // Notify all the connected players that a player moved
             var players = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            object newPos = new {Pseudo = login, Position = position};
             for (int i = 0; i < players.Count; i++)
             {
                 if (players[i].SignalRId == Context.ConnectionId) continue;
 
-                Clients.Client(players[i].SignalRId).playerMoved(new { Pseudo = login, Position = position });
+                Clients.Client(players[i].SignalRId).playerMoved(newPos);
             }
         }
 
         public void GetAllPlayers()
         {
-            foreach (ServerPlayerModel players in ServiceProvider.GetPlayerService().GetAllPlayersServer())
+            var players = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+
+            for (int i = 0; i < players.Count; i++)
             {
-                if (players.SignalRId == Context.ConnectionId) continue;
-                
-                Clients.Caller.playerConnected(new { Pseudo = ServiceProvider.GetUserService().GetUserLogin(players.SignalRId), Position = players.Position });
+                if (players[i].SignalRId == Context.ConnectionId) continue;
+                Clients.Caller.playerConnected(new {Pseudo = players[i].Pseudo, Position = players[i].Position});
             }
+
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Wander.Server.Model
     {
         public int UserId { get; set; }
         public string SignalRId { get; set; }
+        public string Pseudo { get; set; }
         public Vector2 Position { get; set; }
     }
 }
