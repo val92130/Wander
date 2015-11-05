@@ -64,5 +64,6 @@ namespace Wander.Server.Tests
             ServiceProvider.GetPlayerService().RemovePlayer("signalrId");
             TestEnvironment.DeleteTestUser();
         }
+       
     }
 }
