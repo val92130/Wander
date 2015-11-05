@@ -41,6 +41,35 @@ namespace Wander.Server.Services
                 }
             }
         }
+        public List<ServerPropertyUserModel> GetPropertiesInSell()
+        {
+
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = string.Format("SELECT l.ListPropertyId, l.Nameproperty, l.PropertyDescription,l.Threshold, p.Price, p.UserId from dbo.PropertiesToSell p JOIN dbo.ListProperties l on l.ListPropertyId = p.ListPropertyId ");
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    List<ServerPropertyUserModel> Properties = new List<ServerPropertyUserModel>();
+                    conn.Open();
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        ServerPropertyUserModel propertyModel = new ServerPropertyUserModel();
+                        propertyModel.PropertyId = Convert.ToInt32(reader["ListPropertyId"]);
+                        propertyModel.PropertyName = (reader["NameProperty"]).ToString();
+                        propertyModel.PropertyDescription = (reader["PropertyDescription"]).ToString();
+                        propertyModel.Threshold = Convert.ToInt32(reader["Threshold"]);
+                        propertyModel.Price = Convert.ToInt32(reader["Price"]);
+                        propertyModel.UserId = Convert.ToInt32(reader["UserId"]);
+                        Properties.Add(propertyModel);
+                    }
+
+                    conn.Close();
+
+                    return Properties;
+                }
+            }
+        }
 
         public int AddProperty(ServerPropertyModel model)
         {
@@ -210,6 +239,7 @@ namespace Wander.Server.Services
                     } 
                 }
             }
+            
 
         }
 
