@@ -101,5 +101,33 @@ namespace Wander.Server.Tests
             TestEnvironment.DeleteTestUser();
             ServiceProvider.GetPropertiesService().DeleteProperty(createdId);
         }
+        [TestMethod]
+        public void PropertyToSellTest()
+        {
+            TestEnvironment.DeleteTestUser();
+            UserModel user = TestEnvironment.GetTestUserModel();
+            ServiceProvider.GetUserRegistrationService().Register(user);
+            int id = ServiceProvider.GetUserRegistrationService().Connect(user);
+            ServiceProvider.GetPlayerService().AddPlayer("signalrId", id);
+            ServerPlayerModel player = ServiceProvider.GetPlayerService().GetPlayer("signalrId");
+            ServiceProvider.GetUserService().SetUserBankAccount(player, 2000);
+            ServiceProvider.GetPropertiesService().GetUserProperties(player);
+            ServerPropertyModel model = new ServerPropertyModel();
+            model.PropertyName = "TestProperty";
+            model.Price = 100;
+            model.PropertyDescription = "TestDes";
+            model.Threshold = 1000;
+
+            int createdId = ServiceProvider.GetPropertiesService().AddProperty(model);
+
+
+            List<ServerPropertyModel> allProperties = ServiceProvider.GetPropertiesService().GetProperties();
+            ServerPropertyModel createdProperty = allProperties.FirstOrDefault(x => x.PropertyId == createdId);
+            ServiceProvider.GetPropertiesService().BuyProperty("signalrId", createdProperty);
+            ServiceProvider.GetPropertiesService().MakePropertyInSell("signalrId", createdProperty, 200);
+            List<ServerPropertyUserModel> PropertiesUsersInSell = ServiceProvider.GetPropertiesService().GetPropertiesInSell();
+            Assert.IsTrue(PropertiesUsersInSell.FirstOrDefault(x => x.UserId == id)!= null);
+            TestEnvironment.DeleteTestUser();
+        }
     }
 }

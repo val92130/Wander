@@ -41,6 +41,35 @@ namespace Wander.Server.Services
                 }
             }
         }
+        public List<ServerPropertyUserModel> GetPropertiesInSell()
+        {
+
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = string.Format("SELECT l.ListPropertyId, l.Nameproperty, l.PropertyDescription,l.Threshold, p.Price, p.UserId from dbo.PropertiesToSell p JOIN dbo.ListProperties l on l.ListPropertyId = p.ListPropertyId ");
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    List<ServerPropertyUserModel> Properties = new List<ServerPropertyUserModel>();
+                    conn.Open();
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        ServerPropertyUserModel propertyModel = new ServerPropertyUserModel();
+                        propertyModel.PropertyId = Convert.ToInt32(reader["ListPropertyId"]);
+                        propertyModel.PropertyName = (reader["NameProperty"]).ToString();
+                        propertyModel.PropertyDescription = (reader["PropertyDescription"]).ToString();
+                        propertyModel.Threshold = Convert.ToInt32(reader["Threshold"]);
+                        propertyModel.Price = Convert.ToInt32(reader["Price"]);
+                        propertyModel.UserId = Convert.ToInt32(reader["UserId"]);
+                        Properties.Add(propertyModel);
+                    }
+
+                    conn.Close();
+
+                    return Properties;
+                }
+            }
+        }
 
         public int AddProperty(ServerPropertyModel model)
         {
@@ -181,14 +210,72 @@ namespace Wander.Server.Services
 
         }
 
-        public void MakePropertyInSell(string connectionId, ServerPropertyModel property)
+        public void MakePropertyInSell(string connectionId, ServerPropertyModel property, int price)
         {
+            if (connectionId == null) throw new ArgumentException("parameter user is null");
+            if (property == null) throw new ArgumentException("parameter property is null");
+            if (price <= 0) throw new ArgumentException("price must be greater than 0");
+
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                var properties = GetUserProperties(connectionId);
+                bool alreadyHas = properties.FirstOrDefault(x => x.PropertyId == property.PropertyId) != null;
+               
+                int id = ServiceProvider.GetPlayerService().GetPlayer(connectionId).UserId;
+                if (alreadyHas)
+                {
+                    {
+                        string query =
+                    "INSERT INTO dbo.PropertiesToSell (UserId, ListPropertyId, Price) values ( @UserId, @ListPropertyId, @Price) "; 
+                        using (SqlCommand cmd = new SqlCommand(query, conn))
+                        {
+                            conn.Open();
+                            cmd.Parameters.AddWithValue("@UserId", id);
+                            cmd.Parameters.AddWithValue("@ListPropertyId", property.PropertyId);
+                            cmd.Parameters.AddWithValue("@Price", price);
+                            cmd.ExecuteNonQuery();
+                            conn.Close();
+                        }   
+                    } 
+                }
+            }
+            
 
         }
 
-        public void BuyPropertyFromUser(string connectionId, ServerPropertyModel property)
+        public void BuyPropertyFromUser(string connectionId, string connectionId2, ServerPropertyModel property)
         {
-
+            if (connectionId == null) throw new ArgumentException("parameter user is null");
+            if (connectionId2 == null) throw new ArgumentException("parameter user2 is null");
+            if (property == null) throw new ArgumentException("parameter property is null");
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                var properties = GetUserProperties(connectionId);
+                bool alreadyHas = properties.FirstOrDefault(x => x.PropertyId == property.PropertyId) != null;
+                int id = ServiceProvider.GetPlayerService().GetPlayer(connectionId).UserId;
+                int id2 = ServiceProvider.GetPlayerService().GetPlayer(connectionId2).UserId;
+                int moneyUser1 = ServiceProvider.GetUserService().GetUserBankAccount(connectionId2);
+                int moneyUser2 = ServiceProvider.GetUserService().GetUserBankAccount(connectionId2);
+                if (alreadyHas && moneyUser2 >= property.Price)
+                {
+                    string query =
+                        "UPDATE dbo.UserProperties SET UserId = @UserId WHERE ListPropertyId = @propertyUserId "
+                        + "AND UserId = @UserId1" ;
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        conn.Open();
+                        cmd.Parameters.AddWithValue("@UserId", id2);
+                        cmd.Parameters.AddWithValue("@UserId1", id);
+                        cmd.Parameters.AddWithValue("@propertyUserId", property.PropertyId);
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                    }
+                    int remainingMoneyUser1 = moneyUser2 + property.Price;
+                    int remainingMoneyUser2 = moneyUser2 - property.Price;
+                    ServiceProvider.GetUserService().SetUserBankAccount(connectionId, remainingMoneyUser1);
+                    ServiceProvider.GetUserService().SetUserBankAccount(connectionId2, remainingMoneyUser2);
+                }
+            }
         }
 
         public List<ServerPropertyModel> GetUserProperties(string ConnectionId)
