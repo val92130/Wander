@@ -4,7 +4,9 @@ INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Pr
 INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('test4', 'description4', 2, 3000);
 INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('test5', 'description5', 2, 250);
 
-INSERT INTO dbo.Users(UserLogin, UserPassword, Email, Sex, Account, Points, Connected, Activated, JobId) values ('testLogin', 'test','test @gmail.com',1,0,0,1,0,0);
+INSERT INTO dbo.Users(UserLogin, UserPassword, Email, Sex, Account, Points, Connected, Activated, JobId) values ('test', 'test','test@gmail.com',1,0,0,1,0,0);
+INSERT INTO dbo.Users(UserLogin, UserPassword, Email, Sex, Account, Points, Connected, Activated, JobId) values ('rami', 'rami','rami@gmail.com',1,0,0,1,0,0);
+INSERT INTO dbo.Users(UserLogin, UserPassword, Email, Sex, Account, Points, Connected, Activated, JobId) values ('val', 'val','val@gmail.com',1,0,0,1,0,0);
 
 INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('test5', 'description5', 2, 250);
 
