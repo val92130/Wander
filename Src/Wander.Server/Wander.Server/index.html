@@ -247,11 +247,18 @@
 
     </div>
 </div>
-<script src="Scripts/Game/EDirection.js"></script>
-<script src="Scripts/Game/Player.js"></script>
-<script src="Scripts/Game/GameLauncher.js"></script>
 <script src="Scripts/HubConnection.js"></script>
 <script src="Scripts/UserInteraction.js"></script>
 <script src="Scripts/Messaging.js"></script>
-<script src="Scripts/Game/Game.js"></script>
+<script src="Scripts/WanderGame/MainGame.js"></script>
+
+<script>
+    
+    window.onload = () => {
+
+        var mainGame = new WanderGame();
+        console.log("ok");
+    }
+
+</script>
 </html>

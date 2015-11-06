@@ -106,6 +106,7 @@
     <Content Include="packages.config" />
     <Content Include="Scripts\jquery-1.9.1.min.map" />
     <Content Include="Content\Game\Maps\newMap.json" />
+    <Content Include="Content\Game\Maps\newMap2.json" />
     <None Include="Properties\PublishProfiles\FTP.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -179,10 +180,12 @@
     <TypeScriptCompile Include="Scripts\phaser.d.ts" />
     <TypeScriptCompile Include="Scripts\References.ts" />
     <TypeScriptCompile Include="Scripts\UserInteraction.ts" />
+    <TypeScriptCompile Include="Scripts\WanderGame\MainGame.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
