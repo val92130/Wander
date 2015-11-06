@@ -114,12 +114,12 @@ constraint CK_ListProperties_ListPropertiesThreshold check(Threshold <> N'')
 create table dbo.PropertiesToSell
 (
 PropertyToSellId int identity(0,1),
-UserId int not null,
+UserId int not null ,
 ListPropertyId int not null,
 Price int not null
 
 constraint PK_PropertiesToSellId primary key(PropertyToSellId),
-constraint FK_PropertiesToSell_UserId foreign key(UserId) references dbo.Users(UserId),
+constraint FK_PropertiesToSell_UserId foreign key(UserId) references dbo.Users(UserId) ON UPDATE CASCADE ON DELETE CASCADE,
 constraint FK_PropertiesToSell_ListPropertyId foreign key(ListPropertyId) references dbo.ListProperties(ListPropertyId)
 
 );
