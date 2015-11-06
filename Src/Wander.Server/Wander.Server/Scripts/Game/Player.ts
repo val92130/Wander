@@ -5,7 +5,7 @@ class Player {
     pseudo: string;
     texture: Phaser.Sprite;
     newPosition: Phaser.Point;
-
+    speed : number;
     style: any;
 
     text: any;
@@ -14,6 +14,7 @@ class Player {
     endTime: any;
 
     constructor(game: Phaser.Game, pseudo: string, position: Phaser.Point) {
+        this.speed = 3;
         this.texture = game.add.sprite(200, 200, "player");
         this.pseudo = pseudo;
         this.position = position;
@@ -25,31 +26,47 @@ class Player {
         this.endTime = new Date().getTime();
     }
 
-    update = () => {
+    update() {
         this.texture.x = this.position.x;
         this.texture.y = this.position.y;
 
         this.text.x = this.texture.x;
         this.text.y = this.texture.y - 20;
 
-
     }
 
-    updateServer = () => {
+    move(direction: EDirection) {
+        switch (direction) {
+            case EDirection.Left:
+                this.position.x -= this.speed;
+                break;
+            case EDirection.Right:
+                this.position.x += this.speed;
+                break;
+            case EDirection.Up:
+                this.position.y -= this.speed;
+                break;
+            case EDirection.Down:
+                this.position.y += this.speed;
+                break;
+        }
+    }
+
+    updateServer() {
         this.position.x = Lerp(this.newPosition.x, this.position.x, 3);
         this.position.y = Lerp(this.newPosition.y, this.position.y, 3);
     }
 
-    remove = () => {
+    remove() {
         this.text.kill();
         this.texture.kill();
 
     }
 
-    updatePosition = () => {
+    updatePosition() {
         this.startTime = new Date().getTime();
         var time = this.startTime - this.endTime;
-        if (time >= 50) {
+        if (time >= 40) {
             this.endTime = this.startTime;
             hub.invoke("MoveTo", { X: this.position.x, Y: this.position.y });
         }

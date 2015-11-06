@@ -1,14 +1,12 @@
-﻿/// <reference path="../UserInteraction.ts"/>
-/// <reference path="Player.ts"/>
-/// <reference path="GameLauncher.ts"/>
+﻿var game: any;
 
-var game: any;
 
 class MainGame {
 
     players: Player[];
     game: Phaser.Game;
     currentPlayer: Player;
+    camera : Phaser.Camera;
 
     constructor(game: Phaser.Game) {
         hub.invoke("GetAllPlayers");
@@ -52,7 +50,7 @@ class MainGame {
         }
     }
 
-    update = () => {
+    update() {
         for (var i = 0; i < this.players.length; i++) {
             this.players[i].update();
             this.players[i].updateServer();
@@ -61,26 +59,26 @@ class MainGame {
         this.currentPlayer.update();
 
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-            this.currentPlayer.position.x -= 4;
+            this.currentPlayer.move(EDirection.Left);
             this.currentPlayer.updatePosition();
         }
         else if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-            this.currentPlayer.position.x += 4;
+            this.currentPlayer.move(EDirection.Right);
             this.currentPlayer.updatePosition();
         }
 
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
-            this.currentPlayer.position.y -= 4;
+            this.currentPlayer.move(EDirection.Up);
             this.currentPlayer.updatePosition();
         }
         else if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
-            this.currentPlayer.position.y += 4;
+            this.currentPlayer.move(EDirection.Down);
             this.currentPlayer.updatePosition();
         }
     }
 
-    render = () => {
-
+    render() {
+        this.game.debug.cameraInfo(this.game.camera, 32, 32);
     }
 }
 
@@ -98,6 +96,7 @@ hub.on("playerDisconnected", function (player) {
 hub.on("playerMoved", function (player) {
     game.mainGame.updatePlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
 });
+
 
 function createGame() {
     game = new GameLauncher();

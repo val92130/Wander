@@ -1,6 +1,3 @@
-/// <reference path="../UserInteraction.ts"/>
-/// <reference path="Player.ts"/>
-/// <reference path="GameLauncher.ts"/>
 var game;
 var MainGame = (function () {
     function MainGame(game) {
@@ -34,36 +31,37 @@ var MainGame = (function () {
                 }
             }
         };
-        this.update = function () {
-            for (var i = 0; i < _this.players.length; i++) {
-                _this.players[i].update();
-                _this.players[i].updateServer();
-            }
-            _this.currentPlayer.update();
-            if (_this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-                _this.currentPlayer.position.x -= 4;
-                _this.currentPlayer.updatePosition();
-            }
-            else if (_this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-                _this.currentPlayer.position.x += 4;
-                _this.currentPlayer.updatePosition();
-            }
-            if (_this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
-                _this.currentPlayer.position.y -= 4;
-                _this.currentPlayer.updatePosition();
-            }
-            else if (_this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
-                _this.currentPlayer.position.y += 4;
-                _this.currentPlayer.updatePosition();
-            }
-        };
-        this.render = function () {
-        };
         hub.invoke("GetAllPlayers");
         this.game = game;
         this.players = new Array();
         this.currentPlayer = new Player(game, userPseudo, new Phaser.Point(10, 10));
     }
+    MainGame.prototype.update = function () {
+        for (var i = 0; i < this.players.length; i++) {
+            this.players[i].update();
+            this.players[i].updateServer();
+        }
+        this.currentPlayer.update();
+        if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+            this.currentPlayer.move(EDirection.Left);
+            this.currentPlayer.updatePosition();
+        }
+        else if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+            this.currentPlayer.move(EDirection.Right);
+            this.currentPlayer.updatePosition();
+        }
+        if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
+            this.currentPlayer.move(EDirection.Up);
+            this.currentPlayer.updatePosition();
+        }
+        else if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
+            this.currentPlayer.move(EDirection.Down);
+            this.currentPlayer.updatePosition();
+        }
+    };
+    MainGame.prototype.render = function () {
+        this.game.debug.cameraInfo(this.game.camera, 32, 32);
+    };
     return MainGame;
 })();
 hub.on("playerConnected", function (player) {
@@ -93,4 +91,3 @@ function Lerp(goal, current, time) {
     }
     return goal;
 }
-//# sourceMappingURL=Game.js.map

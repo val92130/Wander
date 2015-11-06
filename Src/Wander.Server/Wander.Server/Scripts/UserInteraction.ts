@@ -1,4 +1,4 @@
-﻿/// <reference path="Game/Game.ts"/>
+﻿/// <reference path="References.ts"/>
 
 console.log("loaded");
 

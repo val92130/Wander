@@ -1,4 +1,4 @@
-/// <reference path="Game/Game.ts"/>
+/// <reference path="References.ts"/>
 console.log("loaded");
 var $;
 var isConnected = false;
@@ -127,4 +127,3 @@ $(document).ready(function () {
         }
     }, 15000);
 });
-//# sourceMappingURL=UserInteraction.js.map

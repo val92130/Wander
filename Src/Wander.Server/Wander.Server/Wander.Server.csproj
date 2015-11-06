@@ -97,13 +97,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\background.jpg" />
-    <Content Include="Content\Game\player.png" />
+    <Content Include="Content\Game\Images\breadinator_tileset.png" />
+    <Content Include="Content\Game\Images\player.png" />
     <Content Include="Content\Style.css" />
     <Content Include="Content\user-boy.png" />
     <Content Include="Content\user-girl.png" />
     <Content Include="Content\wander-logo2.png" />
     <Content Include="packages.config" />
     <Content Include="Scripts\jquery-1.9.1.min.map" />
+    <Content Include="Content\Game\Maps\newMap.json" />
     <None Include="Properties\PublishProfiles\FTP.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -167,12 +169,15 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\Game\EDirection.ts" />
     <TypeScriptCompile Include="Scripts\Game\Game.ts" />
     <TypeScriptCompile Include="Scripts\Game\GameLauncher.ts" />
+    <TypeScriptCompile Include="Scripts\Game\GameModule.ts" />
     <TypeScriptCompile Include="Scripts\Game\Player.ts" />
     <TypeScriptCompile Include="Scripts\HubConnection.ts" />
     <TypeScriptCompile Include="Scripts\Messaging.ts" />
     <TypeScriptCompile Include="Scripts\phaser.d.ts" />
+    <TypeScriptCompile Include="Scripts\References.ts" />
     <TypeScriptCompile Include="Scripts\UserInteraction.ts" />
   </ItemGroup>
   <ItemGroup>
