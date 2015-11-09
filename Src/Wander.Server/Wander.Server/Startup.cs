@@ -14,29 +14,15 @@ namespace Wander.Server
 {
     public class Startup
     {
-        Timer payTime = new Timer();
-        private static int count = 0;
+        GameManager game;
         public Startup()
         {
-            payTime.Interval = 3600000; // every hour
-            payTime.Elapsed += Elapsed;
-            payTime.Start();
+            game = new GameManager();
+            
         }
         public void Configuration(IAppBuilder app)
         {
             app.MapSignalR();
-        }
-
-        private void Elapsed(object sender, ElapsedEventArgs e)
-        {
-            Debug.Print("Delivering pay ! "+ count++);
-            List<ServerPlayerModel> connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
-
-            for (int i = 0; i < connectedPlayers.Count; i++)
-            {
-                ServiceProvider.GetUserService().DeliverPay(connectedPlayers[i]);
-                ServiceProvider.GetUserService().DeliverPoints(connectedPlayers[i]);
-            }
         }
     }
 }

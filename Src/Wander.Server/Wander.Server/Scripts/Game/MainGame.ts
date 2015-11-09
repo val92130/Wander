@@ -43,7 +43,7 @@ class WanderGame {
         this.players = new Array<Player>();
 
         this.currentPlayer = new Player(this.game, userPseudo, new Phaser.Point(10, 10));
-        this.game.camera.follow(this.currentPlayer.texture);
+
     }
 
     update() {
@@ -108,8 +108,20 @@ class WanderGame {
             }
         }
     }
+
+    getPlayer(game: any, pseudo: string) {
+        for (var i = 0; i < game.players.length; i++) {
+            if (game.players[i].pseudo == pseudo) {
+                return game.players[i];
+            }
+        }
+        return undefined;
+    }
 }
 
+hub.on("MessageReceived", function (msg) {
+    
+});
 
 hub.on("playerConnected", function (player) {
     game.addPlayer(currentGame, player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));

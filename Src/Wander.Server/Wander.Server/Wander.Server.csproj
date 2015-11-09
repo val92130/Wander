@@ -140,6 +140,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameManager.cs" />
     <Compile Include="Hubs\GameHub.cs" />
     <Compile Include="Model\ChatMessageModel.cs" />
     <Compile Include="Model\ClientNotificationMessageModel.cs" />

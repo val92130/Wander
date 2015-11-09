@@ -165,7 +165,7 @@ $(document).ready(function () {
 
 
     $("#my_infos").click(function() {
-        $("#my_infos_box").fadeToggle();
+        $("#my_infos_box").slideToggle();
 
         if ($("#msgFooter").css('display') != 'none') {
             $("#msgFooter").hide();
@@ -173,10 +173,20 @@ $(document).ready(function () {
     });
 
     $("#chat_btn").click(function() {
-        $("#msgFooter").fadeToggle();
+        $("#msgFooter").slideToggle();
         if ($("#my_infos_box").css('display') != 'none') {
             $("#my_infos_box").hide();
         }
+    });
+
+    $("#heading_box_msg").click(function () {
+        console.log("ok");
+        $("#msgFooter").hide();
+    });
+
+    $("#heading_box_info").click(function () {
+        console.log("ok");
+        $("#my_infos_box").hide();
     });
 
     setInterval(function () {

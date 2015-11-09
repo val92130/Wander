@@ -24,7 +24,6 @@ var WanderGame = (function () {
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.players = new Array();
         this.currentPlayer = new Player(this.game, userPseudo, new Phaser.Point(10, 10));
-        this.game.camera.follow(this.currentPlayer.texture);
     };
     WanderGame.prototype.update = function () {
         for (var i = 0; i < this.players.length; i++) {
@@ -78,8 +77,18 @@ var WanderGame = (function () {
             }
         }
     };
+    WanderGame.prototype.getPlayer = function (game, pseudo) {
+        for (var i = 0; i < game.players.length; i++) {
+            if (game.players[i].pseudo == pseudo) {
+                return game.players[i];
+            }
+        }
+        return undefined;
+    };
     return WanderGame;
 })();
+hub.on("MessageReceived", function (msg) {
+});
 hub.on("playerConnected", function (player) {
     game.addPlayer(currentGame, player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
     $.notify("player connected : " + player.Pseudo, "warn");
