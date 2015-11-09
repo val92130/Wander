@@ -1,7 +1,9 @@
 var Player = (function () {
     function Player(game, pseudo, position) {
-        this.speed = 3;
-        this.texture = game.add.sprite(200, 200, "player");
+        this.speed = 2;
+        this.texture = game.add.sprite(position.x, position.y, "player");
+        this.texture.width = 15;
+        this.texture.height = 20;
         this.pseudo = pseudo;
         this.position = position;
         this.newPosition = new Phaser.Point(this.position.x, this.position.y);

@@ -64,30 +64,3 @@ var MainGame = (function () {
     };
     return MainGame;
 })();
-hub.on("playerConnected", function (player) {
-    game.mainGame.addPlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
-    $.notify("player connected : " + player.Pseudo, "warn");
-});
-hub.on("playerDisconnected", function (player) {
-    game.mainGame.removePlayer(player.Pseudo);
-    $.notify("player disconnected : " + player.Pseudo, "error");
-});
-hub.on("playerMoved", function (player) {
-    game.mainGame.updatePlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
-});
-function createGame() {
-    game = new GameLauncher();
-}
-function deleteGame() {
-    game.game.destroy();
-}
-function Lerp(goal, current, time) {
-    var diff = goal - current;
-    if (diff > time) {
-        return current + time;
-    }
-    if (diff < -time) {
-        return current - time;
-    }
-    return goal;
-}

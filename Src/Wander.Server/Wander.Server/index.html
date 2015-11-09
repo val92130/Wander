@@ -21,7 +21,7 @@
             <div class="sk-cube3 sk-cube"></div>
         </div>
     </div>
-<nav class="navbar navbar-trans navbar-fixed-top" role="navigation" style="position: relative">
+<nav class="navbar navbar-trans navbar-fixed-top" role="navigation" style="position: relative; margin-bottom: 0px">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapsible">
@@ -147,8 +147,8 @@
 </body>
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-5" style="position: absolute; bottom: 0px; width: 50%; left: 0px;" id="msgFooter">
+    <div class="row" style="margin-right: auto;margin-left: auto;width: 500px;">
+        <div class="col-md-5" style="position: absolute; bottom: 30px; width: 50%; margin-left: auto; margin-right: auto" id="msgFooter">
             <div class="panel panel-primary" style="border-color: #2B2B2B;">
                 <div class="panel-heading" style="background-image: none;">
                     <span class="glyphicon glyphicon-comment"></span> Public Chat
@@ -196,8 +196,8 @@
 </div>
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-5" style="position: absolute; bottom: 0px; width: 50%; right: 0px;" id="infoFooter">
+    <div class="row" style="margin-right: auto;margin-left: auto;width: 500px;">
+        <div class="col-md-5" style="position: absolute; bottom: 30px; width: 50%; margin-left: auto; margin-right: auto" id="my_infos_box" >
             <div class="panel panel-primary" style="border-color: #2B2B2B;">
                 <div class="panel-heading" style="background-image: none;">
                     <span class="glyphicon glyphicon-user"></span> My infos
@@ -217,22 +217,34 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-6"><div class="well well-sm"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Username : <span class="label label-primary" id="userNameLabel"></span></div></div>
-                        <div class="col-md-6"><div class="well well-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> Job : <span class="label label-primary" id="jobLabel"></span></div></div>
+                        <div class="col-md-6">
+                            <div class="well well-sm"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Username : <span class="label label-primary" id="userNameLabel"></span></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="well well-sm"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span> Job : <span class="label label-primary" id="jobLabel"></span></div>
+                        </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6"><div class="well well-sm"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span> Sex : <span class="label label-primary" id="sexLabel"></span></div></div>
-                        <div class="col-md-6"><div class="well well-sm"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Points : <span class="label label-primary" id="pointsLabel"></span></div></div>
+                        <div class="col-md-6">
+                            <div class="well well-sm"><span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span> Sex : <span class="label label-primary" id="sexLabel"></span></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="well well-sm"><span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Points : <span class="label label-primary" id="pointsLabel"></span></div>
+                        </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6"><div class="well well-sm"><span class="glyphicon glyphicon-euro" aria-hidden="true"></span> Account : <span class="label label-primary" id="accountLabel"></span></div></div>
-                        <div class="col-md-6"><div class="well well-sm"><span class="glyphicon glyphicon-euro" aria-hidden="true"></span> Salary : <span class="label label-primary" id="salaryLabel"></span></div></div>
+                        <div class="col-md-6">
+                            <div class="well well-sm"><span class="glyphicon glyphicon-euro" aria-hidden="true"></span> Account : <span class="label label-primary" id="accountLabel"></span></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="well well-sm"><span class="glyphicon glyphicon-euro" aria-hidden="true"></span> Salary : <span class="label label-primary" id="salaryLabel"></span></div>
+                        </div>
                     </div>
                 </div>
                 <div class="panel-footer">
                     <div class="well well-sm">
                         <span class="glyphicon glyphicon-home"></span> My properties :
-                        <select class="form-control" style="width: 50%;display: inline-block; " id="propertyListOption">
+                        <select class="form-control" style="width: 50%; display: inline-block;" id="propertyListOption">
                             <option>1</option>
                             <option>2</option>
                             <option>3</option>
@@ -247,18 +259,36 @@
 
     </div>
 </div>
+
+
+
+<nav class="navbar navbar-trans navbar-fixed-bottom" role="navigation" style="position: absolute; display: none" id="bottom_navbar">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapsible">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-collapsible">
+            <ul class="nav navbar-nav navbar-left">
+                <li><a href="#chat" id="chat_btn"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> Public chat</a></li>
+                <li><a href="#register" id="my_infos"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> My Infos</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 <script src="Scripts/HubConnection.js"></script>
 <script src="Scripts/UserInteraction.js"></script>
+<script src="Scripts/Game/EDirection.js"></script>
 <script src="Scripts/Messaging.js"></script>
-<script src="Scripts/WanderGame/MainGame.js"></script>
+<script src="Scripts/Game/Player.js"></script>
+<script src="Scripts/Game/MainGame.js"></script>
 
 <script>
-    
-    window.onload = () => {
 
-        var mainGame = new WanderGame();
-        console.log("ok");
-    }
 
 </script>
 </html>

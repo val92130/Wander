@@ -1,4 +1,3 @@
-/// <reference path="References.ts"/>
 console.log("loaded");
 var $;
 var isConnected = false;
@@ -6,7 +5,7 @@ var userPseudo;
 $(document).ready(function () {
     $("#logoutBtn").hide();
     $("#msgFooter").hide();
-    $("#infoFooter").hide();
+    $("#my_infos_box").hide();
     $("#loginBtn").click(function () {
         $("#loginModal").modal();
     });
@@ -62,8 +61,7 @@ $(document).ready(function () {
         $("#loginBtn").hide();
         $("#registerBtn").hide();
         $("#logoutBtn").show();
-        $("#msgFooter").fadeIn("slow");
-        $("#infoFooter").fadeIn("slow");
+        $("#bottom_navbar").fadeIn("slow");
         GetInfos();
         createGame();
     }
@@ -72,8 +70,9 @@ $(document).ready(function () {
         $("#registerBtn").show();
         $("#logoutBtn").hide();
         $("#msgFooter").fadeOut("slow");
-        $("#infoFooter").fadeOut("slow");
+        $("#my_infos_box").fadeOut("slow");
         $("#labelPseudo").text("");
+        $("#bottom_navbar").fadeOut("slow");
         isConnected = false;
         deleteGame();
     }
@@ -120,6 +119,18 @@ $(document).ready(function () {
     $("#refreshPropertyBtn").click(function () {
         GetInfos();
         console.log("refreshing");
+    });
+    $("#my_infos").click(function () {
+        $("#my_infos_box").fadeToggle();
+        if ($("#msgFooter").css('display') != 'none') {
+            $("#msgFooter").hide();
+        }
+    });
+    $("#chat_btn").click(function () {
+        $("#msgFooter").fadeToggle();
+        if ($("#my_infos_box").css('display') != 'none') {
+            $("#my_infos_box").hide();
+        }
     });
     setInterval(function () {
         if (isConnected) {
