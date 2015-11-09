@@ -172,6 +172,11 @@ $(document).ready(function () {
         }
     });
 
+    $("#job_btn").click(function () {
+        getAllJobs();
+        $("#jobsModal").modal();
+    });
+
     
 
     $("#chat_btn").click(function() {

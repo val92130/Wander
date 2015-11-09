@@ -13,20 +13,40 @@ namespace Wander.Server
 {
     public class GameManager
     {
-        Timer payTime = new Timer();
-        private static int count = 0;
+        DateTime _time;
+        Timer _payTimer = new Timer();
+        Timer _alertTimer = new Timer();
         IHubContext context;
+        int _intervalMinutes = 15;
         public GameManager()
         {
             context = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
-            payTime.Interval = 1000 * 60 * 15; // Every 15 minutes
-            payTime.Elapsed += Elapsed;
-            payTime.Start();
+            _time = DateTime.Now;
+            _payTimer.Interval = 1000 * 60 * _intervalMinutes;
+            _payTimer.Elapsed += Elapsed;
+            _payTimer.Start();
+
+            _alertTimer.Interval = 1000 * 60 * 2; // We remain the player every two minutes
+            _alertTimer.Elapsed += Alert;
+            _alertTimer.Start();
+        }
+
+        private void Alert(object sender, ElapsedEventArgs e)
+        {
+            List<ServerPlayerModel> connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            TimeSpan interval = DateTime.Now - _time;
+            int remainingMinutes = _intervalMinutes - interval.Minutes;
+            if (remainingMinutes == 0) return;
+            for (int i = 0; i < connectedPlayers.Count; i++)
+            {
+                context.Clients.Client(connectedPlayers[i].SignalRId)
+                    .notify(Helper.CreateNotificationMessage("Next pay coming in :  " + remainingMinutes + " minutes", EMessageType.info));
+            }
         }
 
         private void Elapsed(object sender, ElapsedEventArgs e)
         {
-            Debug.Print("Delivering pay ! " + count++);
+            _time = DateTime.Now;
             List<ServerPlayerModel> connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
 
             for (int i = 0; i < connectedPlayers.Count; i++)

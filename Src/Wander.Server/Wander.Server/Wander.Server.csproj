@@ -173,6 +173,7 @@
     <TypeScriptCompile Include="Scripts\Game\EDirection.ts" />
     <TypeScriptCompile Include="Scripts\Game\Player.ts" />
     <TypeScriptCompile Include="Scripts\HubConnection.ts" />
+    <TypeScriptCompile Include="Scripts\JobManagement.ts" />
     <TypeScriptCompile Include="Scripts\Messaging.ts" />
     <TypeScriptCompile Include="Scripts\phaser.d.ts" />
     <TypeScriptCompile Include="Scripts\UserInteraction.ts" />
@@ -181,9 +182,7 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scripts\WanderGame\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

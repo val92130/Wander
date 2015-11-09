@@ -1,36 +1,33 @@
-﻿var game: WanderGame;
+﻿var game: Game;
 var currentGame: any;
-
-class WanderGame {
+var currentState;
+class Game extends Phaser.Game {
     
+    constructor() {
+        // init game
+        currentState = new GameState();
+        super(1024, 768, Phaser.CANVAS, "main", currentState);
+        
+    }
+}
+
+class GameState extends Phaser.State {
+
     game: Phaser.Game;
     map: Phaser.Tilemap;
     cursors: Phaser.CursorKeys;
     players: Player[];
-    currentPlayer : Player;
-    t:number;
-    constructor() {
-        this.t = 10;
-        this.game = new Phaser.Game(1024, 768, Phaser.AUTO, 'main', {
-            create: this.create, preload:
-            this.preload, render: this.render, update:this.update
-        }); 
-    }
+    currentPlayer: Player;
 
     preload() {
+        this.stage.disableVisibilityChange = true;
         this.game.stage.disableVisibilityChange = true;
         this.game.load.image("player", "Content/Game/Images/player.png");
         this.game.load.tilemap("Map", "Content/Game/Maps/wander_map.json", null, Phaser.Tilemap.TILED_JSON);
         this.game.load.image("Tiles", "Content/Game/Images/wander_tileset.png");
-        
-    }
-
-    render() {
-        
     }
 
     create() {
-        console.log(this.t);
         hub.invoke("GetAllPlayers");
         currentGame = this;
         this.map = this.game.add.tilemap("Map");
@@ -39,8 +36,8 @@ class WanderGame {
         var bg = this.map.createLayer("backgroundLayer");
         bg.setScale(2, 2);
         bg.resizeWorld();
-        
-        
+
+
         var col = this.map.createLayer("collisionLayer");
         col.setScale(2, 2);
 
@@ -59,7 +56,7 @@ class WanderGame {
 
         this.game.camera.x = Lerp(camX * this.game.camera.width, this.game.camera.x, 20);
         this.game.camera.y = Lerp(camY * this.game.camera.height, this.game.camera.y, 20);
-        
+
         for (var i = 0; i < this.players.length; i++) {
             this.players[i].update();
             this.players[i].updateServer();
@@ -87,75 +84,78 @@ class WanderGame {
 
     }
 
-    addPlayer(game:any, pseudo: string, position: Phaser.Point) {
+    addPlayer(pseudo: string, position: Phaser.Point) {
 
         var flag: Boolean = false;
-        for (var i = 0; i < game.players.length; i++) {
-            if (game.players[i].pseudo == pseudo) {
+        for (var i = 0; i < this.players.length; i++) {
+            if (this.players[i].pseudo == pseudo) {
                 flag = true;
                 break;
             }
         }
 
         if (!flag) {
-            game.players.push(new Player(game, pseudo, position));
+            this.players.push(new Player(game, pseudo, position));
         }
     }
 
-    removePlayer(game: any, pseudo: string) {
-        for (var i = 0; i < game.players.length; i++) {
-            if (game.players[i].pseudo == pseudo) {
-                game.players[i].remove();
-                game.players.splice(i, 1);
+    removePlayer(pseudo: string) {
+        for (var i = 0; i < this.players.length; i++) {
+            if (this.players[i].pseudo == pseudo) {
+                this.players[i].remove();
+                this.players.splice(i, 1);
                 break;
             }
         }
     }
 
-    updatePlayer(game: any, pseudo: string, position: Phaser.Point) {
-        for (var i = 0; i < game.players.length; i++) {
-            if (game.players[i].pseudo == pseudo) {
-                game.players[i].newPosition = position;
+    updatePlayer(pseudo: string, position: Phaser.Point) {
+        for (var i = 0; i < this.players.length; i++) {
+            if (this.players[i].pseudo == pseudo) {
+                this.players[i].newPosition = position;
                 break;
             }
         }
     }
 
-    getPlayer(game: any, pseudo: string) {
-        for (var i = 0; i < game.players.length; i++) {
-            if (game.players[i].pseudo == pseudo) {
-                return game.players[i];
+    getPlayer(pseudo: string) {
+        for (var i = 0; i < this.players.length; i++) {
+            if (this.players[i].pseudo == pseudo) {
+                return this.players[i];
             }
         }
         return undefined;
     }
 }
 
+
+
 hub.on("MessageReceived", function (msg) {
     
 });
 
 hub.on("playerConnected", function (player) {
-    game.addPlayer(currentGame, player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
+    currentState.addPlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
     $.notify("player connected : " + player.Pseudo, "warn");
 });
 
 hub.on("playerDisconnected", function (player) {
-    game.removePlayer(currentGame,player.Pseudo);
+    currentState.removePlayer(player.Pseudo);
     $.notify("player disconnected : " + player.Pseudo, "error");
 });
 
 hub.on("playerMoved", function (player) {
-    game.updatePlayer(currentGame,player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
+    currentState.updatePlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
 });
 
 
+
 function createGame() {
-    game = new WanderGame();
+    game = new Game();
 }
 
 function deleteGame() {
-    game.game.destroy();
+    game.destroy();
 }
 
 

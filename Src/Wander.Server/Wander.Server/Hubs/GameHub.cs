@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Web;
@@ -214,6 +215,45 @@ namespace Wander.Server.Hubs
                 Clients.Caller.playerConnected(new {Pseudo = players[i].Pseudo, Position = players[i].Position});
             }
 
+        }
+
+        public void GetAllJobs()
+        {
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return;
+
+            Clients.Caller.onGetJobs(ServiceProvider.GetJobService().GetAllJobs());
+        }
+
+        public void ApplyJob(int jobId)
+        {
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return;
+
+            bool val = ServiceProvider.GetJobService().ChangeUserJob(jobId, Context.ConnectionId);
+            if (val)
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("Congratulations ! You got a new job ! ",
+                    EMessageType.success));
+            }
+            else
+            {
+                int points = ServiceProvider.GetUserService().GetUserPoints(Context.ConnectionId);
+                JobModel j = ServiceProvider.GetJobService().GetAllJobs().FirstOrDefault(x => x.JobId == jobId);
+                if (j == null)
+                {
+                    Clients.Caller.notify(Helper.CreateNotificationMessage("This job doesnt exist ! ",
+                        EMessageType.error));
+                    return;
+                }
+
+                if (points < j.NecessaryPoints)
+                {
+                    Clients.Caller.notify(Helper.CreateNotificationMessage("You don't have enough points ! ",
+                        EMessageType.error));
+                    return;
+                }
+                Clients.Caller.notify(Helper.CreateNotificationMessage("Unknown error, please try again later ",
+                        EMessageType.error));
+            }
         }
     }
 }

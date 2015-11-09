@@ -126,6 +126,10 @@ $(document).ready(function () {
             $("#msgFooter").hide();
         }
     });
+    $("#job_btn").click(function () {
+        getAllJobs();
+        $("#jobsModal").modal();
+    });
     $("#chat_btn").click(function () {
         $("#msgFooter").slideToggle();
         if ($("#msgFooter").css('display') != 'none') {
