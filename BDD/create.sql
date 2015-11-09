@@ -165,8 +165,43 @@ constraint FK_UserIdMessage foreign key(UserId) references dbo.Users(UserId)
 
 
 
-INSERT INTO dbo.Jobs(JobDescription, Salary, Threshold) values('unemployed', 0, 0);
+INSERT INTO dbo.Jobs(JobDescription, Salary, Threshold, EarningPoints, NecessaryPoints) values('unemployed', 0, 0,2,0);
 
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Barman', 50, 5,70,100); 
 
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Taxi Driver', 200, 10,20,4); 
 
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Dj', 300, 15,130,2); 
+
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Computer engineer', 500, 30,150,20); 
+
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Jeweller', 100, 7,85,10); 
+
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Accountant', 500, 25,60,5); 
+
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Cook', 100, 7,70,50); 
+
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Dentist', 500, 35,130,40); 
+
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Electrician', 70, 5,90,100); 
+
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Journalist', 250, 12,100,20); 
+
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Doctor', 600, 35,180,10); 
+
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Plumber', 70, 5,90,100); 
+
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Policeman', 150, 8,95,30); 
+
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Secretary', 20, 3,60,250); 
+
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Technician', 250, 12,110,25); 
+
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Teacher', 80, 6,85,35); 
+
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Office worker', 80, 6,75,60); 
+
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Medic', 550, 30,120,15); 
+
+ INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Firefighter', 450, 26,120,20); 
 
