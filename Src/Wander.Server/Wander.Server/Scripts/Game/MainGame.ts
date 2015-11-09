@@ -1,6 +1,6 @@
 ﻿var game: WanderGame;
-
 var currentGame: any;
+
 class WanderGame {
     
     game: Phaser.Game;

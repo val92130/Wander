@@ -1,4 +1,6 @@
-﻿$("#msgForm").submit(function (e) {
+﻿var unreadMsg = 0;
+
+$("#msgForm").submit(function (e) {
     
 
     var values: {};
@@ -26,8 +28,12 @@ $("#hideInfosBoxBtn").click(function () {
 });
 
 hub.on("MessageReceived", function (msg) {
-    $(".panel-body").animate({ scrollTop: $('.panel-body').prop("scrollHeight") }, 1000);
+    $(".panel-body").animate({ scrollTop: $('.panel-body').prop("scrollHeight") }, 20);
 
+    if ($("#msgFooter").css('display') == 'none') {
+        unreadMsg += 1;
+        $("#chat_btn").css("color", "green");
+    } 
     var img = msg.Sex == 1 ? "user-boy.png" : "user-girl.png"; 
     $("#chatBox").append(buildChatMessage(msg.Sex, msg.UserName, msg.Content, msg.Hour));
 });

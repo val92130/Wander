@@ -172,8 +172,16 @@ $(document).ready(function () {
         }
     });
 
+    
+
     $("#chat_btn").click(function() {
         $("#msgFooter").slideToggle();
+        if ($("#msgFooter").css('display') != 'none') {
+            $(".panel-body").animate({ scrollTop: $('.panel-body').prop("scrollHeight") }, 20);
+            $("#sendMsgInput").focus();
+            unreadMsg = 0;
+            $("#chat_btn").css("color", "#CDCDCD");
+        }
         if ($("#my_infos_box").css('display') != 'none') {
             $("#my_infos_box").hide();
         }

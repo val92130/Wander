@@ -7,16 +7,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wander.Server.Tests", "Wand
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wander.Server", "Wander.Server\Wander.Server.csproj", "{732B2BB2-D706-4DE3-A3DB-8A664FE3DD3A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCakeBuilder", "CodeCakeBuilder\CodeCakeBuilder.csproj", "{FD4817B6-3CD7-4E74-AA10-7CA95FDFCF2D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4432C4E7-C8EB-41CB-AA9D-797477A3CB41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4432C4E7-C8EB-41CB-AA9D-797477A3CB41}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4432C4E7-C8EB-41CB-AA9D-797477A3CB41}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4432C4E7-C8EB-41CB-AA9D-797477A3CB41}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B9B2EBDC-40FF-4331-9359-21D725839C1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B9B2EBDC-40FF-4331-9359-21D725839C1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9B2EBDC-40FF-4331-9359-21D725839C1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -25,6 +23,10 @@ Global
 		{732B2BB2-D706-4DE3-A3DB-8A664FE3DD3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{732B2BB2-D706-4DE3-A3DB-8A664FE3DD3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{732B2BB2-D706-4DE3-A3DB-8A664FE3DD3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD4817B6-3CD7-4E74-AA10-7CA95FDFCF2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD4817B6-3CD7-4E74-AA10-7CA95FDFCF2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD4817B6-3CD7-4E74-AA10-7CA95FDFCF2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD4817B6-3CD7-4E74-AA10-7CA95FDFCF2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
