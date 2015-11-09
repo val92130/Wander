@@ -5,3 +5,4 @@ var EDirection;
     EDirection[EDirection["Down"] = 2] = "Down";
     EDirection[EDirection["Up"] = 3] = "Up";
 })(EDirection || (EDirection = {}));
+//# sourceMappingURL=EDirection.js.map

@@ -3,8 +3,8 @@ var Player = (function () {
         this.game = game;
         this.speed = 2;
         this.texture = game.add.sprite(position.x, position.y, "player");
-        this.texture.width = 15;
-        this.texture.height = 20;
+        this.texture.width = 20;
+        this.texture.height = 30;
         this.pseudo = pseudo;
         this.position = position;
         this.newPosition = new Phaser.Point(this.position.x, this.position.y);
@@ -34,8 +34,8 @@ var Player = (function () {
                 this.position.y += this.speed;
                 break;
         }
-        this.game.camera.x = this.position.x - (this.game.camera.width / 2) + this.texture.width / 2;
-        this.game.camera.y = this.position.y - (this.game.camera.height / 2) + this.texture.height / 2;
+        //this.game.camera.x = this.position.x - (this.game.camera.width / 2) + this.texture.width / 2;
+        //this.game.camera.y = this.position.y - (this.game.camera.height / 2) + this.texture.height/2;
     };
     Player.prototype.updateServer = function () {
         this.position.x = Lerp(this.newPosition.x, this.position.x, 2);
@@ -55,3 +55,4 @@ var Player = (function () {
     };
     return Player;
 })();
+//# sourceMappingURL=Player.js.map

@@ -18,8 +18,8 @@ class Player {
         this.game = game;
         this.speed = 2;
         this.texture = game.add.sprite(position.x, position.y, "player");
-        this.texture.width = 15;
-        this.texture.height = 20;
+        this.texture.width = 20;
+        this.texture.height = 30;
         this.pseudo = pseudo;
         this.position = position;
         this.newPosition = new Phaser.Point(this.position.x, this.position.y);
@@ -56,8 +56,8 @@ class Player {
                 break;
         }
 
-        this.game.camera.x = this.position.x - (this.game.camera.width / 2) + this.texture.width / 2;
-        this.game.camera.y = this.position.y - (this.game.camera.height / 2) + this.texture.height/2;
+        //this.game.camera.x = this.position.x - (this.game.camera.width / 2) + this.texture.width / 2;
+        //this.game.camera.y = this.position.y - (this.game.camera.height / 2) + this.texture.height/2;
         
 
         

@@ -8,9 +8,9 @@ class WanderGame {
     cursors: Phaser.CursorKeys;
     players: Player[];
     currentPlayer : Player;
-
+    t:number;
     constructor() {
-        
+        this.t = 10;
         this.game = new Phaser.Game(1024, 768, Phaser.AUTO, 'main', {
             create: this.create, preload:
             this.preload, render: this.render, update:this.update
@@ -30,14 +30,20 @@ class WanderGame {
     }
 
     create() {
+        console.log(this.t);
         hub.invoke("GetAllPlayers");
         currentGame = this;
         this.map = this.game.add.tilemap("Map");
         this.map.addTilesetImage("wander_tileset", "Tiles");
 
-        this.map.createLayer("backgroundLayer").resizeWorld();
-        this.map.createLayer("collisionLayer");
+        var bg = this.map.createLayer("backgroundLayer");
+        bg.setScale(2, 2);
+        bg.resizeWorld();
         
+        
+        var col = this.map.createLayer("collisionLayer");
+        col.setScale(2, 2);
+
         this.cursors = this.game.input.keyboard.createCursorKeys();
 
         this.players = new Array<Player>();
@@ -48,6 +54,12 @@ class WanderGame {
 
     update() {
 
+        var camX = Math.floor(this.currentPlayer.position.x / this.game.camera.width);
+        var camY = Math.floor(this.currentPlayer.position.y / this.game.camera.height);
+
+        this.game.camera.x = Lerp(camX * this.game.camera.width, this.game.camera.x, 20);
+        this.game.camera.y = Lerp(camY * this.game.camera.height, this.game.camera.y, 20);
+        
         for (var i = 0; i < this.players.length; i++) {
             this.players[i].update();
             this.players[i].updateServer();
