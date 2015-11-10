@@ -2,6 +2,7 @@ console.log("loaded");
 var $;
 var isConnected = false;
 var userPseudo;
+var currentUser;
 $(document).ready(function () {
     $("#logoutBtn").hide();
     $("#msgFooter").hide();
@@ -95,6 +96,7 @@ $(document).ready(function () {
         OnLogout();
     });
     hub.on("getInfos", function (user) {
+        currentUser = user;
         $("#jobLabel").text(user.Job.JobDescription);
         $("#salaryLabel").text(user.Job.Salary + " €");
         $("#userNameLabel").text(user.UserName);

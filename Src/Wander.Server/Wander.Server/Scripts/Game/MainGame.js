@@ -4,7 +4,6 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var game;
-var currentGame;
 var currentState;
 var Game = (function (_super) {
     __extends(Game, _super);
@@ -24,24 +23,26 @@ var GameState = (function (_super) {
         this.stage.disableVisibilityChange = true;
         this.game.stage.disableVisibilityChange = true;
         this.game.load.image("player", "Content/Game/Images/player.png");
-        this.game.load.tilemap("Map", "Content/Game/Maps/wander_map.json", null, Phaser.Tilemap.TILED_JSON);
+        this.game.load.tilemap("Map", "Content/Game/Maps/map.json", null, Phaser.Tilemap.TILED_JSON);
         this.game.load.image("Tiles", "Content/Game/Images/wander_tileset.png");
     };
     GameState.prototype.create = function () {
         hub.invoke("GetAllPlayers");
-        currentGame = this;
+        this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.map = this.game.add.tilemap("Map");
         this.map.addTilesetImage("wander_tileset", "Tiles");
-        var bg = this.map.createLayer("backgroundLayer");
-        bg.setScale(2, 2);
-        bg.resizeWorld();
-        var col = this.map.createLayer("collisionLayer");
-        col.setScale(2, 2);
+        this.bgLayer = this.map.createLayer("backgroundLayer");
+        this.bgLayer.resizeWorld();
+        this.colLayer = this.map.createLayer("collisionLayer");
+        this.colLayer.alpha = 0;
+        this.map.setCollisionBetween(1, 2500, true, this.colLayer);
+        this.objLayer = this.map.createLayer("objectsLayer");
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.players = new Array();
         this.currentPlayer = new Player(this.game, userPseudo, new Phaser.Point(10, 10));
     };
     GameState.prototype.update = function () {
+        this.game.physics.arcade.collide(this.currentPlayer.texture, this.colLayer);
         var camX = Math.floor(this.currentPlayer.position.x / this.game.camera.width);
         var camY = Math.floor(this.currentPlayer.position.y / this.game.camera.height);
         this.game.camera.x = Lerp(camX * this.game.camera.width, this.game.camera.x, 20);

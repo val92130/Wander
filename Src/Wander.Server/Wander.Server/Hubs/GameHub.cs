@@ -221,7 +221,7 @@ namespace Wander.Server.Hubs
         {
             if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return;
 
-            Clients.Caller.onGetJobs(ServiceProvider.GetJobService().GetAllJobs());
+            Clients.Caller.onGetJobs(ServiceProvider.GetJobService().GetAllJobs().OrderBy(x => x.NecessaryPoints).ToList());
         }
 
         public void ApplyJob(int jobId)

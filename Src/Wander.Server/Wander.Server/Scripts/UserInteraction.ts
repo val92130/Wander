@@ -4,6 +4,7 @@ console.log("loaded");
 var $: any;
 var isConnected = false;
 var userPseudo: any;
+var currentUser: any;
 
 $(document).ready(function () {
 
@@ -131,6 +132,7 @@ $(document).ready(function () {
     });
 
     hub.on("getInfos", function (user) {
+        currentUser = user;
         $("#jobLabel").text(user.Job.JobDescription);
         $("#salaryLabel").text(user.Job.Salary + " €");
         $("#userNameLabel").text(user.UserName);

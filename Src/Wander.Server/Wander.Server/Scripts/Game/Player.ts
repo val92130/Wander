@@ -16,7 +16,9 @@ class Player {
     constructor(game: Phaser.Game, pseudo: string, position: Phaser.Point) {
 
         this.game = game;
-        this.speed = 2;
+
+
+        this.speed = 100;
         this.texture = game.add.sprite(position.x, position.y, "player");
         this.texture.width = 20;
         this.texture.height = 30;
@@ -28,11 +30,20 @@ class Player {
         this.startTime = new Date().getTime();
         this.endTime = new Date().getTime();
 
+        this.game.physics.enable(this.texture);
+        this.texture.body.collideWorldBounds = true;
+        this.texture.body.maxVelocity = 20;
+
     }
 
     update() {
-        this.texture.x = this.position.x;
-        this.texture.y = this.position.y;
+        
+        this.texture.body.velocity.x = 0;
+        this.texture.body.velocity.y = 0;
+
+        this.position.x = this.texture.x;
+        this.position.y = this.texture.y;
+
 
         this.text.x = this.texture.x;
         this.text.y = this.texture.y - 20;
@@ -43,29 +54,25 @@ class Player {
         
         switch (direction) {
             case EDirection.Left:
-                this.position.x -= this.speed;
+                this.texture.body.velocity.x = -this.speed;
                 break;
             case EDirection.Right:
-                this.position.x += this.speed;
+                this.texture.body.velocity.x = this.speed;
                 break;
             case EDirection.Up:
-                this.position.y -= this.speed;
+                this.texture.body.velocity.y = -this.speed;
                 break;
             case EDirection.Down:
-                this.position.y += this.speed;
+                this.texture.body.velocity.y = this.speed;
                 break;
         }
-
-        //this.game.camera.x = this.position.x - (this.game.camera.width / 2) + this.texture.width / 2;
-        //this.game.camera.y = this.position.y - (this.game.camera.height / 2) + this.texture.height/2;
-        
 
         
     }
 
     updateServer() {
-        this.position.x = Lerp(this.newPosition.x, this.position.x, 2);
-        this.position.y = Lerp(this.newPosition.y, this.position.y, 2);
+        this.texture.body.x = Lerp(this.newPosition.x, this.texture.body.x, 2);
+        this.texture.body.y = Lerp(this.newPosition.y, this.texture.body.y, 2);
     }
 
     remove() {
