@@ -10,7 +10,7 @@ var Game = (function (_super) {
     function Game() {
         // init game
         currentState = new GameState();
-        _super.call(this, 1024, 768, Phaser.CANVAS, "main", currentState);
+        _super.call(this, 1024, 768, Phaser.WEBGL, "main", currentState);
     }
     return Game;
 })(Phaser.Game);
@@ -23,26 +23,32 @@ var GameState = (function (_super) {
         this.stage.disableVisibilityChange = true;
         this.game.stage.disableVisibilityChange = true;
         this.game.load.image("player", "Content/Game/Images/player.png");
-        this.game.load.tilemap("Map", "Content/Game/Maps/map.json", null, Phaser.Tilemap.TILED_JSON);
-        this.game.load.image("Tiles", "Content/Game/Images/wander_tileset.png");
+        this.game.load.tilemap("Map", "Content/Game/Maps/map7.json", null, Phaser.Tilemap.TILED_JSON);
+        this.game.load.image("Tiles", "Content/Game/Images/tileset3.png");
+        this.game.load.image("Overlay", "Content/Game/Images/filter.png");
     };
     GameState.prototype.create = function () {
         hub.invoke("GetAllPlayers");
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.map = this.game.add.tilemap("Map");
-        this.map.addTilesetImage("wander_tileset", "Tiles");
-        this.bgLayer = this.map.createLayer("backgroundLayer");
+        this.map.addTilesetImage("tilset3", "Tiles");
+        this.bgLayer = this.map.createLayer("Calque de Tile 1");
         this.bgLayer.resizeWorld();
-        this.colLayer = this.map.createLayer("collisionLayer");
-        this.colLayer.alpha = 0;
-        this.map.setCollisionBetween(1, 2500, true, this.colLayer);
-        this.objLayer = this.map.createLayer("objectsLayer");
+        //this.colLayer = this.map.createLayer("collisionLayer");
+        //this.colLayer.alpha = 0;
+        //this.map.setCollisionBetween(1, 2500, true, this.colLayer);
+        //this.objLayer = this.map.createLayer("objectsLayer");
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.players = new Array();
         this.currentPlayer = new Player(this.game, userPseudo, new Phaser.Point(10, 10));
+        this.dayNightCycle = new DayNightCycle(this.game);
+        this.dayNightCycle.create();
+        hub.invoke("update");
+        this.game.world.bringToTop(currentState.dayNightCycle.overlay);
     };
     GameState.prototype.update = function () {
-        this.game.physics.arcade.collide(this.currentPlayer.texture, this.colLayer);
+        this.dayNightCycle.update();
+        //this.game.physics.arcade.collide(this.currentPlayer.texture, this.colLayer);
         var camX = Math.floor(this.currentPlayer.position.x / this.game.camera.width);
         var camY = Math.floor(this.currentPlayer.position.y / this.game.camera.height);
         this.game.camera.x = Lerp(camX * this.game.camera.width, this.game.camera.x, 20);
@@ -80,6 +86,7 @@ var GameState = (function (_super) {
         if (!flag) {
             this.players.push(new Player(game, pseudo, position));
         }
+        this.game.world.bringToTop(currentState.dayNightCycle.overlay);
     };
     GameState.prototype.removePlayer = function (pseudo) {
         for (var i = 0; i < this.players.length; i++) {
@@ -89,6 +96,7 @@ var GameState = (function (_super) {
                 break;
             }
         }
+        this.game.world.bringToTop(currentState.dayNightCycle.overlay);
     };
     GameState.prototype.updatePlayer = function (pseudo, position) {
         for (var i = 0; i < this.players.length; i++) {
@@ -121,6 +129,22 @@ hub.on("playerDisconnected", function (player) {
 hub.on("playerMoved", function (player) {
     currentState.updatePlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
 });
+hub.on("updateTime", function (isDay) {
+    currentState.dayNightCycle.isDay = isDay;
+});
+hub.on("MessageReceived", function (msg) {
+    var u = currentState.getPlayer(msg.UserName);
+    if (msg.UserName == currentState.currentPlayer.pseudo)
+        u = currentState.currentPlayer;
+    if (u != undefined) {
+        u.setTextMessage(msg.Content);
+    }
+});
+setInterval(function () {
+    if (isConnected) {
+        hub.invoke("update");
+    }
+}, 10000);
 function createGame() {
     game = new Game();
 }
@@ -137,4 +161,3 @@ function Lerp(goal, current, time) {
     }
     return goal;
 }
-//# sourceMappingURL=MainGame.js.map

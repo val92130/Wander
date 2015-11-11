@@ -255,5 +255,15 @@ namespace Wander.Server.Hubs
                         EMessageType.error));
             }
         }
+
+        public void Update()
+        {
+            var players = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+
+            for (int i = 0; i < players.Count; i++)
+            {
+                Clients.Client(players[i].SignalRId).updateTime(ServiceProvider.GetGameManager().IsDay);
+            }
+        }
     }
 }

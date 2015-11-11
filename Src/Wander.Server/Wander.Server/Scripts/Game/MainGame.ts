@@ -5,7 +5,7 @@ class Game extends Phaser.Game {
     constructor() {
         // init game
         currentState = new GameState();
-        super(1024, 768, Phaser.CANVAS, "main", currentState);
+        super(1024, 768, Phaser.WEBGL, "main", currentState);
         
     }
 }
@@ -20,34 +20,38 @@ class GameState extends Phaser.State {
     colLayer:Phaser.TilemapLayer;
     bgLayer:Phaser.TilemapLayer;
     objLayer: Phaser.TilemapLayer;
-
+    overlay: Phaser.Sprite;
+    filter: Phaser.Filter;
+    dayNightCycle: DayNightCycle;
     preload() {
         this.stage.disableVisibilityChange = true;
         this.game.stage.disableVisibilityChange = true;
         this.game.load.image("player", "Content/Game/Images/player.png");
-        this.game.load.tilemap("Map", "Content/Game/Maps/map.json", null, Phaser.Tilemap.TILED_JSON);
-        this.game.load.image("Tiles", "Content/Game/Images/wander_tileset.png");
+        this.game.load.tilemap("Map", "Content/Game/Maps/map7.json", null, Phaser.Tilemap.TILED_JSON);
+        this.game.load.image("Tiles", "Content/Game/Images/tileset3.png");
+        this.game.load.image("Overlay", "Content/Game/Images/filter.png");
+        
     }
 
     create() {
         hub.invoke("GetAllPlayers");
-
         
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
         this.map = this.game.add.tilemap("Map");
-        this.map.addTilesetImage("wander_tileset", "Tiles");
 
-        this.bgLayer = this.map.createLayer("backgroundLayer");
+        this.map.addTilesetImage("tilset3", "Tiles");
+
+        this.bgLayer = this.map.createLayer("Calque de Tile 1");
        
         this.bgLayer.resizeWorld();
 
 
-        this.colLayer = this.map.createLayer("collisionLayer");
-        this.colLayer.alpha = 0;
-        this.map.setCollisionBetween(1, 2500, true, this.colLayer);
+        //this.colLayer = this.map.createLayer("collisionLayer");
+        //this.colLayer.alpha = 0;
+        //this.map.setCollisionBetween(1, 2500, true, this.colLayer);
 
-        this.objLayer = this.map.createLayer("objectsLayer");
+        //this.objLayer = this.map.createLayer("objectsLayer");
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
 
@@ -55,12 +59,17 @@ class GameState extends Phaser.State {
 
         this.currentPlayer = new Player(this.game, userPseudo, new Phaser.Point(10, 10));
 
-
+        this.dayNightCycle = new DayNightCycle(this.game);
+        this.dayNightCycle.create();
+        hub.invoke("update");
+        this.game.world.bringToTop(currentState.dayNightCycle.overlay);
 
     }
 
     update() {
-        this.game.physics.arcade.collide(this.currentPlayer.texture, this.colLayer);
+        this.dayNightCycle.update();
+
+        //this.game.physics.arcade.collide(this.currentPlayer.texture, this.colLayer);
 
         var camX = Math.floor(this.currentPlayer.position.x / this.game.camera.width);
         var camY = Math.floor(this.currentPlayer.position.y / this.game.camera.height);
@@ -108,6 +117,7 @@ class GameState extends Phaser.State {
         if (!flag) {
             this.players.push(new Player(game, pseudo, position));
         }
+        this.game.world.bringToTop(currentState.dayNightCycle.overlay);
     }
 
     removePlayer(pseudo: string) {
@@ -118,6 +128,7 @@ class GameState extends Phaser.State {
                 break;
             }
         }
+        this.game.world.bringToTop(currentState.dayNightCycle.overlay);
     }
 
     updatePlayer(pseudo: string, position: Phaser.Point) {
@@ -158,6 +169,26 @@ hub.on("playerDisconnected", function (player) {
 hub.on("playerMoved", function (player) {
     currentState.updatePlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
 });
+
+hub.on("updateTime", function (isDay) {
+    currentState.dayNightCycle.isDay = isDay;
+});
+
+hub.on("MessageReceived", function (msg) {
+    
+    var u = currentState.getPlayer(msg.UserName);
+    if (msg.UserName == currentState.currentPlayer.pseudo) u = currentState.currentPlayer;
+    if (u != undefined) {
+        u.setTextMessage(msg.Content);
+    }
+});
+
+setInterval(function () {
+    if (isConnected) {
+        hub.invoke("update");
+    }
+
+}, 10000);
 
 
 

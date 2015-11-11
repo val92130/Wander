@@ -18,16 +18,42 @@ namespace Wander.Server
         Timer _alertTimer = new Timer();
         IHubContext context;
         int _intervalMinutes = 15;
+        bool _isDay;
+        Timer _updateTimer = new Timer();
         public GameManager()
         {
             context = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
             _time = DateTime.Now;
             _payTimer.Interval = 1000 * 60 * _intervalMinutes;
-            _payTimer.Elapsed += Elapsed;
+            _payTimer.Elapsed += DeliverPayEvent;
             _payTimer.Start();
 
             _alertTimer.Interval = 1000 * 60 * 2; // We remain the player every two minutes
             _alertTimer.Elapsed += Alert;
+
+            _updateTimer.Interval = 2000;
+            _updateTimer.Elapsed += Update;
+        }
+
+        private void Update(object sender, ElapsedEventArgs e)
+        {
+            DateTime now = DateTime.Now;
+            _isDay = (now.Hour <= 18 && now.Hour >= 8);
+        }
+
+        public bool IsDay
+        {
+            get
+            {
+                return _isDay;
+            }
+        }
+
+        public void Start()
+        {
+            
+
+            _payTimer.Start();
             _alertTimer.Start();
         }
 
@@ -44,7 +70,7 @@ namespace Wander.Server
             }
         }
 
-        private void Elapsed(object sender, ElapsedEventArgs e)
+        private void DeliverPayEvent(object sender, ElapsedEventArgs e)
         {
             _time = DateTime.Now;
             List<ServerPlayerModel> connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();

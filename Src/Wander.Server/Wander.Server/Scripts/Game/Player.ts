@@ -7,11 +7,17 @@ class Player {
     newPosition: Phaser.Point;
     speed : number;
     style: any;
-
+    messageStyle: any;
     text: any;
     game:Phaser.Game;
     startTime: any;
     endTime: any;
+
+    textMessageContent: string;
+    textMessage: any;
+
+    messageTime: any;
+    messageTimeEnd: any;
 
     constructor(game: Phaser.Game, pseudo: string, position: Phaser.Point) {
 
@@ -22,6 +28,12 @@ class Player {
         this.texture = game.add.sprite(position.x, position.y, "player");
         this.texture.width = 20;
         this.texture.height = 30;
+
+        this.textMessageContent = "";
+        this.messageStyle = { font: "18px Arial", fill: "#FFFFFF", wordWrap: true };
+        this.textMessage = game.add.text(0, 0, this.textMessageContent, this.messageStyle);
+
+        
         this.pseudo = pseudo;
         this.position = position;
         this.newPosition = new Phaser.Point(this.position.x, this.position.y);
@@ -29,6 +41,8 @@ class Player {
         this.text = game.add.text(0, 0, pseudo, this.style);
         this.startTime = new Date().getTime();
         this.endTime = new Date().getTime();
+        this.messageTime = new Date().getTime();
+        this.messageTimeEnd = new Date().getTime();
 
         this.game.physics.enable(this.texture);
         this.texture.body.collideWorldBounds = true;
@@ -48,6 +62,26 @@ class Player {
         this.text.x = this.texture.x;
         this.text.y = this.texture.y - 20;
 
+        this.textMessage.x = this.texture.x;
+        this.textMessage.y = this.texture.y - 45;
+        
+        if (this.textMessageContent != "") {
+            this.messageTime = new Date().getTime();
+            var nTime = this.messageTime - this.messageTimeEnd;
+            if (nTime >= 5000) {
+                this.messageTimeEnd = this.messageTime;
+                this.textMessageContent = "";
+                
+            }
+        }
+        this.textMessage.text = this.textMessageContent;
+
+    }
+
+    public setTextMessage(text: string) {
+        this.textMessageContent = text;
+        this.messageTime = new Date().getTime();
+        this.messageTimeEnd = this.messageTime;
     }
 
     move(direction: EDirection) {

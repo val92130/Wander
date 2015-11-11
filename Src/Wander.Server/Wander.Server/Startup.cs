@@ -17,8 +17,7 @@ namespace Wander.Server
         GameManager game;
         public Startup()
         {
-            game = new GameManager();
-            
+            ServiceProvider.GetGameManager().Start();            
         }
         public void Configuration(IAppBuilder app)
         {
