@@ -13,14 +13,27 @@
     <meta charset="utf-8" />
 </head>
 <body>
-    <div class="overlay">
-        <div class="sk-folding-cube">
-            <div class="sk-cube1 sk-cube"></div>
-            <div class="sk-cube2 sk-cube"></div>
-            <div class="sk-cube4 sk-cube"></div>
-            <div class="sk-cube3 sk-cube"></div>
-        </div>
+<div class="overlay">
+    <div class="sk-folding-cube">
+        <div class="sk-cube1 sk-cube"></div>
+        <div class="sk-cube2 sk-cube"></div>
+        <div class="sk-cube4 sk-cube"></div>
+        <div class="sk-cube3 sk-cube"></div>
     </div>
+</div>
+
+<div class="quickChatOverlay">
+
+</div>
+
+<div class="quickChatBox">
+    <form id="quickChatForm">
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></span>
+            <input type="text" id="quickChatInput" class="form-control" placeholder="Message" aria-describedby="basic-addon1">
+        </div>
+    </form>
+</div>
 <nav class="navbar navbar-trans navbar-fixed-top" role="navigation" style="position: relative; margin-bottom: 0px">
     <div class="container">
         <div class="navbar-header">
@@ -306,14 +319,14 @@
 <nav class="navbar navbar-trans navbar-fixed-bottom" role="navigation" style="position: absolute; display: none" id="bottom_navbar">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapsible">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapsible-bottom">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
         </div>
-        <div class="navbar-collapse collapse" id="navbar-collapsible">
+        <div class="navbar-collapse collapse" id="navbar-collapsible-bottom">
             <ul class="nav navbar-nav navbar-left">
                 <li><a href="#chat" id="chat_btn"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> Public chat</a></li>
                 <li><a href="#register" id="my_infos"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> My Infos</a></li>
@@ -324,6 +337,7 @@
 </nav>
 <script src="Scripts/Game/NightFilter.js"></script>
 <script src="Scripts/Game/DayNightCycle.js"></script>
+<script src="Scripts/Game/Map.js"></script>
 <script src="Scripts/HubConnection.js"></script>
 <script src="Scripts/JobManagement.js"></script>
 <script src="Scripts/UserInteraction.js"></script>

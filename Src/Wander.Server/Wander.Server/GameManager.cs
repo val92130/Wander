@@ -20,6 +20,7 @@ namespace Wander.Server
         int _intervalMinutes = 15;
         bool _isDay;
         Timer _updateTimer = new Timer();
+        public static int DefaultUnemployedEarningPoints = 2;
         public GameManager()
         {
             context = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
@@ -38,7 +39,7 @@ namespace Wander.Server
         private void Update(object sender, ElapsedEventArgs e)
         {
             DateTime now = DateTime.Now;
-            _isDay = (now.Hour <= 18 && now.Hour >= 8);
+            _isDay = (now.Hour < 18 && now.Hour >= 8);
         }
 
         public bool IsDay
@@ -52,9 +53,9 @@ namespace Wander.Server
         public void Start()
         {
             
-
             _payTimer.Start();
             _alertTimer.Start();
+            _updateTimer.Start();
         }
 
         private void Alert(object sender, ElapsedEventArgs e)

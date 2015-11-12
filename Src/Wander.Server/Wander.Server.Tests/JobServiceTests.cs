@@ -32,7 +32,7 @@ namespace Wander.Server.Tests {
             Assert.AreEqual(model.JobId, 0);
             Assert.AreEqual(model.Salary, 0);
             Assert.AreEqual(model.Threshold, 0);
-            Assert.AreEqual(model.EarningPoints, 0);
+            Assert.AreEqual(model.EarningPoints, GameManager.DefaultUnemployedEarningPoints);
             Assert.AreEqual(model.NecessaryPoints, 0);
 
             ServiceProvider.GetPlayerService().RemovePlayer("signalrId");
@@ -57,7 +57,7 @@ namespace Wander.Server.Tests {
             Assert.AreEqual(model.JobId, 0);
             Assert.AreEqual(model.Salary, 0);
             Assert.AreEqual(model.Threshold, 0);
-            Assert.AreEqual(model.EarningPoints, 0);
+            Assert.AreEqual(model.EarningPoints, GameManager.DefaultUnemployedEarningPoints);
             Assert.AreEqual(model.NecessaryPoints, 0);
 
             ServiceProvider.GetPlayerService().RemovePlayer("signalrId");
@@ -83,7 +83,7 @@ namespace Wander.Server.Tests {
             Assert.AreEqual(model.JobId, 0);
             Assert.AreEqual(model.Salary, 0);
             Assert.AreEqual(model.Threshold, 0);
-            Assert.AreEqual(model.EarningPoints, 0);
+            Assert.AreEqual(model.EarningPoints, GameManager.DefaultUnemployedEarningPoints);
             Assert.AreEqual(model.NecessaryPoints, 0);
 
             int newJobId =
@@ -123,7 +123,7 @@ namespace Wander.Server.Tests {
             Assert.AreEqual(model.JobId, 0);
             Assert.AreEqual(model.Salary, 0);
             Assert.AreEqual(model.Threshold, 0);
-            Assert.AreEqual(model.EarningPoints, 0);
+            Assert.AreEqual(model.EarningPoints, GameManager.DefaultUnemployedEarningPoints);
             Assert.AreEqual(model.NecessaryPoints, 0);
 
             
@@ -143,7 +143,7 @@ namespace Wander.Server.Tests {
             Assert.AreEqual(model.JobId, 0);
             Assert.AreEqual(model.Salary, 0);
             Assert.AreEqual(model.Threshold, 0);
-            Assert.AreEqual(model.EarningPoints, 0);
+            Assert.AreEqual(model.EarningPoints, GameManager.DefaultUnemployedEarningPoints);
             Assert.AreEqual(model.NecessaryPoints, 0);
 
             ServiceProvider.GetPlayerService().RemovePlayer("signalrId");

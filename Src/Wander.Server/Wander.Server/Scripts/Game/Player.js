@@ -1,7 +1,7 @@
 var Player = (function () {
     function Player(game, pseudo, position) {
         this.game = game;
-        this.speed = 100;
+        this.speed = 7;
         this.texture = game.add.sprite(position.x, position.y, "player");
         this.texture.width = 20;
         this.texture.height = 30;
@@ -48,16 +48,16 @@ var Player = (function () {
     Player.prototype.move = function (direction) {
         switch (direction) {
             case EDirection.Left:
-                this.texture.body.velocity.x = -this.speed;
+                this.texture.body.velocity.x = -(this.speed * this.game.time.elapsedMS);
                 break;
             case EDirection.Right:
-                this.texture.body.velocity.x = this.speed;
+                this.texture.body.velocity.x = this.speed * this.game.time.elapsedMS;
                 break;
             case EDirection.Up:
-                this.texture.body.velocity.y = -this.speed;
+                this.texture.body.velocity.y = -(this.speed * this.game.time.elapsedMS);
                 break;
             case EDirection.Down:
-                this.texture.body.velocity.y = this.speed;
+                this.texture.body.velocity.y = this.speed * this.game.time.elapsedMS;
                 break;
         }
     };
@@ -79,3 +79,4 @@ var Player = (function () {
     };
     return Player;
 })();
+//# sourceMappingURL=Player.js.map

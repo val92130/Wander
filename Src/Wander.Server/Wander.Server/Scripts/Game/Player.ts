@@ -1,5 +1,4 @@
-﻿
-class Player {
+﻿class Player {
 
     position: Phaser.Point;
     pseudo: string;
@@ -24,7 +23,7 @@ class Player {
         this.game = game;
 
 
-        this.speed = 100;
+        this.speed = 7;
         this.texture = game.add.sprite(position.x, position.y, "player");
         this.texture.width = 20;
         this.texture.height = 30;
@@ -32,7 +31,6 @@ class Player {
         this.textMessageContent = "";
         this.messageStyle = { font: "18px Arial", fill: "#FFFFFF", wordWrap: true };
         this.textMessage = game.add.text(0, 0, this.textMessageContent, this.messageStyle);
-
         
         this.pseudo = pseudo;
         this.position = position;
@@ -88,16 +86,16 @@ class Player {
         
         switch (direction) {
             case EDirection.Left:
-                this.texture.body.velocity.x = -this.speed;
+                this.texture.body.velocity.x = -(this.speed * this.game.time.elapsedMS);
                 break;
             case EDirection.Right:
-                this.texture.body.velocity.x = this.speed;
+                this.texture.body.velocity.x = this.speed * this.game.time.elapsedMS;
                 break;
             case EDirection.Up:
-                this.texture.body.velocity.y = -this.speed;
+                this.texture.body.velocity.y = -(this.speed * this.game.time.elapsedMS);
                 break;
             case EDirection.Down:
-                this.texture.body.velocity.y = this.speed;
+                this.texture.body.velocity.y = this.speed * this.game.time.elapsedMS;
                 break;
         }
 

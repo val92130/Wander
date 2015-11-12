@@ -1,59 +1,41 @@
 ﻿var game: Game;
 var currentState;
 class Game extends Phaser.Game {
-    
+
     constructor() {
         // init game
         currentState = new GameState();
-        super(1024, 768, Phaser.WEBGL, "main", currentState);
-        
+        super("100%", 768, Phaser.WEBGL, "main", currentState);
+
     }
 }
 
 class GameState extends Phaser.State {
-
+    map: Map;
     game: Phaser.Game;
-    map: Phaser.Tilemap;
-    cursors: Phaser.CursorKeys;
     players: Player[];
     currentPlayer: Player;
-    colLayer:Phaser.TilemapLayer;
-    bgLayer:Phaser.TilemapLayer;
-    objLayer: Phaser.TilemapLayer;
     overlay: Phaser.Sprite;
     filter: Phaser.Filter;
     dayNightCycle: DayNightCycle;
+
     preload() {
         this.stage.disableVisibilityChange = true;
         this.game.stage.disableVisibilityChange = true;
         this.game.load.image("player", "Content/Game/Images/player.png");
-        this.game.load.tilemap("Map", "Content/Game/Maps/map7.json", null, Phaser.Tilemap.TILED_JSON);
+        this.game.load.tilemap("Map", "Content/Game/Maps/map2.json", null, Phaser.Tilemap.TILED_JSON);
         this.game.load.image("Tiles", "Content/Game/Images/tileset3.png");
         this.game.load.image("Overlay", "Content/Game/Images/filter.png");
-        
+        this.map = new Map(this.game, "Map", "Tiles", "tileset3", 1.5);
+
     }
 
     create() {
         hub.invoke("GetAllPlayers");
-        
+
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        this.map = this.game.add.tilemap("Map");
-
-        this.map.addTilesetImage("tilset3", "Tiles");
-
-        this.bgLayer = this.map.createLayer("Calque de Tile 1");
-       
-        this.bgLayer.resizeWorld();
-
-
-        //this.colLayer = this.map.createLayer("collisionLayer");
-        //this.colLayer.alpha = 0;
-        //this.map.setCollisionBetween(1, 2500, true, this.colLayer);
-
-        //this.objLayer = this.map.createLayer("objectsLayer");
-
-        this.cursors = this.game.input.keyboard.createCursorKeys();
+        this.map.create();
 
         this.players = new Array<Player>();
 
@@ -64,12 +46,13 @@ class GameState extends Phaser.State {
         hub.invoke("update");
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
 
+
     }
 
     update() {
         this.dayNightCycle.update();
 
-        //this.game.physics.arcade.collide(this.currentPlayer.texture, this.colLayer);
+        this.game.physics.arcade.collide(this.currentPlayer.texture, this.map.collisionLayer);
 
         var camX = Math.floor(this.currentPlayer.position.x / this.game.camera.width);
         var camY = Math.floor(this.currentPlayer.position.y / this.game.camera.height);
@@ -148,34 +131,51 @@ class GameState extends Phaser.State {
         }
         return undefined;
     }
+
+    resizeGame() {
+        var width = $(window).width();
+        this.game.width = width;
+        this.game.stage.width = width;
+        this.dayNightCycle.overlay.width = width;
+        this.game.camera.width = width;
+        if (this.game.renderType === Phaser.WEBGL) {
+            this.game.renderer.resize(width, this.game.renderer.height);
+        }
+    }
 }
 
 
 
 hub.on("MessageReceived", function (msg) {
-    
+
 });
 
 hub.on("playerConnected", function (player) {
+    if (currentState == undefined) return;
     currentState.addPlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
     $.notify("player connected : " + player.Pseudo, "warn");
 });
 
 hub.on("playerDisconnected", function (player) {
+    if (currentState == undefined) return;
     currentState.removePlayer(player.Pseudo);
     $.notify("player disconnected : " + player.Pseudo, "error");
 });
 
 hub.on("playerMoved", function (player) {
-    currentState.updatePlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
+    if (currentState != undefined) {
+        currentState.updatePlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
+    }
 });
 
 hub.on("updateTime", function (isDay) {
-    currentState.dayNightCycle.isDay = isDay;
+    if (currentState != undefined) {
+        currentState.dayNightCycle.isDay = isDay;
+    }
 });
 
 hub.on("MessageReceived", function (msg) {
-    
+
     var u = currentState.getPlayer(msg.UserName);
     if (msg.UserName == currentState.currentPlayer.pseudo) u = currentState.currentPlayer;
     if (u != undefined) {
@@ -191,6 +191,7 @@ setInterval(function () {
 }, 10000);
 
 
+$(window).resize(function () { currentState.resizeGame(); });
 
 function createGame() {
     game = new Game();

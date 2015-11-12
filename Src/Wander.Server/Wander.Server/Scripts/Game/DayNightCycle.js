@@ -1,7 +1,8 @@
 var DayNightCycle = (function () {
     function DayNightCycle(game) {
+        this.nightAmbient = 0.45;
         this.game = game;
-        this.ambient = 0.80;
+        this.ambient = this.nightAmbient;
     }
     DayNightCycle.prototype.create = function () {
         this.overlay = this.game.add.sprite(0, 0, "Overlay");
@@ -12,16 +13,16 @@ var DayNightCycle = (function () {
     };
     DayNightCycle.prototype.update = function () {
         if (this.isDay) {
-            if (this.ambient > 0) {
-                this.ambient -= 0.01;
-                this.overlay.filters[0].uniforms.ambient.value = this.ambient;
+            this.ambient = Lerp(0, this.ambient, 0.01);
+            this.overlay.filters[0].uniforms.ambient.value = this.ambient;
+            if (this.ambient == 0) {
+                this.overlay.alpha = 0;
             }
         }
         else {
-            if (this.ambient < 0.80) {
-                this.ambient += 0.01;
-                this.overlay.filters[0].uniforms.ambient.value = this.ambient;
-            }
+            this.overlay.alpha = 1;
+            this.ambient = Lerp(this.nightAmbient, this.ambient, 0.01);
+            this.overlay.filters[0].uniforms.ambient.value = this.ambient;
         }
     };
     DayNightCycle.prototype.setNight = function () {
@@ -32,3 +33,4 @@ var DayNightCycle = (function () {
     };
     return DayNightCycle;
 })();
+//# sourceMappingURL=DayNightCycle.js.map

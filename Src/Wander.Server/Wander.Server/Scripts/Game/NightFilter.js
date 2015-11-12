@@ -20,7 +20,7 @@ var NightShader = (function (_super) {
             "uniform float      ambient;",
             "void main(void) {",
             "vec4 texColor = texture2D(uSampler, vTextureCoord);",
-            "texColor = vec4(0, 0, 0.2,ambient);",
+            "texColor = vec4(0, 0, 0.18,ambient);",
             "gl_FragColor = texColor;",
             "}"
         ];
@@ -28,3 +28,4 @@ var NightShader = (function (_super) {
     }
     return NightShader;
 })(Phaser.Filter);
+//# sourceMappingURL=NightFilter.js.map

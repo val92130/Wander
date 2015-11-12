@@ -5,11 +5,12 @@
     NightShader: NightShader;
     ambient: number;
     isDay: boolean;
+    nightAmbient: number;
 
     constructor(game: Phaser.Game) {
+        this.nightAmbient = 0.45;
         this.game = game;
-        this.ambient = 0.80;
-
+        this.ambient = this.nightAmbient;
     }
 
 
@@ -26,18 +27,16 @@
     update() {
         
         if (this.isDay) {
-            if (this.ambient > 0) {
-                this.ambient -= 0.01;
-                this.overlay.filters[0].uniforms.ambient.value = this.ambient;
+            this.ambient = Lerp(0, this.ambient, 0.01);
+            this.overlay.filters[0].uniforms.ambient.value = this.ambient;
+            if (this.ambient == 0) {
+                this.overlay.alpha = 0;
             }
         } else {
-            if (this.ambient < 0.80) {
-                this.ambient += 0.01;
-                this.overlay.filters[0].uniforms.ambient.value = this.ambient;
-            }
+            this.overlay.alpha = 1;
+            this.ambient = Lerp(this.nightAmbient, this.ambient, 0.01);
+            this.overlay.filters[0].uniforms.ambient.value = this.ambient;
         }
-        
-
         
     }
 

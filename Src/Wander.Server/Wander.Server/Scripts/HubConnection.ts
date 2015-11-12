@@ -1,4 +1,5 @@
-﻿var connection = $.hubConnection();
+﻿
+var connection = $.hubConnection();
 var hub = connection.createHubProxy('GameHub');
 
 connection.start(function () {
