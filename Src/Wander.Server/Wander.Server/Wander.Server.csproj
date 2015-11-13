@@ -108,6 +108,7 @@
     <Content Include="Scripts\jquery-1.9.1.min.map" />
     <Content Include="Content\Game\Maps\map2.json" />
     <None Include="Properties\PublishProfiles\FTP.pubxml" />
+    <Content Include="Services\ServiceDiagram.cd" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

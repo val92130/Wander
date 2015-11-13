@@ -35,8 +35,7 @@ hub.on("MessageReceived", function (msg) {
             unreadMsg += 1;
             $("#chat_btn").css("color", "green");
         }
-        
-        
+           
     } 
     var img = msg.Sex == 1 ? "user-boy.png" : "user-girl.png"; 
     $("#chatBox").append(buildChatMessage(msg.Sex, msg.UserName, msg.Content, msg.Hour));
@@ -61,6 +60,7 @@ $(document).keypress(function (event) {
                     $(".quickChatBox").fadeIn(function () {
                         $("#quickChatInput").focus();
                     });
+
                     $(".quickChatOverlay").fadeIn(300);
                 }
                 quickChatToggle = true;

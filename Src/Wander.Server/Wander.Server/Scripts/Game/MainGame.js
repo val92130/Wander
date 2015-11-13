@@ -44,8 +44,8 @@ var GameState = (function (_super) {
         this.game.physics.arcade.collide(this.currentPlayer.texture, this.map.collisionLayer);
         var camX = Math.floor(this.currentPlayer.position.x / this.game.camera.width);
         var camY = Math.floor(this.currentPlayer.position.y / this.game.camera.height);
-        this.game.camera.x = Lerp(camX * this.game.camera.width, this.game.camera.x, 20);
-        this.game.camera.y = Lerp(camY * this.game.camera.height, this.game.camera.y, 20);
+        this.game.camera.x = Lerp(camX * this.game.camera.width, this.game.camera.x, 40);
+        this.game.camera.y = Lerp(camY * this.game.camera.height, this.game.camera.y, 40);
         for (var i = 0; i < this.players.length; i++) {
             this.players[i].update();
             this.players[i].updateServer();
