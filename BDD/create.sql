@@ -7,57 +7,11 @@ GO
 use WanderDB;
 GO
 
-
-
-
-if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'PropertiesToSell')
-begin
-drop table dbo.PropertiesToSell;
-end;
-GO
-
-if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'ListProperties')
-begin
-drop table dbo.ListProperties;
-end;
-GO
-
-if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Properties')
-begin
-drop table dbo.Properties;
-end;
-GO
-
-if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'UserProperties')
-begin
-drop table dbo.UserProperties;
-end;
-GO
-
-if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'UserMessages')
-begin
-drop table dbo.UserMessages;
-end;
-GO
-
 if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Jobs')
 begin
 drop table dbo.Jobs;
 end;
 GO
-
-if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Users')
-begin
-drop table dbo.Users;
-end;
-GO
-
-if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'MessageLogs')
-begin
-drop table dbo.MessageLogs;
-end;
-GO
-
 
 create table dbo.Jobs
 (
@@ -72,6 +26,13 @@ Threshold int not null
 constraint PK_JobId primary key(JobId),
 constraint CK_Jobs_JobDescription check(JobDescription <> N'')
 );
+
+if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Users')
+begin
+drop table dbo.Users;
+end;
+GO
+
 create table dbo.Users
 (
 UserId int identity(0,1),
@@ -95,6 +56,11 @@ constraint FK_Users_JobId foreign key(JobId) references dbo.Jobs(JobId),
 
 );
 
+if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'ListProperties')
+begin
+drop table dbo.ListProperties;
+end;
+GO
 
 
 create table dbo.ListProperties
@@ -111,6 +77,13 @@ constraint CK_ListProperties_ListPropertiesThreshold check(Threshold <> N'')
 
 );
 
+if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'PropertiesToSell')
+begin
+drop table dbo.PropertiesToSell;
+end;
+GO
+
+
 create table dbo.PropertiesToSell
 (
 PropertyToSellId int identity(0,1),
@@ -125,6 +98,11 @@ constraint FK_PropertiesToSell_ListPropertyId foreign key(ListPropertyId) refere
 );
 
 
+if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'UserProperties')
+begin
+drop table dbo.UserProperties;
+end;
+GO
 
 
 create table dbo.UserProperties
@@ -139,6 +117,14 @@ constraint FK_UserProperties_UserId foreign key(UserId) references dbo.Users(Use
 constraint FK_UserProperties_ListPropertyId foreign key(ListPropertyId) references dbo.ListProperties(ListPropertyId)
 );
 
+
+if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'UserMessages')
+begin
+drop table dbo.UserMessages;
+end;
+GO
+
+
 create table dbo.UserMessages
 (
 UserMessageId int identity(0,1),
@@ -151,6 +137,11 @@ constraint PK_UserMessagesId primary key(UserMessageId),
 constraint FK_UserMessages_UserId foreign key(UserId) references dbo.Users(UserId)
 );
 
+if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'MessageLogs')
+begin
+drop table dbo.MessageLogs;
+end;
+GO
 
 create table dbo.MessageLogs
 (
