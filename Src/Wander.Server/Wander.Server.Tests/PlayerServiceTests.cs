@@ -501,6 +501,29 @@ namespace Wander.Server.Tests
         }
 
         [TestMethod]
+        public void ChangePlayerDirectionWorks()
+        {
+            TestEnvironment.DeleteTestUser();
+            UserModel user = TestEnvironment.GetTestUserModel();
+            ServiceProvider.GetUserRegistrationService().Register(user);
+            int id = ServiceProvider.GetUserRegistrationService().Connect(user);
+            ServiceProvider.GetPlayerService().AddPlayer("signalrId", id);
+
+            ServerPlayerModel player = ServiceProvider.GetPlayerService().GetPlayer("signalrId");
+            Assert.IsTrue(player.Direction == Model.Players.EPlayerDirection.Idle);
+
+            Vector2 to = new Vector2(50, 90);
+            ServiceProvider.GetPlayerService().MovePlayerTo(player, to, Model.Players.EPlayerDirection.DownRight);
+
+            player = ServiceProvider.GetPlayerService().GetPlayer("signalrId");
+            Assert.IsTrue((player.Position.X == 50 && player.Position.Y == 90));
+            Assert.IsTrue(player.Direction == Model.Players.EPlayerDirection.DownRight);
+
+            ServiceProvider.GetPlayerService().RemovePlayer("signalrId");
+            TestEnvironment.DeleteTestUser();
+        }
+
+        [TestMethod]
         public void TestPlayerExistReturnFalseIfTheUserDoesntExist()
         {
             Assert.IsFalse(ServiceProvider.GetPlayerService().Exists("randomId"));
