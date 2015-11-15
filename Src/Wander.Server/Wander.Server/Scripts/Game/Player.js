@@ -1,6 +1,7 @@
 var Player = (function () {
     function Player(game, pseudo, position) {
         this.game = game;
+        this.direction = EDirection.Idle;
         this.speed = 7;
         this.texture = game.add.sprite(position.x, position.y, "player");
         this.texture.width = 20;
@@ -22,6 +23,41 @@ var Player = (function () {
         this.texture.body.maxVelocity = 20;
     }
     Player.prototype.update = function () {
+        var velX = this.texture.body.velocity.x;
+        var velY = this.texture.body.velocity.y;
+        if (velX > 0) {
+            if (velY > 0) {
+                this.direction = EDirection.DownRight;
+            }
+            else if (velY < 0) {
+                this.direction = EDirection.UpRight;
+            }
+            else {
+                this.direction = EDirection.Right;
+            }
+        }
+        else if (velX < 0) {
+            if (velY > 0) {
+                this.direction = EDirection.DownLeft;
+            }
+            else if (velY < 0) {
+                this.direction = EDirection.UpLeft;
+            }
+            else {
+                this.direction = EDirection.Left;
+            }
+        }
+        else if (velY != 0) {
+            if (velY > 0) {
+                this.direction = EDirection.Down;
+            }
+            else {
+                this.direction = EDirection.Up;
+            }
+        }
+        if (velX == 0 && velY == 0) {
+            this.direction = EDirection.Idle;
+        }
         this.texture.body.velocity.x = 0;
         this.texture.body.velocity.y = 0;
         this.position.x = this.texture.x;
@@ -74,7 +110,7 @@ var Player = (function () {
         var time = this.startTime - this.endTime;
         if (time >= 55) {
             this.endTime = this.startTime;
-            hub.invoke("MoveTo", { X: this.position.x, Y: this.position.y });
+            hub.invoke("UpdatePosition", { X: this.position.x, Y: this.position.y }, this.direction.toString());
         }
     };
     return Player;

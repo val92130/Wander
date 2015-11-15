@@ -4,11 +4,11 @@
     pseudo: string;
     texture: Phaser.Sprite;
     newPosition: Phaser.Point;
-    speed : number;
+    speed: number;
     style: any;
     messageStyle: any;
     text: any;
-    game:Phaser.Game;
+    game: Phaser.Game;
     startTime: any;
     endTime: any;
 
@@ -17,12 +17,13 @@
 
     messageTime: any;
     messageTimeEnd: any;
+    direction: EDirection;
 
     constructor(game: Phaser.Game, pseudo: string, position: Phaser.Point) {
 
         this.game = game;
 
-
+        this.direction = EDirection.Idle;
         this.speed = 7;
         this.texture = game.add.sprite(position.x, position.y, "player");
         this.texture.width = 20;
@@ -31,7 +32,7 @@
         this.textMessageContent = "";
         this.messageStyle = { font: "18px Arial", fill: "#FFFFFF", wordWrap: true };
         this.textMessage = game.add.text(0, 0, this.textMessageContent, this.messageStyle);
-        
+
         this.pseudo = pseudo;
         this.position = position;
         this.newPosition = new Phaser.Point(this.position.x, this.position.y);
@@ -49,7 +50,39 @@
     }
 
     update() {
-        
+        var velX = this.texture.body.velocity.x;
+        var velY = this.texture.body.velocity.y;
+
+        if (velX > 0) {
+            if (velY > 0) {
+                this.direction = EDirection.DownRight;
+            } else if (velY < 0) {
+                this.direction = EDirection.UpRight;
+            } else {
+                this.direction = EDirection.Right;
+            }
+        }
+        else if (velX < 0) {
+            if (velY > 0) {
+                this.direction = EDirection.DownLeft;
+            } else if (velY < 0) {
+                this.direction = EDirection.UpLeft;
+            } else {
+                this.direction = EDirection.Left;
+            }
+        } else if (velY != 0) {
+            if (velY > 0) {
+                this.direction = EDirection.Down;
+            } else {
+                this.direction = EDirection.Up;
+            }
+        }
+
+        if (velX == 0 && velY == 0) {
+            this.direction = EDirection.Idle;
+        }
+
+
         this.texture.body.velocity.x = 0;
         this.texture.body.velocity.y = 0;
 
@@ -62,14 +95,14 @@
 
         this.textMessage.x = this.texture.x;
         this.textMessage.y = this.texture.y - 45;
-        
+
         if (this.textMessageContent != "") {
             this.messageTime = new Date().getTime();
             var nTime = this.messageTime - this.messageTimeEnd;
             if (nTime >= 5000) {
                 this.messageTimeEnd = this.messageTime;
                 this.textMessageContent = "";
-                
+
             }
         }
         this.textMessage.text = this.textMessageContent;
@@ -83,7 +116,7 @@
     }
 
     move(direction: EDirection) {
-        
+
         switch (direction) {
             case EDirection.Left:
                 this.texture.body.velocity.x = -(this.speed * this.game.time.elapsedMS);
@@ -99,7 +132,6 @@
                 break;
         }
 
-        
     }
 
     updateServer() {
@@ -117,7 +149,7 @@
         var time = this.startTime - this.endTime;
         if (time >= 55) {
             this.endTime = this.startTime;
-            hub.invoke("MoveTo", { X: this.position.x, Y: this.position.y });
+            hub.invoke("UpdatePosition", { X: this.position.x, Y: this.position.y }, this.direction.toString());
         }
     }
 

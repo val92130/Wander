@@ -108,7 +108,6 @@
     <Content Include="Scripts\jquery-1.9.1.min.map" />
     <Content Include="Content\Game\Maps\map2.json" />
     <None Include="Properties\PublishProfiles\FTP.pubxml" />
-    <Content Include="Services\ServiceDiagram.cd" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -149,6 +148,7 @@
     <Compile Include="Model\Job\JobModel.cs" />
     <Compile Include="Model\Players\ClientPlayerModel.cs" />
     <Compile Include="Model\EMessageType.cs" />
+    <Compile Include="Model\Players\EPlayerDirection.cs" />
     <Compile Include="Model\Players\ServerPlayerModel.cs" />
     <Compile Include="Model\Forms\UserModel.cs" />
     <Compile Include="Model\Players\ServerPropertyModel.cs" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Wander.Server.Model.Players;
 
 namespace Wander.Server.Model
 {
@@ -14,5 +15,6 @@ namespace Wander.Server.Model
         public string SignalRId { get; set; }
         public string Pseudo { get; set; }
         public Vector2 Position { get; set; }
+        public EPlayerDirection Direction { get; set; }
     }
 }

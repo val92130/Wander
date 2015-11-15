@@ -8,6 +8,7 @@ using System.Web;
 using Microsoft.AspNet.SignalR;
 using Wander.Server.Model;
 using Wander.Server.Services;
+using Wander.Server.Model.Players;
 
 namespace Wander.Server.Hubs
 {
@@ -52,7 +53,7 @@ namespace Wander.Server.Hubs
                 foreach (ServerPlayerModel players in ServiceProvider.GetPlayerService().GetAllPlayersServer())
                 {
                     if (players.SignalRId == Context.ConnectionId) continue;
-                    Clients.Client(players.SignalRId).playerConnected(new { Pseudo = user.Login, Position = new Vector2() });
+                    Clients.Client(players.SignalRId).playerConnected(new { Pseudo = user.Login, Position = new Vector2(), Direction = EPlayerDirection.Idle });
                 }
                 Debug.Print(idSignalR);
                 Clients.Caller.notify(Helper.CreateNotificationMessage("Welcome ! You are now online", EMessageType.success));
@@ -187,16 +188,16 @@ namespace Wander.Server.Hubs
         /// Move the caller to the specified position
         /// </summary>
         /// <param name="position"></param>
-        public void MoveTo(Vector2 position)
+        public void UpdatePosition(Vector2 position, EPlayerDirection direction)
         {
             if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return;
 
-            ServiceProvider.GetPlayerService().MovePlayerTo(Context.ConnectionId, position);
+            ServiceProvider.GetPlayerService().MovePlayerTo(Context.ConnectionId, position, direction);
             string login = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId).Pseudo;
 
             // Notify all the connected players that a player moved
             var players = ServiceProvider.GetPlayerService().GetAllPlayersServer();
-            object newPos = new {Pseudo = login, Position = position};
+            object newPos = new {Pseudo = login, Position = position, Direction = direction};
             for (int i = 0; i < players.Count; i++)
             {
                 if (players[i].SignalRId == Context.ConnectionId) continue;
@@ -212,7 +213,7 @@ namespace Wander.Server.Hubs
             for (int i = 0; i < players.Count; i++)
             {
                 if (players[i].SignalRId == Context.ConnectionId) continue;
-                Clients.Caller.playerConnected(new {Pseudo = players[i].Pseudo, Position = players[i].Position});
+                Clients.Caller.playerConnected(new {Pseudo = players[i].Pseudo, Position = players[i].Position, Direction = players[i].Direction});
             }
 
         }

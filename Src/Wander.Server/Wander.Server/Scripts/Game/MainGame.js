@@ -91,10 +91,11 @@ var GameState = (function (_super) {
         }
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
     };
-    GameState.prototype.updatePlayer = function (pseudo, position) {
+    GameState.prototype.updatePlayer = function (pseudo, position, direction) {
         for (var i = 0; i < this.players.length; i++) {
             if (this.players[i].pseudo == pseudo) {
                 this.players[i].newPosition = position;
+                this.players[i].direction = direction;
                 break;
             }
         }
@@ -135,7 +136,8 @@ hub.on("playerDisconnected", function (player) {
 });
 hub.on("playerMoved", function (player) {
     if (currentState != undefined) {
-        currentState.updatePlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
+        console.log(player.Direction);
+        currentState.updatePlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y), player.Direction);
     }
 });
 hub.on("updateTime", function (isDay) {

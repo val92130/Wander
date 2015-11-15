@@ -2,5 +2,11 @@
     Left,
     Right,
     Down,
-    Up
+    Up,
+    DownLeft,
+    DownRight,
+    UpLeft,
+    UpRight,
+    Idle
 }
+

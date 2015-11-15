@@ -114,10 +114,11 @@ class GameState extends Phaser.State {
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
     }
 
-    updatePlayer(pseudo: string, position: Phaser.Point) {
+    updatePlayer(pseudo: string, position: Phaser.Point, direction: EDirection) {
         for (var i = 0; i < this.players.length; i++) {
             if (this.players[i].pseudo == pseudo) {
                 this.players[i].newPosition = position;
+                this.players[i].direction = direction;
                 break;
             }
         }
@@ -164,7 +165,8 @@ hub.on("playerDisconnected", function (player) {
 
 hub.on("playerMoved", function (player) {
     if (currentState != undefined) {
-        currentState.updatePlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
+        console.log(player.Direction);
+        currentState.updatePlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y), player.Direction);
     }
 });
 

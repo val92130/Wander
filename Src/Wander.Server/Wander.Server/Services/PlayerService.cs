@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Wander.Server.Model;
 using System.Linq;
+using Wander.Server.Model.Players;
 
 namespace Wander.Server.Services
 {
@@ -88,9 +89,9 @@ namespace Wander.Server.Services
         /// </summary>
         /// <param name="player"></param>
         /// <param name="to"></param>
-        public void MovePlayerTo(ServerPlayerModel player, Vector2 to)
+        public void MovePlayerTo(ServerPlayerModel player, Vector2 to, EPlayerDirection direction)
         {
-            MovePlayerTo(player.SignalRId, to);
+            MovePlayerTo(player.SignalRId, to, direction);
         }
 
         /// <summary>
@@ -98,7 +99,7 @@ namespace Wander.Server.Services
         /// </summary>
         /// <param name="connectionId"></param>
         /// <param name="to"></param>
-        public void MovePlayerTo(string connectionId, Vector2 to)
+        public void MovePlayerTo(string connectionId, Vector2 to, EPlayerDirection direction)
         {
             lock (Players)
             {
@@ -106,6 +107,7 @@ namespace Wander.Server.Services
                 if (p == null)
                     return;
                 p.Position = to;
+                p.Direction = direction;
             }
         }
 
