@@ -86,19 +86,23 @@ namespace CodeCake
             {
                 var path = "./Wander.Server/";
                 var files =  Cake.GetFiles(path + "*");
+                string tmp = "./tmp";
 
-
+                if (!Directory.Exists(tmp))
+                {
+                    Directory.CreateDirectory(tmp);
+                }
                 DirectoryPath path2 = new DirectoryPath(path);
-                DirectoryPath d = new DirectoryPath(@"C:\Users\Rami\Desktop\t\");
+                DirectoryPath d = new DirectoryPath(tmp + "/");
                 this.Cake.CopyDirectory(path2, d);
                 
-                Directory.Delete(@"C:\Users\Rami\Desktop\t\Properties", true);
-                Directory.Delete(@"C:\Users\Rami\Desktop\t\obj", true);
-                Directory.Delete(@"C:\Users\Rami\Desktop\t\Model", true);
-                Directory.Delete(@"C:\Users\Rami\Desktop\t\Hubs", true);
-                this.Cake.DeleteFiles(@"C:\Users\Rami\Desktop\t\*.cs");
-                this.Cake.DeleteFiles(@"C:\Users\Rami\Desktop\t\*.csproj");
-
+                Directory.Delete(tmp+ "/Properties", true);
+                Directory.Delete(tmp + "/obj", true);
+                Directory.Delete(tmp + "/Model", true);
+                Directory.Delete(tmp + "/Hubs", true);
+                this.Cake.DeleteFiles(tmp + "/*.cs");
+                this.Cake.DeleteFiles(tmp + "/*.csproj");
+               
                 // Copy all exe and dll files to the output directory.
                 //Cake.CopyFiles(files, @"C:\Users\Rami\Desktop\t\");
             });
@@ -106,8 +110,17 @@ namespace CodeCake
             .IsDependentOn("CopyFiles")
             .Does(() =>
             {
-                            // Zip all files in the bin directory.
-                            Cake.Zip(@"C:\Users\Rami\Desktop\t\", "C:/Users/Rami/Desktop/Wanderv2/Wander/CodeCakeBuilder/build.zip");
+                string output = "./output";
+                if (!Directory.Exists(output))
+                {
+                    Directory.CreateDirectory(output);
+                }
+                string tmp = "./tmp";
+                // Zip all files in the bin directory.
+                Cake.Zip(tmp + "/",output +"/build.zip");
+                
+                Directory.Delete(tmp, true);
+                Directory.Delete(output, true);
 
             });
 
