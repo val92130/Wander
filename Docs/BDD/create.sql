@@ -1,10 +1,14 @@
-﻿if not exists(select * from sys.databases where name = 'WanderDB')
-begin
-create database WanderDB
-end;
+﻿use master
 GO
 
-use WanderDB;
+IF EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'WanderDB')
+DROP DATABASE WanderDB
+GO
+
+CREATE DATABASE WanderDB
+GO
+
+use WanderDB
 GO
 
 if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Jobs')

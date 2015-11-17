@@ -20,18 +20,27 @@ namespace Wander.Server.Services
         /// <returns>Returns the new SqlConnection</returns>
         public static SqlConnection GetConnection()
         {
-            if (ConnectionString == null)
+            string db = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+            if (db == null)
             {
-                try
+                if (ConnectionString == null)
                 {
-                    ConnectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
-                }
-                catch (Exception e)
-                {
-                    Debug.Print(e.Message);
-                    ConnectionString = DefaultConnection;
+                    try
+                    {
+                        ConnectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Print(e.Message);
+                        ConnectionString = DefaultConnection;
+                    }
                 }
             }
+            else
+            {
+                ConnectionString = db;
+            }
+            
             return new SqlConnection(ConnectionString);
         }
     }

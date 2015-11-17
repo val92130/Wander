@@ -11,8 +11,13 @@ using System.Linq;
 using Cake.Core.Diagnostics;
 using Cake.Common.Tools.NuGet.Restore;
 using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Text.RegularExpressions;
+using Cake.Common.Build;
 using Cake.Common.Tools.NuGet.Push;
 using Cake.Common.Tools.MSTest;
+
 
 namespace CodeCake
 {
@@ -38,54 +43,86 @@ namespace CodeCake
 
             Task("Clean")
                 .Does(() =>
-               {
+                {
                     // Avoids cleaning CodeCakeBuilder itself!
-                   Cake.CleanDirectories("**/bin/" + configuration, d => !d.Path.Segments.Contains("CodeCakeBuilder"));
-                   Cake.CleanDirectories("**/obj/" + configuration, d => !d.Path.Segments.Contains("CodeCakeBuilder"));
-                   Cake.CleanDirectories(releasesDir);
-               });
+                    Cake.CleanDirectories("**/bin/" + configuration, d => !d.Path.Segments.Contains("CodeCakeBuilder"));
+                    Cake.CleanDirectories("**/obj/" + configuration, d => !d.Path.Segments.Contains("CodeCakeBuilder"));
+                    Cake.CleanDirectories(releasesDir);
+                });
 
             Task("Restore-NuGet-Packages")
                 .Does(() =>
-               {
-                   Cake.Information("Restoring nuget packages for existing .sln files at the root level.", configuration);
-                   foreach (var sln in Cake.GetFiles("*.sln"))
-                   {
-                       Cake.NuGetRestore(sln);
-                   }
-               });
+                {
+                    Cake.Information("Restoring nuget packages for existing .sln files at the root level.", configuration);
+                    foreach (var sln in Cake.GetFiles("*.sln"))
+                    {
+                        Cake.NuGetRestore(sln);
+                    }
+                });
 
             Task("Build")
                 .IsDependentOn("Clean")
                 .IsDependentOn("Restore-NuGet-Packages")
                 .Does(() =>
-               {
-                   Cake.Information("Building all existing .sln files at the root level with '{0}' configuration (excluding this builder application).", configuration);
-                   foreach (var sln in Cake.GetFiles("*.sln"))
-                   {
-                       using (var tempSln = Cake.CreateTemporarySolutionFile(sln))
-                       {
+                {
+                    Cake.Information("Building all existing .sln files at the root level with '{0}' configuration (excluding this builder application).", configuration);
+                    foreach (var sln in Cake.GetFiles("*.sln"))
+                    {
+                        using (var tempSln = Cake.CreateTemporarySolutionFile(sln))
+                        {
                             // Excludes "CodeCakeBuilder" itself from compilation!
                             tempSln.ExcludeProjectsFromBuild("CodeCakeBuilder");
-                           Cake.MSBuild(tempSln.FullPath, new MSBuildSettings()
-                                   .SetConfiguration(configuration)
-                                   .SetVerbosity(Verbosity.Minimal)
-                                   .SetMaxCpuCount(1));
-                       }
-                   }                   
-               });
+                            Cake.MSBuild(tempSln.FullPath, new MSBuildSettings()
+                                    .SetConfiguration(configuration)
+                                    .SetVerbosity(Verbosity.Minimal)
+                                    .SetMaxCpuCount(1));
+                        }
+                    }
+                });
 
 
             Task("DBSetup")
                 .IsDependentOn("Build")
                 .Does(
                     () =>
+                    {
+                        string db = Cake.InteractiveEnvironmentVariable("DB_CONNECTION_STRING");
+                        if (Cake.AppVeyor().IsRunningOnAppVeyor)
                         {
-                            string db = Cake.InteractiveEnvironmentVariable("DB_CONNECTION_STRING");
-                            if (String.IsNullOrEmpty(db)) db = "le local de Rami et Valentin";
-                            Cake.Information( "Using database: {0}", db );
-                            
-                        });
+                            db = @"Server=(local)\SQL2014;Database=master;User ID=sa;Password=Password12!";
+                        }
+
+                        if (String.IsNullOrEmpty(db))
+                            db =
+                                @"Data Source=(localdb)\ProjectsV12;Initial Catalog=WanderDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+                        Cake.Information("Using database: {0}", db);
+
+                        SqlConnection conn = new SqlConnection(db);
+
+                        string filePath = "Docs/BDD/create.sql";
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            string create = System.IO.File.ReadAllText(filePath);
+                            string[] commands = create.Split(new string[] { "GO" }, StringSplitOptions.None);
+
+                            IEnumerable<string> commandStrings = Regex.Split(create, @"^\s*GO\s*$",
+                           RegexOptions.Multiline | RegexOptions.IgnoreCase);
+
+                            conn.Open();
+                            foreach (string commandString in commandStrings)
+                            {
+                                if (commandString.Trim() != "")
+                                {
+                                    using (var command = new SqlCommand(commandString, conn))
+                                    {
+                                        command.ExecuteNonQuery();
+                                    }
+                                }
+                            }
+                            conn.Close();
+                        }
+
+                    });
 
             Task("Unit-Tests")
                 .IsDependentOn("DBSetup")
