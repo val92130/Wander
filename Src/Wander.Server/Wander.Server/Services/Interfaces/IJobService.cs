@@ -15,5 +15,6 @@ namespace Wander.Server.Services
         bool ChangeUserJob(int jobId, ServerPlayerModel user);
         int AddJob(JobModel model);
         bool DeleteJob(JobModel model);
+        bool DeleteJob(int jobId);
     }
 }

@@ -38,7 +38,7 @@ namespace Wander.Server.Tests
         public void AddPlayerWorksCorrectly()
         {
             ServerPlayerModel serverPlayer = TestEnvironment.GetTestPlayerModel();
-            PlayerService playerService = new PlayerService();
+            PlayerService playerService = ServiceProvider.GetPlayerService();
 
             playerService.AddPlayer(serverPlayer.SignalRId, serverPlayer.UserId);
 
@@ -55,7 +55,7 @@ namespace Wander.Server.Tests
         public void RemovePlayerWorksCorrectly()
         {
             ServerPlayerModel serverPlayer = TestEnvironment.GetTestPlayerModel();
-            PlayerService playerService = new PlayerService();
+            PlayerService playerService = ServiceProvider.GetPlayerService();
 
             playerService.AddPlayer(serverPlayer.SignalRId, serverPlayer.UserId);
 

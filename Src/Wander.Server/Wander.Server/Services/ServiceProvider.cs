@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Wander.Server.Services
 {
-    
+
     public class ServiceProvider
     {
         private static IUserRegistrationService RegistrationService;
@@ -18,57 +18,36 @@ namespace Wander.Server.Services
 
         public static IUserRegistrationService GetUserRegistrationService()
         {
-            if(RegistrationService == null)
-                RegistrationService = new DbUserRegistrationService();
-
-            return RegistrationService;
+            return null;
         }
 
         public static PlayerService GetPlayerService()
         {
-            if(PlayerService == null)
-                PlayerService = new PlayerService();
-
-            return PlayerService;
+            return null;
         }
 
         public static UserService GetUserService()
         {
-            if (UserService == null)
-                UserService = new UserService();
-
-            return UserService;
+            return null;
         }
         public static PropertyService GetPropertiesService()
         {
-            if (PropertyService == null)
-                PropertyService = new PropertyService();
-
-            return PropertyService;
+            return null;
         }
 
         public static MessageService GetMessageService()
         {
-            if (MessageService == null)
-                MessageService = new MessageService();
-
-            return MessageService;
+            return null;
         }
 
         public static JobService GetJobService()
         {
-            if (JobService == null)
-                JobService = new JobService();
-
-            return JobService;
+            return null;
         }
 
         public static GameManager GetGameManager()
         {
-            if (GameManager == null)
-                GameManager = new GameManager();
-
-            return GameManager;
+            return null;
         }
 
 

@@ -9,6 +9,19 @@ namespace Wander.Server.Services
 {
     public class JobService : IJobService
     {
+        SqlConnectionService _connectionService;
+        IPlayerService _playerService;
+        IUserService _userService;
+        public JobService(SqlConnectionService connectionService, IPlayerService playerService, IUserService userService)
+        {
+            if(connectionService == null) throw new ArgumentNullException("connectionService");
+            if (playerService == null) throw new ArgumentNullException("playerService");
+            if (userService == null) throw new ArgumentNullException("userService");
+            _connectionService = connectionService;
+            _playerService = playerService;
+            _userService = userService;
+        }
+
         /// <summary>
         /// Gets all the info relating the job of the User corresponding to the connectionId
         /// </summary>
@@ -17,7 +30,7 @@ namespace Wander.Server.Services
         public JobModel GetUserJobInfos(string connectionId)
         {
             if (connectionId == null) throw new ArgumentException("there is no id");
-            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(connectionId);
+            ServerPlayerModel user = _playerService.GetPlayer(connectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
 
             using (SqlConnection conn = SqlConnectionService.GetConnection())
@@ -103,7 +116,7 @@ namespace Wander.Server.Services
             if(connectionId == null)
                 throw new ArgumentException("Connection id is null !");
 
-            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(connectionId);
+            ServerPlayerModel user = _playerService.GetPlayer(connectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
 
             JobModel job = GetAllJobs().FirstOrDefault(x => x.JobId == jobId);
@@ -114,7 +127,7 @@ namespace Wander.Server.Services
             }
 
 
-            if (job.NecessaryPoints > ServiceProvider.GetUserService().GetUserPoints(user))
+            if (job.NecessaryPoints > _userService.GetUserPoints(user))
             {
                 return false;
             }

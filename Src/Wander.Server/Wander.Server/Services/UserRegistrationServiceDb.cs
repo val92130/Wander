@@ -8,7 +8,7 @@ using Wander.Server.Model;
 
 namespace Wander.Server.Services
 {
-    public class DbUserRegistrationService : IUserRegistrationService
+    public class UserRegistrationServiceDb : IUserRegistrationService
     {
         public static int MinPasswordLength = 4;
         public static int MinLoginLength = 4;

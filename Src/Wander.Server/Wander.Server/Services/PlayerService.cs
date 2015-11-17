@@ -12,8 +12,17 @@ namespace Wander.Server.Services
 
     public class PlayerService : IPlayerService
     {
-        static List<ServerPlayerModel> Players = new List<ServerPlayerModel>(); 
-
+        static List<ServerPlayerModel> Players = new List<ServerPlayerModel>();
+        IUserService _userService;
+        IPropertyService _propertyService;
+        IJobService _jobService;
+        public PlayerService(IUserService userService, IJobService jobService, IPropertyService propertyService)
+        {           
+            if(userService == null) throw new ArgumentNullException("userService");
+            if(jobService == null) throw new ArgumentNullException("jobService");
+            if(propertyService == null) throw new ArgumentNullException("propertyService");
+            _userService = userService;
+        }
         /// <summary>
         /// Add a new player to the Players list if it doesnt already exists
         /// </summary>
@@ -26,7 +35,7 @@ namespace Wander.Server.Services
                 ServerPlayerModel p = Players.FirstOrDefault(x => x.SignalRId == signalRId);
                 if (p == null)
                 {
-                    Players.Add(new ServerPlayerModel() {SignalRId = signalRId, UserId = userId, Position = new Vector2(), Pseudo = ServiceProvider.GetUserService().GetUserLoginById(userId), Direction = EPlayerDirection.Idle});
+                    Players.Add(new ServerPlayerModel() {SignalRId = signalRId, UserId = userId, Position = new Vector2(), Pseudo = _userService.GetUserLoginById(userId), Direction = EPlayerDirection.Idle});
                 }
             }
         }
@@ -155,7 +164,7 @@ namespace Wander.Server.Services
 
             for (int i = 0; i < players.Count; i++)
             {
-                clientPlayers.Add(Helper.CreateClientPlayerModel(ServiceProvider.GetUserService().GetUserLogin(players[i]), ServiceProvider.GetUserService().GetUserSex(players[i]), players[i].Position));
+                clientPlayers.Add(Helper.CreateClientPlayerModel(_userService.GetUserLogin(players[i]), _userService.GetUserSex(players[i]), players[i].Position));
             }
             return clientPlayers;
         }
@@ -171,10 +180,10 @@ namespace Wander.Server.Services
                 throw new ArgumentException("Connection id is null ! ");
             lock (Players)
             {
-                ClientPlayerModel model = ServiceProvider.GetUserService().GetAllUserInfos(connectionId);
+                ClientPlayerModel model = _userService.GetAllUserInfos(connectionId);
                 model.Position = GetPlayer(connectionId).Position;
-                model.Job = ServiceProvider.GetJobService().GetUserJobInfos(connectionId);
-                model.Properties = ServiceProvider.GetPropertiesService().GetUserProperties(connectionId);
+                model.Job = _jobService.GetUserJobInfos(connectionId);
+                model.Properties = _propertyService.GetUserProperties(connectionId);
                 return model;
             }
 

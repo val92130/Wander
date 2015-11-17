@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Web;
 using Microsoft.AspNet.SignalR;
+using Ninject;
 using Wander.Server.Model;
 using Wander.Server.Services;
 using Wander.Server.Model.Players;
@@ -14,6 +15,33 @@ namespace Wander.Server.Hubs
 {
     public class GameHub : Hub
     {
+        IUserRegistrationService _userRegistrationService;
+        IPlayerService _playerService;
+        IMessageService _messageService;
+        IUserService _userService;
+        IJobService _jobService;
+        GameManager _gameManager;
+
+        [Inject]
+        IJobService JobService { get; set; }
+
+        [Inject]
+        public GameHub(IPlayerService playerService, IUserRegistrationService userRegistrationService, IMessageService messageService, IUserService userService,
+            IJobService jobService, GameManager gameManager)
+        {
+            _userRegistrationService = userRegistrationService;
+            _playerService = playerService;
+            _messageService = messageService;
+            _userService = userService;
+            _jobService = jobService;
+            _gameManager = gameManager;
+        }
+
+        public GameHub()
+        {
+            IJobService t = JobService;
+            Debug.Print(t == null ? "Null" : "not null");
+        }
 
         /// <summary>
         /// Connect the user to the game and into the database
@@ -21,13 +49,15 @@ namespace Wander.Server.Hubs
         /// <param name="user"></param>
         public void Connect(UserModel user)
         {
-            if (ServiceProvider.GetUserRegistrationService().CheckLogin(user))
+
+
+            if (_userRegistrationService.CheckLogin(user))
             {
-                List<ChatMessageModel> lastMessages = ServiceProvider.GetMessageService().GetMessagesLimit(5);
+                List<ChatMessageModel> lastMessages = _messageService.GetMessagesLimit(5);
                 Clients.Caller.LoadMessages(lastMessages);
                 
 
-                int playerId = ServiceProvider.GetUserRegistrationService().Connect(user);
+                int playerId = _userRegistrationService.Connect(user);
                 string idSignalR = Context.ConnectionId;
                 if (playerId == -1)
                 {
@@ -36,21 +66,21 @@ namespace Wander.Server.Hubs
                 }
 
                 // we check if the user isnt already connected somewhere else
-                ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(playerId);
+                ServerPlayerModel candidate = _playerService.GetPlayer(playerId);
                 if(candidate != null)
                 {
                     Clients.Client(candidate.SignalRId).notify(Helper.CreateNotificationMessage("Someone else is connected from another computer", EMessageType.error));
                     Clients.Client(candidate.SignalRId).forceDisconnect();
-                    ServiceProvider.GetPlayerService().RemovePlayer(candidate.SignalRId);
+                    _playerService.RemovePlayer(candidate.SignalRId);
                 }
 
                 Debug.Print("Client connected : " + idSignalR);
 
                 Clients.Caller.onConnected(user.Login);
-                ServiceProvider.GetPlayerService().AddPlayer(idSignalR, playerId);
+                _playerService.AddPlayer(idSignalR, playerId);
 
                 //Notify all connected users that someone just connected
-                foreach (ServerPlayerModel players in ServiceProvider.GetPlayerService().GetAllPlayersServer())
+                foreach (ServerPlayerModel players in _playerService.GetAllPlayersServer())
                 {
                     if (players.SignalRId == Context.ConnectionId) continue;
                     Clients.Client(players.SignalRId).playerConnected(new { Pseudo = user.Login, Position = new Vector2(), Direction = EPlayerDirection.Idle });
@@ -70,10 +100,10 @@ namespace Wander.Server.Hubs
         /// <param name="user">Form fields represented by the UserModel</param>
         public void RegisterUser(UserModel user)
         {
-            Debug.Print(ServiceProvider.GetUserRegistrationService().CheckRegisterForm(user).ToString());
-            if (ServiceProvider.GetUserRegistrationService().CheckRegisterForm(user))
+            Debug.Print(_userRegistrationService.CheckRegisterForm(user).ToString());
+            if (_userRegistrationService.CheckRegisterForm(user))
             {
-                ServiceProvider.GetUserRegistrationService().Register(user);
+                _userRegistrationService.Register(user);
                 Clients.Caller.notify(Helper.CreateNotificationMessage("Successfuly registered", EMessageType.success));
                 Clients.Caller.onRegistered();
             }
@@ -88,20 +118,20 @@ namespace Wander.Server.Hubs
         /// </summary>
         public void Disconnect()
         {
-            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId))
+            if (!_playerService.Exists(Context.ConnectionId))
             {
                 return;
             }
             Debug.Print("Client disconnected : " + Context.ConnectionId);
-            foreach (ServerPlayerModel players in ServiceProvider.GetPlayerService().GetAllPlayersServer())
+            foreach (ServerPlayerModel players in _playerService.GetAllPlayersServer())
             {
                 if(players.SignalRId == Context.ConnectionId) continue;
                 Clients.Client(players.SignalRId).playerDisconnected(
-                new { Pseudo = ServiceProvider.GetUserService().GetUserLogin(Context.ConnectionId) });
+                new { Pseudo = _userService.GetUserLogin(Context.ConnectionId) });
             }
 
-            ServiceProvider.GetUserRegistrationService().LogOut(ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId));
-            ServiceProvider.GetPlayerService().RemovePlayer(Context.ConnectionId);
+            _userRegistrationService.LogOut(_playerService.GetPlayer(Context.ConnectionId));
+            _playerService.RemovePlayer(Context.ConnectionId);
             Clients.Caller.notify(Helper.CreateNotificationMessage("See you soon !", EMessageType.info));
         }
 
@@ -112,7 +142,7 @@ namespace Wander.Server.Hubs
         /// <returns></returns>
         public override Task OnDisconnected(bool stopCalled)
         {
-            ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            ServerPlayerModel candidate = _playerService.GetPlayer(Context.ConnectionId);
             // If the disconnected client is logged in the database, we log him out
             if (candidate != null)
             {
@@ -139,7 +169,7 @@ namespace Wander.Server.Hubs
                 return;
             }
 
-            ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            ServerPlayerModel candidate = _playerService.GetPlayer(Context.ConnectionId);
             if (candidate == null)
             {
                 Clients.Caller.notify(Helper.CreateNotificationMessage(
@@ -151,13 +181,13 @@ namespace Wander.Server.Hubs
             string caller = candidate.Pseudo;
 
             string msg = HttpUtility.HtmlEncode(message);
-            List<ServerPlayerModel> ids = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            List<ServerPlayerModel> ids = _playerService.GetAllPlayersServer();
             ChatMessageModel messageModel = Helper.CreateChatMessage(caller, candidate.UserId, msg,
-            ServiceProvider.GetUserService().GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString());
-            ServiceProvider.GetMessageService().LogMessage(messageModel);
+            _userService.GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString());
+            _messageService.LogMessage(messageModel);
             for (int i = 0; i < ids.Count;i++)
             {
-                Clients.Client(ids[i].SignalRId).MessageReceived(Helper.CreateChatMessage(caller, candidate.UserId, msg, ServiceProvider.GetUserService().GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString()));
+                Clients.Client(ids[i].SignalRId).MessageReceived(Helper.CreateChatMessage(caller, candidate.UserId, msg, _userService.GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString()));
             }
         }
 
@@ -166,7 +196,7 @@ namespace Wander.Server.Hubs
         /// </summary>
         public void GetConnectedPlayers()
         {
-            Clients.Caller.showConnectedPlayers(ServiceProvider.GetPlayerService().GetAllPlayersClient());
+            Clients.Caller.showConnectedPlayers(_playerService.GetAllPlayersClient());
         }
 
         /// <summary>
@@ -174,14 +204,14 @@ namespace Wander.Server.Hubs
         /// </summary>
         public void GetPlayerInfo()
         {
-            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId))
+            if (!_playerService.Exists(Context.ConnectionId))
             {
                 Clients.Caller.notify(Helper.CreateNotificationMessage(
                     "You have to be connected ! ", EMessageType.error));
                 return;
             }            
 
-            Clients.Caller.getInfos(ServiceProvider.GetPlayerService().GetPlayerInfos(Context.ConnectionId));
+            Clients.Caller.getInfos(_playerService.GetPlayerInfos(Context.ConnectionId));
         }
 
         /// <summary>
@@ -190,13 +220,13 @@ namespace Wander.Server.Hubs
         /// <param name="position"></param>
         public void UpdatePosition(Vector2 position, EPlayerDirection direction)
         {
-            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return;
+            if (!_playerService.Exists(Context.ConnectionId)) return;
 
-            ServiceProvider.GetPlayerService().MovePlayerTo(Context.ConnectionId, position, direction);
-            string login = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId).Pseudo;
+            _playerService.MovePlayerTo(Context.ConnectionId, position, direction);
+            string login = _playerService.GetPlayer(Context.ConnectionId).Pseudo;
 
             // Notify all the connected players that a player moved
-            var players = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            var players = _playerService.GetAllPlayersServer();
             object newPos = new {Pseudo = login, Position = position, Direction = direction};
             for (int i = 0; i < players.Count; i++)
             {
@@ -208,7 +238,7 @@ namespace Wander.Server.Hubs
 
         public void GetAllPlayers()
         {
-            var players = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            var players = _playerService.GetAllPlayersServer();
 
             for (int i = 0; i < players.Count; i++)
             {
@@ -220,16 +250,16 @@ namespace Wander.Server.Hubs
 
         public void GetAllJobs()
         {
-            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return;
+            if (!_playerService.Exists(Context.ConnectionId)) return;
 
-            Clients.Caller.onGetJobs(ServiceProvider.GetJobService().GetAllJobs().OrderBy(x => x.NecessaryPoints).ToList());
+            Clients.Caller.onGetJobs(_jobService.GetAllJobs().OrderBy(x => x.NecessaryPoints).ToList());
         }
 
         public void ApplyJob(int jobId)
         {
-            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return;
+            if (!_playerService.Exists(Context.ConnectionId)) return;
 
-            bool val = ServiceProvider.GetJobService().ChangeUserJob(jobId, Context.ConnectionId);
+            bool val = _jobService.ChangeUserJob(jobId, Context.ConnectionId);
             if (val)
             {
                 Clients.Caller.notify(Helper.CreateNotificationMessage("Congratulations ! You got a new job ! ",
@@ -237,8 +267,8 @@ namespace Wander.Server.Hubs
             }
             else
             {
-                int points = ServiceProvider.GetUserService().GetUserPoints(Context.ConnectionId);
-                JobModel j = ServiceProvider.GetJobService().GetAllJobs().FirstOrDefault(x => x.JobId == jobId);
+                int points = _userService.GetUserPoints(Context.ConnectionId);
+                JobModel j = _jobService.GetAllJobs().FirstOrDefault(x => x.JobId == jobId);
                 if (j == null)
                 {
                     Clients.Caller.notify(Helper.CreateNotificationMessage("This job doesnt exist ! ",
@@ -259,11 +289,11 @@ namespace Wander.Server.Hubs
 
         public void Update()
         {
-            var players = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            var players = _playerService.GetAllPlayersServer();
 
             for (int i = 0; i < players.Count; i++)
             {
-                Clients.Client(players[i].SignalRId).updateTime(ServiceProvider.GetGameManager().IsDay);
+                Clients.Client(players[i].SignalRId).updateTime(_gameManager.IsDay);
             }
         }
     }

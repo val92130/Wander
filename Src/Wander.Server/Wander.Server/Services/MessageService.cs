@@ -7,7 +7,7 @@ using Wander.Server.Model;
 
 namespace Wander.Server.Services
 {
-    public class MessageService
+    public class MessageService : IMessageService
     {
         public List<ChatMessageModel> GetMessagesLimit(int limit)
         {

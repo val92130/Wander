@@ -12,7 +12,19 @@ namespace Wander.Server.Services
 
     public class PropertyService: IPropertyService
     {
+        IPlayerService _playerService;
+        IUserService _userService;
+        IPropertyService _propertyService;
+        public PropertyService(IPlayerService playerService, IUserService userService, IPropertyService propertyService)
+        {
+            if(playerService == null) throw new ArgumentNullException("playerService");
+            if(userService == null) throw new ArgumentNullException("userService");
+            if (propertyService == null) throw new ArgumentNullException("propertyService");
 
+            _playerService = playerService;
+            _propertyService = propertyService;
+            _userService = userService;
+        }
        public  List<ServerPropertyModel> GetProperties()
         {
 
@@ -21,7 +33,7 @@ namespace Wander.Server.Services
                 string query = string.Format("SELECT * from dbo.ListProperties");
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    List<ServerPropertyModel> Properties  = new List<ServerPropertyModel>();
+                    List<ServerPropertyModel> properties  = new List<ServerPropertyModel>();
                     conn.Open();
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -32,12 +44,12 @@ namespace Wander.Server.Services
                         propertyModel.PropertyDescription = (reader["PropertyDescription"]).ToString();
                         propertyModel.Threshold = Convert.ToInt32(reader["Threshold"]);
                         propertyModel.Price = Convert.ToInt32(reader["Price"]);
-                        Properties.Add(propertyModel);
+                        properties.Add(propertyModel);
                     }
 
                     conn.Close();
 
-                    return Properties;
+                    return properties;
                 }
             }
         }
@@ -49,7 +61,7 @@ namespace Wander.Server.Services
                 string query = string.Format("SELECT l.ListPropertyId, l.Nameproperty, l.PropertyDescription,l.Threshold, p.Price, p.UserId from dbo.PropertiesToSell p JOIN dbo.ListProperties l on l.ListPropertyId = p.ListPropertyId ");
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    List<ServerPropertyUserModel> Properties = new List<ServerPropertyUserModel>();
+                    List<ServerPropertyUserModel> properties = new List<ServerPropertyUserModel>();
                     conn.Open();
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -61,12 +73,12 @@ namespace Wander.Server.Services
                         propertyModel.Threshold = Convert.ToInt32(reader["Threshold"]);
                         propertyModel.Price = Convert.ToInt32(reader["Price"]);
                         propertyModel.UserId = Convert.ToInt32(reader["UserId"]);
-                        Properties.Add(propertyModel);
+                        properties.Add(propertyModel);
                     }
 
                     conn.Close();
 
-                    return Properties;
+                    return properties;
                 }
             }
         }
@@ -131,7 +143,7 @@ namespace Wander.Server.Services
                 string query = ("SELECT l.ListPropertyId, l.NameProperty, l.PropertyDescription, l.Threshold, l.Price from dbo.UserProperties p JOIN dbo.Users u on p.UserId = u.UserId JOIN dbo.ListProperties l ON l.ListPropertyId = p.ListPropertyId WHERE p.UserId = @id");
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    List<ServerPropertyModel> Properties = new List<ServerPropertyModel>();
+                    List<ServerPropertyModel> properties = new List<ServerPropertyModel>();
                     conn.Open();
                     cmd.Parameters.AddWithValue("@id", user.UserId);
                     var reader = cmd.ExecuteReader();
@@ -143,12 +155,12 @@ namespace Wander.Server.Services
                         propertyModel.PropertyDescription = (reader["PropertyDescription"]).ToString();
                         propertyModel.Threshold = Convert.ToInt32(reader["Threshold"]);
                         propertyModel.Price = Convert.ToInt32(reader["Price"]);
-                        Properties.Add(propertyModel);
+                        properties.Add(propertyModel);
                     }
 
                     conn.Close();
 
-                    return Properties;
+                    return properties;
                 }
             }
         }
@@ -182,8 +194,8 @@ namespace Wander.Server.Services
                 var properties = GetUserProperties(connectionId);
 
                 bool alreadyHas = properties.FirstOrDefault(x => x.PropertyId == property.PropertyId) != null;
-                int money = ServiceProvider.GetUserService().GetUserBankAccount(connectionId);
-                int id = ServiceProvider.GetPlayerService().GetPlayer(connectionId).UserId;
+                int money = _userService.GetUserBankAccount(connectionId);
+                int id = _playerService.GetPlayer(connectionId).UserId;
                 if (!alreadyHas && money >= property.Price)
                 {
                     using (SqlConnection conn = SqlConnectionService.GetConnection())
@@ -203,7 +215,7 @@ namespace Wander.Server.Services
                         }
                     }
                     int remainingMoney = money - property.Price;
-                    ServiceProvider.GetUserService().SetUserBankAccount(connectionId, remainingMoney);
+                    _userService.SetUserBankAccount(connectionId, remainingMoney);
                 }
             }
             
@@ -221,7 +233,7 @@ namespace Wander.Server.Services
                 var properties = GetUserProperties(connectionId);
                 bool alreadyHas = properties.FirstOrDefault(x => x.PropertyId == property.PropertyId) != null;
                
-                int id = ServiceProvider.GetPlayerService().GetPlayer(connectionId).UserId;
+                int id = _playerService.GetPlayer(connectionId).UserId;
                 if (alreadyHas)
                 {
                     {
@@ -252,10 +264,10 @@ namespace Wander.Server.Services
             {
                 var properties = GetUserProperties(connectionId);
                 bool alreadyHas = properties.FirstOrDefault(x => x.PropertyId == property.PropertyId) != null;
-                int id = ServiceProvider.GetPlayerService().GetPlayer(connectionId).UserId;
-                int id2 = ServiceProvider.GetPlayerService().GetPlayer(connectionId2).UserId;
-                int moneyUser1 = ServiceProvider.GetUserService().GetUserBankAccount(connectionId2);
-                int moneyUser2 = ServiceProvider.GetUserService().GetUserBankAccount(connectionId2);
+                int id = _playerService.GetPlayer(connectionId).UserId;
+                int id2 = _playerService.GetPlayer(connectionId2).UserId;
+                int moneyUser1 = _userService.GetUserBankAccount(connectionId2);
+                int moneyUser2 = _userService.GetUserBankAccount(connectionId2);
                 if (alreadyHas && moneyUser2 >= property.Price)
                 {
                     string query =
@@ -272,18 +284,18 @@ namespace Wander.Server.Services
                     }
                     int remainingMoneyUser1 = moneyUser2 + property.Price;
                     int remainingMoneyUser2 = moneyUser2 - property.Price;
-                    ServiceProvider.GetUserService().SetUserBankAccount(connectionId, remainingMoneyUser1);
-                    ServiceProvider.GetUserService().SetUserBankAccount(connectionId2, remainingMoneyUser2);
+                    _userService.SetUserBankAccount(connectionId, remainingMoneyUser1);
+                    _userService.SetUserBankAccount(connectionId2, remainingMoneyUser2);
                 }
             }
         }
 
-        public List<ServerPropertyModel> GetUserProperties(string ConnectionId)
+        public List<ServerPropertyModel> GetUserProperties(string connectionId)
         {
-            if (ConnectionId == null) throw new ArgumentException("there is no id");
+            if (connectionId == null) throw new ArgumentException("there is no id");
             
-            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
-            List<ServerPropertyModel> property = ServiceProvider.GetPropertiesService().GetUserProperties(user);
+            ServerPlayerModel user = _playerService.GetPlayer(connectionId);
+            List<ServerPropertyModel> property = _propertyService.GetUserProperties(user);
 
             return property;
         }

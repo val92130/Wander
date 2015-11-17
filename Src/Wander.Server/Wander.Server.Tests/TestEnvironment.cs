@@ -46,7 +46,7 @@ namespace Wander.Server.Tests
         internal static IUserRegistrationService GetUserRegistrationService()
         {
             if(RegistrationService == null)
-                RegistrationService = new DbUserRegistrationService();
+                RegistrationService = new UserRegistrationServiceDb();
 
             return RegistrationService;
             
