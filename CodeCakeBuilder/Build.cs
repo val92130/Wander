@@ -169,8 +169,8 @@ namespace CodeCake
                         }
                         finally
                         {
-                            reqStream?.Close();
-                            stream?.Close();
+                            if (reqStream != null) reqStream.Close();
+                            if (stream != null) stream.Close();
 
                             Directory.Delete(tmp, true);
                             Directory.Delete(output, true);
