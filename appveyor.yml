@@ -1,5 +1,7 @@
 # Basic appveyor configuration : CodeCakeBuilder does the job.
 version: build{build}
+services:
+  - mssql2014
 branches:
   only:
   - master
