@@ -150,7 +150,7 @@ namespace CodeCake
                             FtpWebRequest request =
                                 (FtpWebRequest)FtpWebRequest.Create("ftp://labo.nightlydev.fr/" + "/www/" + "build.zip");
                             request.Method = WebRequestMethods.Ftp.UploadFile;
-                            request.Credentials = new NetworkCredential("administrateur", "pass");
+                            request.Credentials = new NetworkCredential("administrateur", pswd);
                             request.UsePassive = true;
                             request.UseBinary = true;
                             request.KeepAlive = false;
