@@ -16,17 +16,14 @@ using Cake.Common.Tools.MSTest;
 
 namespace CodeCake
 {
+    using Cake.Common.Tools.Cake;
+    using Cake.Core.IO;
+
     /// <summary>
     /// Sample build "script".
     /// Build scripts can be decorated with AddPath attributes that inject existing paths into the PATH environment variable. 
     /// </summary>
     [AddPath("CodeCakeBuilder/Tools")]
-    [AddPath("packages/**/tools*")]
-    // The following one is a sample, but the two previous ones are useful: 
-    // the first one finds the nuget.exe that bootstrap.ps1 downloads and uses, 
-    // the second one enables to find tools that can be installed as NuGet packages in a solution.
-    // You may keep this sample AddPath since unexisting paths are actually ignored.
-    [AddPath("%LOCALAPPDATA%/My-Marvelous-Tools")]
     public class Build : CodeCakeHost
     {
         public Build()
@@ -43,7 +40,7 @@ namespace CodeCake
                 .Does(() =>
                {
                     // Avoids cleaning CodeCakeBuilder itself!
-                    Cake.CleanDirectories("**/bin/" + configuration, d => !d.Path.Segments.Contains("CodeCakeBuilder"));
+                   Cake.CleanDirectories("**/bin/" + configuration, d => !d.Path.Segments.Contains("CodeCakeBuilder"));
                    Cake.CleanDirectories("**/obj/" + configuration, d => !d.Path.Segments.Contains("CodeCakeBuilder"));
                    Cake.CleanDirectories(releasesDir);
                });
@@ -51,17 +48,6 @@ namespace CodeCake
             Task("Restore-NuGet-Packages")
                 .Does(() =>
                {
-                    // Reminder for first run.
-                    // Bootstrap.ps1 ensures that Tools/nuget.exe exists
-                    // and compiles this CodeCakeBuilder application in Release mode.
-                    // It is the first thing that a CI should execute in the initialization phase and
-                    // once done bin/Release/CodeCakeBuilder.exe can be called to do its job.
-                    // (Of course, the following check can be removed and nuget.exe be conventionnaly located somewhere else.)
-                    if (!Cake.FileExists("CodeCakeBuilder/Tools/nuget.exe"))
-                   {
-                       throw new Exception("Please execute Bootstrap.ps1 first.");
-                   }
-
                    Cake.Information("Restoring nuget packages for existing .sln files at the root level.", configuration);
                    foreach (var sln in Cake.GetFiles("*.sln"))
                    {
@@ -92,10 +78,14 @@ namespace CodeCake
 
             Task("DBSetup")
                 .IsDependentOn("Build")
-                .Does(() =>
-                {
-                   
-                });
+                .Does(
+                    () =>
+                        {
+                            string db = Cake.InteractiveEnvironmentVariable("DB_CONNECTION_STRING");
+                            if (String.IsNullOrEmpty(db)) db = "le local de Rami et Valentin";
+                            Cake.Information( "Using database: {0}", db );
+                            
+                        });
 
             Task("Unit-Tests")
                 .IsDependentOn("DBSetup")
