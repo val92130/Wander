@@ -35,13 +35,13 @@ namespace Wander.Server.Hubs
             _gameManager = gameManager;
         }
 
+
         /// <summary>
         /// Connect the user to the game and into the database
         /// </summary>
         /// <param name="user"></param>
         public void Connect(UserModel user)
         {
-
 
             if (_userRegistrationService.CheckLogin(user))
             {

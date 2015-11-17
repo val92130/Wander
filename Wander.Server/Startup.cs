@@ -12,6 +12,7 @@ using Owin;
 using Wander.Server.Hubs;
 using Wander.Server.Model;
 using Wander.Server.Services;
+using System.Reflection;
 
 [assembly: OwinStartup(typeof(Wander.Server.Startup))]
 
@@ -26,11 +27,21 @@ namespace Wander.Server
         public void Configuration(IAppBuilder app)
         {
             var kernel = new StandardKernel();
-            var resolver = new NinjectSignalRDependencyResolver(kernel);
+            RegisterServices(kernel);
 
+            app.MapSignalR();
+
+
+        }
+
+
+
+        public static void RegisterServices(IKernel kernel)
+        {
+            GlobalHost.DependencyResolver.Register(typeof(IHubActivator), () => new HubActivator(kernel));
             kernel.Bind<IUserService>().To<UserService>().InSingletonScope();
 
-            
+
 
             kernel.Bind<IJobService>().To<JobService>().InSingletonScope();
 
@@ -39,12 +50,6 @@ namespace Wander.Server
             kernel.Bind<IUserRegistrationService>().To<UserRegistrationServiceDb>().InSingletonScope();
             kernel.Bind<IPlayerService>().To<PlayerService>().InSingletonScope();
             kernel.Bind<GameManager>().To<GameManager>().InSingletonScope();
-
-
-            var config = new HubConfiguration();
-            config.Resolver = resolver;
-            app.MapSignalR(config);
-
 
         }
     }
