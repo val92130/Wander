@@ -22,10 +22,8 @@ namespace Wander.Server.Hubs
         IJobService _jobService;
         GameManager _gameManager;
 
-        [Inject]
         IJobService JobService { get; set; }
 
-        [Inject]
         public GameHub(IPlayerService playerService, IUserRegistrationService userRegistrationService, IMessageService messageService, IUserService userService,
             IJobService jobService, GameManager gameManager)
         {
@@ -35,12 +33,6 @@ namespace Wander.Server.Hubs
             _userService = userService;
             _jobService = jobService;
             _gameManager = gameManager;
-        }
-
-        public GameHub()
-        {
-            IJobService t = JobService;
-            Debug.Print(t == null ? "Null" : "not null");
         }
 
         /// <summary>

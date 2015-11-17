@@ -19,7 +19,6 @@ namespace Wander.Server
 {
     public class Startup
     {
-        GameManager game;
         public Startup()
         {
             //GlobalHost.DependencyResolver.Resolve<GameManager>().Start();            
@@ -34,9 +33,6 @@ namespace Wander.Server
             
 
             kernel.Bind<IJobService>().To<JobService>().InSingletonScope();
-            kernel.Bind(typeof(IHubConnectionContext<dynamic>)).ToMethod(context =>
-                resolver.Resolve<IConnectionManager>().GetHubContext<GameHub>().Clients
-                    ).WhenInjectedInto<IJobService>();
 
             kernel.Bind<IPropertyService>().To<PropertyService>().InSingletonScope();
             kernel.Bind<IMessageService>().To<MessageService>().InSingletonScope();
@@ -47,7 +43,6 @@ namespace Wander.Server
 
             var config = new HubConfiguration();
             config.Resolver = resolver;
-            GlobalHost.DependencyResolver = resolver;
             app.MapSignalR(config);
 
 
