@@ -13,6 +13,7 @@ using Cake.Common.Tools.NuGet.Restore;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Net;
 using System.Text.RegularExpressions;
 using Cake.Common.Build;
 using Cake.Common.Tools.NuGet.Push;
@@ -85,24 +86,29 @@ namespace CodeCake
             .Does(() =>
             {
                 var path = "./Wander.Server/";
-                var files =  Cake.GetFiles(path + "*");
+                var files = Cake.GetFiles(path + "*");
                 string tmp = "./tmp";
 
                 if (!Directory.Exists(tmp))
                 {
                     Directory.CreateDirectory(tmp);
                 }
+                else
+                {
+                    Directory.Delete(tmp, true);
+                    Directory.CreateDirectory(tmp);
+                }
                 DirectoryPath path2 = new DirectoryPath(path);
                 DirectoryPath d = new DirectoryPath(tmp + "/");
                 this.Cake.CopyDirectory(path2, d);
-                
-                Directory.Delete(tmp+ "/Properties", true);
+
+                Directory.Delete(tmp + "/Properties", true);
                 Directory.Delete(tmp + "/obj", true);
                 Directory.Delete(tmp + "/Model", true);
                 Directory.Delete(tmp + "/Hubs", true);
                 this.Cake.DeleteFiles(tmp + "/*.cs");
                 this.Cake.DeleteFiles(tmp + "/*.csproj");
-               
+
                 // Copy all exe and dll files to the output directory.
                 //Cake.CopyFiles(files, @"C:\Users\Rami\Desktop\t\");
             });
@@ -115,12 +121,50 @@ namespace CodeCake
                 {
                     Directory.CreateDirectory(output);
                 }
+                else
+                {
+                    Directory.Delete(output, true);
+                    Directory.CreateDirectory(output);
+                }
                 string tmp = "./tmp";
+                Cake.Information("Zipping...");
                 // Zip all files in the bin directory.
-                Cake.Zip(tmp + "/",output +"/build.zip");
-                
-                Directory.Delete(tmp, true);
-                Directory.Delete(output, true);
+                Cake.Zip(tmp + "/", output + "/build.zip");
+
+
+                Cake.Information("Deploying");
+                FileStream stream = null;
+                Stream reqStream = null;
+                try
+                {
+                    FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create("ftp://labo.nightlydev.fr/" + "/www/" + "build.zip");
+                    request.Method = WebRequestMethods.Ftp.UploadFile;
+                    request.Credentials = new NetworkCredential("administrateur", "pass");
+                    request.UsePassive = true;
+                    request.UseBinary = true;
+                    request.KeepAlive = false;
+
+                    Cake.Information("Uploading to server...");
+                    stream = File.OpenRead(output + "/build.zip");
+                    byte[] buffer = new byte[stream.Length];
+
+                    reqStream = request.GetRequestStream();
+                    reqStream.Write(buffer, 0, buffer.Length);
+                    reqStream.Close();
+                }
+                catch (Exception e)
+                {
+                    Cake.Information(e.Message);
+                }
+                finally
+                {
+                    reqStream?.Close();
+                    stream?.Close();
+
+                    Directory.Delete(tmp, true);
+                    Directory.Delete(output, true);
+
+                }
 
             });
 
