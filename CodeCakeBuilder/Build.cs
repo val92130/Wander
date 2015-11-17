@@ -23,6 +23,7 @@ namespace CodeCake
 {
     using Cake.Common.Tools.Cake;
     using Cake.Core.IO;
+    using System.IO;
 
     /// <summary>
     /// Sample build "script".
@@ -79,6 +80,36 @@ namespace CodeCake
                         }
                     }
                 });
+            Task("CopyFiles")
+            .IsDependentOn("Unit-Tests")
+            .Does(() =>
+            {
+                var path = "./Wander.Server/";
+                var files =  Cake.GetFiles(path + "*");
+
+
+                DirectoryPath path2 = new DirectoryPath(path);
+                DirectoryPath d = new DirectoryPath(@"C:\Users\Rami\Desktop\t\");
+                this.Cake.CopyDirectory(path2, d);
+                
+                Directory.Delete(@"C:\Users\Rami\Desktop\t\Properties", true);
+                Directory.Delete(@"C:\Users\Rami\Desktop\t\obj", true);
+                Directory.Delete(@"C:\Users\Rami\Desktop\t\Model", true);
+                Directory.Delete(@"C:\Users\Rami\Desktop\t\Hubs", true);
+                this.Cake.DeleteFiles(@"C:\Users\Rami\Desktop\t\*.cs");
+                this.Cake.DeleteFiles(@"C:\Users\Rami\Desktop\t\*.csproj");
+
+                // Copy all exe and dll files to the output directory.
+                //Cake.CopyFiles(files, @"C:\Users\Rami\Desktop\t\");
+            });
+            Task("Package")
+            .IsDependentOn("CopyFiles")
+            .Does(() =>
+            {
+                            // Zip all files in the bin directory.
+                            Cake.Zip(@"C:\Users\Rami\Desktop\t\", "C:/Users/Rami/Desktop/Wanderv2/Wander/CodeCakeBuilder/build.zip");
+
+            });
 
 
             Task("DBSetup")
@@ -132,7 +163,7 @@ namespace CodeCake
                 });
 
 
-            Task("Default").IsDependentOn("Unit-Tests");
+            Task("Default").IsDependentOn("Package");
 
         }
     }
