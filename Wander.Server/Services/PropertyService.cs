@@ -10,7 +10,7 @@ namespace Wander.Server.Services
     using Wander.Server.Model;
     using Wander.Server.Model.Players;
 
-    public class PropertyService: IPropertyService
+    public class PropertyService : IPropertyService
     {
 
        public  List<ServerPropertyModel> GetProperties()

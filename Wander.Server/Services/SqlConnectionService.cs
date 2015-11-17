@@ -13,7 +13,7 @@ namespace Wander.Server.Services
         private static string ConnectionString;
 
         private static string DefaultConnection =
-            @"Data Source=(localdb)\ProjectsV12;Initial Catalog=WanderDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        @"Data Source=(localdb)\ProjectsV12;Initial Catalog = WanderDB; Integrated Security = True;";
         /// <summary>
         /// Create a new SqlConnection
         /// </summary>
