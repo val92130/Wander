@@ -158,12 +158,16 @@ namespace CodeCake
                                 request.UseBinary = true;
                                 request.KeepAlive = true;
 
-                                stream = File.OpenRead(FileName);
-                                byte[] buffer = new byte[stream.Length];
+                                using (var str = File.OpenRead(FileName))
+                                {
+                                    byte[] buffer = new byte[str.Length];
 
-                                reqStream = request.GetRequestStream();
-                                reqStream.Write(buffer, 0, buffer.Length);
-                                reqStream.Close();
+                                    reqStream = request.GetRequestStream();
+                                    reqStream.Write(buffer, 0, buffer.Length);
+                                    reqStream.Close();
+                                }
+                                //stream = File.OpenRead(FileName);
+                                
                             }
                         }
                         catch (Exception e)
