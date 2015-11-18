@@ -121,7 +121,7 @@ namespace CodeCake
             .IsDependentOn("CopyFiles")
             .Does(() =>
             {
-                if (Cake.AppVeyor().IsRunningOnAppVeyor)
+                if (!Cake.AppVeyor().IsRunningOnAppVeyor)
                 {
                     string pswd = Environment.GetEnvironmentVariable("FTP_PASSWORD");
                     if (pswd != null)
@@ -146,7 +146,9 @@ namespace CodeCake
                         Stream reqStream = null;
                         try
                         {
-                            string [] fileList = Directory.GetFiles(tmp + "/");
+                            IEnumerable<string> fileList = Directory.GetFiles(tmp + "/").ToList();
+                            fileList = fileList.Concat(Directory.GetFiles(tmp + "/Content/").ToList());
+                            fileList = fileList.Concat(Directory.GetFiles(tmp + "/bin/").ToList());
                             foreach (string FileName in fileList)
                             {
 
