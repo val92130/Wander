@@ -141,27 +141,30 @@ namespace CodeCake
 
                         Cake.Zip(tmp + "/", output + "/build.zip");
 
-
                         Cake.Information("Deploying");
                         FileStream stream = null;
                         Stream reqStream = null;
                         try
                         {
-                            FtpWebRequest request =
-                                (FtpWebRequest)FtpWebRequest.Create("ftp://labo.nightlydev.fr/" + "/www/" + "build.zip");
-                            request.Method = WebRequestMethods.Ftp.UploadFile;
-                            request.Credentials = new NetworkCredential("administrateur", pswd);
-                            request.UsePassive = true;
-                            request.UseBinary = true;
-                            request.KeepAlive = false;
+                            string [] fileList = Directory.GetFiles(tmp + "/");
+                            foreach (string FileName in fileList)
+                            {
 
-                            Cake.Information("Uploading to server...");
-                            stream = File.OpenRead(output + "/build.zip");
-                            byte[] buffer = new byte[stream.Length];
+                                FtpWebRequest request =
+                                            (FtpWebRequest)FtpWebRequest.Create("ftp://labo.nightlydev.fr/" + "t/" + System.IO.Path.GetFileName(FileName));
+                                request.Method = WebRequestMethods.Ftp.UploadFile;
+                                request.Credentials = new NetworkCredential("administrateur", pswd);
+                                request.UsePassive = true;
+                                request.UseBinary = true;
+                                request.KeepAlive = true;
 
-                            reqStream = request.GetRequestStream();
-                            reqStream.Write(buffer, 0, buffer.Length);
-                            reqStream.Close();
+                                stream = File.OpenRead(FileName);
+                                byte[] buffer = new byte[stream.Length];
+
+                                reqStream = request.GetRequestStream();
+                                reqStream.Write(buffer, 0, buffer.Length);
+                                reqStream.Close();
+                            }
                         }
                         catch (Exception e)
                         {
