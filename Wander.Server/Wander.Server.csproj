@@ -155,6 +155,7 @@
     <Compile Include="Model\Forms\UserModel.cs" />
     <Compile Include="Model\Players\ServerPropertyModel.cs" />
     <Compile Include="Model\Players\ServerPropertyUserModel.cs" />
+    <Compile Include="Model\ServerNotificationMessage.cs" />
     <Compile Include="Model\Vector2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DbUserRegistrationService.cs" />

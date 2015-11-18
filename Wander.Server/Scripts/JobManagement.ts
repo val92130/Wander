@@ -15,6 +15,7 @@
 
 function getAllJobs() {
     hub.invoke("GetAllJobs");
+    $("#jobsModal").modal();
 }
 
 function applyToJob(id) {

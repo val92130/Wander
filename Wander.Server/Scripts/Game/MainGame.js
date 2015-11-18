@@ -51,6 +51,13 @@ var GameState = (function (_super) {
                 console.log("propId : " + propId);
                 openModalProperty(propId);
             }
+            else {
+                var isMairie = tile.properties.Mairie;
+                if (isMairie != undefined) {
+                    console.log("ok marie");
+                    getAllJobs();
+                }
+            }
         }
         console.log("x : " + x + " y : " + y);
     };

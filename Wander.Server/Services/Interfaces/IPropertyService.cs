@@ -12,7 +12,7 @@ namespace Wander.Server.Services
         bool DeleteProperty(int id);
         bool DeleteProperty(ServerPropertyModel model);
         List<ServerPropertyModel> GetUserProperties( ServerPlayerModel user);
-        void BuyProperty(string connectionId, ServerPropertyModel property);
+        ServerNotificationMessage BuyProperty(string connectionId, ServerPropertyModel property);
         void MakePropertyInSell(string connectionId, ServerPropertyModel property, int price);
         void BuyPropertyFromUser(string connectionId, string connectionId2, ServerPropertyModel property);
         List<ServerPropertyModel> GetUserProperties(string ConnectionId);

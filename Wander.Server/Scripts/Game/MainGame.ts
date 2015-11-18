@@ -63,6 +63,12 @@ class GameState extends Phaser.State {
             if (propId != undefined) {
                 console.log("propId : " + propId);
                 openModalProperty(propId);
+            } else {
+                var isMairie = tile.properties.Mairie;
+                if (isMairie != undefined) {
+                    console.log("ok marie");
+                    getAllJobs();
+                }
             }
         }
         console.log("x : " + x + " y : " + y);

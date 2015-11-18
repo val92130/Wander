@@ -153,10 +153,13 @@ namespace Wander.Server.Services
             }
         }
 
-        public void BuyProperty(string connectionId, ServerPropertyModel property)
+        public ServerNotificationMessage BuyProperty(string connectionId, ServerPropertyModel property)
         {
             if (connectionId == null) throw new ArgumentException("parameter user is null");
             if (property == null) throw new ArgumentException("parameter property is null");
+
+            ServerNotificationMessage message = new ServerNotificationMessage() {Content = "error", MessageType = EMessageType.error};
+
             int count = 0, threshold = -1;
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
@@ -177,7 +180,7 @@ namespace Wander.Server.Services
                 }
             }
 
-            if  (count < threshold || (count == 0 && threshold == -1) || threshold == 0)
+            if (count < threshold || (count == 0 && threshold == -1) || threshold == 0)
             {
                 var properties = GetUserProperties(connectionId);
 
@@ -189,12 +192,12 @@ namespace Wander.Server.Services
                     using (SqlConnection conn = SqlConnectionService.GetConnection())
                     {
                         string query =
-                    "INSERT INTO dbo.UserProperties (UserId, ListPropertyId) values ( @UserId, @ListPropertyId) ";
+                            "INSERT INTO dbo.UserProperties (UserId, ListPropertyId) values ( @UserId, @ListPropertyId) ";
                         using (SqlCommand cmd = new SqlCommand(query, conn))
                         {
                             conn.Open();
 
-                            cmd.Parameters.AddWithValue("@UserId",id);
+                            cmd.Parameters.AddWithValue("@UserId", id);
                             cmd.Parameters.AddWithValue("@ListPropertyId", property.PropertyId);
 
                             cmd.ExecuteNonQuery();
@@ -204,9 +207,20 @@ namespace Wander.Server.Services
                     }
                     int remainingMoney = money - property.Price;
                     ServiceProvider.GetUserService().SetUserBankAccount(connectionId, remainingMoney);
+                    message.Content = "Success";
+                    message.MessageType = EMessageType.success;
+                }
+                else
+                {
+                    message.Content = "You dont have enough money";
                 }
             }
-            
+            else
+            {
+                message.Content = "Error, this propery reached its limit";
+            }
+            return message;
+
 
         }
 
