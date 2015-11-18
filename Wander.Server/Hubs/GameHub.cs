@@ -266,5 +266,18 @@ namespace Wander.Server.Hubs
                 Clients.Client(players[i].SignalRId).updateTime(ServiceProvider.GetGameManager().IsDay);
             }
         }
+
+        public void GetPropertyInfo(int id)
+        {
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return;
+
+            ServerPropertyModel model =
+                ServiceProvider.GetPropertiesService().GetProperties().FirstOrDefault(x => x.PropertyId == id);
+
+            if (model != null)
+            {
+                Clients.Caller.openModalProperty(model);
+            }
+        }
     }
 }
