@@ -18,4 +18,3 @@ function getAllJobs() {
 function applyToJob(id) {
     hub.invoke("ApplyJob", id);
 }
-//# sourceMappingURL=JobManagement.js.map

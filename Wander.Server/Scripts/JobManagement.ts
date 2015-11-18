@@ -11,6 +11,7 @@
             "<td> " + jobs[i].Threshold + " </td>" +
             "<td> <button class='" + ((currentUser.Job.JobId == jobs[i].JobId || currentUser.Points >= jobs[i].NecessaryPoints) ? "btn btn-success" : "btn btn-danger") + "' " + ((currentUser.Points < jobs[i].NecessaryPoints || currentUser.Job.JobId == jobs[i].JobId) ? " disabled" : " ") + " onclick='applyToJob(" + jobs[i].JobId + ")' > Apply </button></td></tr>");
     }
+
 });
 
 function getAllJobs() {
