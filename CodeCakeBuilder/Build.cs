@@ -11,6 +11,7 @@ using System.Linq;
 using Cake.Core.Diagnostics;
 using Cake.Common.Tools.NuGet.Restore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Net;
@@ -18,6 +19,7 @@ using System.Text.RegularExpressions;
 using Cake.Common.Build;
 using Cake.Common.Tools.NuGet.Push;
 using Cake.Common.Tools.MSTest;
+using CodeCakeBuilder;
 
 
 namespace CodeCake
@@ -146,21 +148,45 @@ namespace CodeCake
                         Stream reqStream = null;
                         try
                         {
+                            List<CustomFolder> files = new List<CustomFolder>();
                             IEnumerable<string> fileList = Directory.GetFiles(tmp + "/").ToList();
-                            fileList = fileList.Concat(Directory.GetFiles(tmp + "/Content/").ToList());
-                            fileList = fileList.Concat(Directory.GetFiles(tmp + "/bin/").ToList());
-                            foreach (string FileName in fileList)
+                            foreach (string fileName in fileList)
+                            {
+                                files.Add(new CustomFolder() {filename = System.IO.Path.GetFileName(fileName), filepath = fileName, foldername = ""});
+                            }
+                            fileList = Directory.GetFiles(tmp + "/bin").ToList();
+                            foreach (string fileName in fileList)
+                            {
+                                files.Add(new CustomFolder() { filename = System.IO.Path.GetFileName(fileName), filepath = fileName, foldername = "bin/" });
+                            }
+                            fileList = Directory.GetFiles(tmp + "/Content").ToList();
+                            foreach (string fileName in fileList)
+                            {
+                                files.Add(new CustomFolder() { filename = System.IO.Path.GetFileName(fileName), filepath = fileName, foldername = "Content/" });
+                            }
+                            fileList = Directory.GetFiles(tmp + "/fonts").ToList();
+                            foreach (string fileName in fileList)
+                            {
+                                files.Add(new CustomFolder() { filename = System.IO.Path.GetFileName(fileName), filepath = fileName, foldername = "fonts/" });
+                            }
+                            fileList = Directory.GetFiles(tmp + "/Scripts").ToList();
+                            foreach (string fileName in fileList)
+                            {
+                                files.Add(new CustomFolder() { filename = System.IO.Path.GetFileName(fileName), filepath = fileName, foldername = "Scripts/" });
+                            }
+
+                            foreach (CustomFolder fileInfo in files)
                             {
 
                                 FtpWebRequest request =
-                                            (FtpWebRequest)FtpWebRequest.Create("ftp://labo.nightlydev.fr/" + "t/" + System.IO.Path.GetFileName(FileName));
+                                            (FtpWebRequest)FtpWebRequest.Create("ftp://labo.nightlydev.fr/" + "t/" + fileInfo.foldername + fileInfo.filename);
                                 request.Method = WebRequestMethods.Ftp.UploadFile;
                                 request.Credentials = new NetworkCredential("administrateur", pswd);
                                 request.UsePassive = true;
                                 request.UseBinary = true;
                                 request.KeepAlive = true;
 
-                                using (var str = File.OpenRead(FileName))
+                                using (var str = File.OpenRead(fileInfo.filepath))
                                 {
                                     byte[] buffer = new byte[str.Length];
 
