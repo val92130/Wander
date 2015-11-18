@@ -121,7 +121,7 @@ namespace CodeCake
             .IsDependentOn("CopyFiles")
             .Does(() =>
             {
-                if (!Cake.AppVeyor().IsRunningOnAppVeyor)
+                if (Cake.AppVeyor().IsRunningOnAppVeyor)
                 {
                     string pswd = Environment.GetEnvironmentVariable("FTP_PASSWORD");
                     if (pswd != null)
