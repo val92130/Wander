@@ -38,6 +38,20 @@ var GameState = (function (_super) {
         this.dayNightCycle.create();
         hub.invoke("update");
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
+        this.game.input.keyboard.addKey(Phaser.Keyboard.E).onDown.add(this.pressAction, { _game: this });
+    };
+    GameState.prototype.pressAction = function () {
+        var _this = this._game;
+        var y = Math.round(_this.currentPlayer.texture.y / (_this.map.tilemap.tileHeight * _this.map.scale));
+        var x = Math.round(_this.currentPlayer.texture.x / (_this.map.tilemap.tileWidth * _this.map.scale));
+        var tile = _this.map.tilemap.getTile(x, y, "houseLayer");
+        if (tile != undefined) {
+            var propId = tile.properties.propertyId;
+            if (propId != undefined) {
+                console.log("propId : " + propId);
+            }
+        }
+        console.log("x : " + x + " y : " + y);
     };
     GameState.prototype.update = function () {
         this.dayNightCycle.update();
@@ -175,4 +189,3 @@ function Lerp(goal, current, time) {
     }
     return goal;
 }
-//# sourceMappingURL=MainGame.js.map

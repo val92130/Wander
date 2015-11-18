@@ -12,10 +12,13 @@ var Map = (function () {
         this.backgroundLayer = this.tilemap.createLayer("backgroundLayer");
         this.collisionLayer = this.tilemap.createLayer("collisionLayer");
         this.collisionLayer.alpha = 0;
+        this.houseLayer = this.tilemap.createLayer("houseLayer");
+        //this.houseLayer.alpha = 0;
         this.objectsLayer = this.tilemap.createLayer("objectsLayer");
         this.backgroundLayer.setScale(this.scale);
         this.objectsLayer.setScale(this.scale);
         this.collisionLayer.setScale(this.scale);
+        this.houseLayer.setScale(this.scale);
         this.backgroundLayer.resizeWorld();
         //this.tilemap.setCollision(2123, true, this.collisionLayer);
         this.tilemap.setCollisionBetween(2000, 2500, true, this.collisionLayer);
@@ -24,4 +27,3 @@ var Map = (function () {
     };
     return Map;
 })();
-//# sourceMappingURL=Map.js.map

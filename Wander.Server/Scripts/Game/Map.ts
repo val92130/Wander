@@ -4,6 +4,7 @@
     backgroundLayer: Phaser.TilemapLayer;
     objectsLayer: Phaser.TilemapLayer;
     collisionLayer: Phaser.TilemapLayer;
+    houseLayer: Phaser.TilemapLayer; 
     tilesetImage: string;
     tilesetName: string;
     scale: number;
@@ -28,6 +29,9 @@
 
         this.collisionLayer = this.tilemap.createLayer("collisionLayer");
         this.collisionLayer.alpha = 0;
+
+        this.houseLayer = this.tilemap.createLayer("houseLayer");
+        //this.houseLayer.alpha = 0;
         
         
 
@@ -36,6 +40,7 @@
         this.backgroundLayer.setScale(this.scale);
         this.objectsLayer.setScale(this.scale);
         this.collisionLayer.setScale(this.scale);
+        this.houseLayer.setScale(this.scale);
         
         this.backgroundLayer.resizeWorld();
 

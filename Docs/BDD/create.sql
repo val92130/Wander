@@ -200,3 +200,8 @@ INSERT INTO dbo.Jobs(JobDescription, Salary, Threshold, EarningPoints, Necessary
 
  INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Firefighter', 450, 26,120,20); 
 
+ INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house', 'new house je sais pas koi', 1000, 500);
+  INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('houseTest', 'new house je sais pas koi', 1000, 500);
+ select * from dbo.ListProperties;
+
+

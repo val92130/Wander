@@ -28,4 +28,3 @@ var NightShader = (function (_super) {
     }
     return NightShader;
 })(Phaser.Filter);
-//# sourceMappingURL=NightFilter.js.map

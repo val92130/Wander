@@ -19,6 +19,7 @@ class GameState extends Phaser.State {
     filter: Phaser.Filter;
     dayNightCycle: DayNightCycle;
 
+
     preload() {
         this.stage.disableVisibilityChange = true;
         this.game.stage.disableVisibilityChange = true;
@@ -46,8 +47,27 @@ class GameState extends Phaser.State {
         hub.invoke("update");
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
 
+        this.game.input.keyboard.addKey(Phaser.Keyboard.E).onDown.add(this.pressAction, { _game: this});
 
     }
+
+    _game : GameState;
+    pressAction() {
+        var _this = this._game;
+        var y = Math.round(_this.currentPlayer.texture.y / (_this.map.tilemap.tileHeight * _this.map.scale));
+        var x = Math.round(_this.currentPlayer.texture.x / (_this.map.tilemap.tileWidth * _this.map.scale));
+
+        var tile = _this.map.tilemap.getTile(x, y, "houseLayer");
+        if (tile != undefined) {
+            var propId = tile.properties.propertyId;
+            if (propId != undefined) {
+                console.log("propId : " + propId);
+            }
+        }
+        console.log("x : " + x + " y : " + y);
+    }
+
+   
 
     update() {
         this.dayNightCycle.update();
@@ -84,6 +104,7 @@ class GameState extends Phaser.State {
             this.currentPlayer.move(EDirection.Down);
             this.currentPlayer.updatePosition();
         }
+
 
     }
 
