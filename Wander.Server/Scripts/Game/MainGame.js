@@ -189,3 +189,10 @@ function Lerp(goal, current, time) {
     }
     return goal;
 }
+function openModalProperty(id) {
+    hub.invoke("GetPropertyInfo", id);
+}
+hub.on('openModalProperty', function (model) {
+    $("#propertyModal").modal();
+    console.log("model: " + model);
+});
