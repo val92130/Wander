@@ -19,7 +19,6 @@ using System.Text.RegularExpressions;
 using Cake.Common.Build;
 using Cake.Common.Tools.NuGet.Push;
 using Cake.Common.Tools.MSTest;
-using CodeCakeBuilder;
 
 
 namespace CodeCake
@@ -277,4 +276,11 @@ namespace CodeCake
 
         }
     }
+}
+class CustomFolder
+{
+    public string filename { get; set; }
+    public string foldername { get; set; }
+
+    public string filepath { get; set; }
 }
