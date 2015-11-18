@@ -13,7 +13,7 @@ var Map = (function () {
         this.collisionLayer = this.tilemap.createLayer("collisionLayer");
         this.collisionLayer.alpha = 0;
         this.houseLayer = this.tilemap.createLayer("houseLayer");
-        //this.houseLayer.alpha = 0;
+        this.houseLayer.alpha = 0;
         this.objectsLayer = this.tilemap.createLayer("objectsLayer");
         this.backgroundLayer.setScale(this.scale);
         this.objectsLayer.setScale(this.scale);
@@ -27,4 +27,3 @@ var Map = (function () {
     };
     return Map;
 })();
-//# sourceMappingURL=Map.js.map

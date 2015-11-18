@@ -201,7 +201,14 @@ function openModalProperty(id) {
     hub.invoke("GetPropertyInfo", id);
 }
 hub.on('getPropertyInfo', function (model) {
+    if (currentUser == "unedfined" || currentUser == null)
+        return;
+    $("#propertyModalBody").text("");
+    $("#propertyModalBody").append("<tr><td>" + model.PropertyName + "</td><td>" + model.PropertyDescription + "</td><td>" + model.Threshold + "</td> <td>" + model.Price + "</td></tr>");
+    $("#propertyModalBody").append(" <button type='button' onclick = 'BuyProperty(" + model.id + ")' class='btn btn-default' data-dismiss='modal'>Buy</button>");
     $("#propertyModal").modal();
     console.log("model: " + model);
 });
-//# sourceMappingURL=MainGame.js.map
+function BuyProperty(id) {
+    hub.invoke("BuyProperty", id);
+}

@@ -31,7 +31,7 @@
         this.collisionLayer.alpha = 0;
 
         this.houseLayer = this.tilemap.createLayer("houseLayer");
-        //this.houseLayer.alpha = 0;
+        this.houseLayer.alpha = 0;
         
         
 

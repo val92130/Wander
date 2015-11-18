@@ -33,4 +33,3 @@ var DayNightCycle = (function () {
     };
     return DayNightCycle;
 })();
-//# sourceMappingURL=DayNightCycle.js.map

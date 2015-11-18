@@ -184,6 +184,20 @@ namespace Wander.Server.Hubs
             Clients.Caller.getInfos(ServiceProvider.GetPlayerService().GetPlayerInfos(Context.ConnectionId));
         }
 
+        public void BuyProperty( int id)
+        {
+            if (ServiceProvider.GetPlayerService().Exists(Context.ConnectionId))
+            {
+                ServerPropertyModel m =
+                    ServiceProvider.GetPropertiesService().GetProperties().FirstOrDefault(x => x.PropertyId == id);
+                if (m != null)
+                {
+                    ServiceProvider.GetPropertiesService().BuyProperty(this.Context.ConnectionId, m);
+                }
+                
+            }
+        }
+
         /// <summary>
         /// Move the caller to the specified position
         /// </summary>
