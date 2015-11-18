@@ -1,4 +1,5 @@
 ﻿hub.on("onGetJobs", function (jobs) {
+    $("#jobsModal").modal();
     if (currentUser == "unedfined" || currentUser == null) return;
     $("#jobsModalBody").text("");
     for (var i = 0; i < jobs.length; i++) {
@@ -16,7 +17,7 @@
 
 function getAllJobs() {
     hub.invoke("GetAllJobs");
-    $("#jobsModal").modal();
+    
 }
 
 function applyToJob(id) {

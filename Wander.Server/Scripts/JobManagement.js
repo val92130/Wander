@@ -1,4 +1,5 @@
 hub.on("onGetJobs", function (jobs) {
+    $("#jobsModal").modal();
     if (currentUser == "unedfined" || currentUser == null)
         return;
     $("#jobsModalBody").text("");
@@ -14,8 +15,8 @@ hub.on("onGetJobs", function (jobs) {
 });
 function getAllJobs() {
     hub.invoke("GetAllJobs");
-    $("#jobsModal").modal();
 }
 function applyToJob(id) {
     hub.invoke("ApplyJob", id);
 }
+//# sourceMappingURL=JobManagement.js.map

@@ -192,9 +192,28 @@ namespace Wander.Server.Hubs
                     ServiceProvider.GetPropertiesService().GetProperties().FirstOrDefault(x => x.PropertyId == id);
                 if (m != null)
                 {
-                    ServiceProvider.GetPropertiesService().BuyProperty(this.Context.ConnectionId, m);
+                    ServerNotificationMessage message = ServiceProvider.GetPropertiesService().BuyProperty(this.Context.ConnectionId, m);
+                    if (message.MessageType == EMessageType.error)
+                    {
+                        Clients.Caller.notify(
+                            Helper.CreateNotificationMessage("Could not buy property ! Reason : " + message.Content,
+                                message.MessageType));
+                    }
+                    else if(message.MessageType == EMessageType.success)
+                    {
+                        Clients.Caller.notify(
+                            Helper.CreateNotificationMessage("Success ! Enjoy your new property",
+                                message.MessageType));
+                    }
+
+                }
+                else
+                {
+                    Clients.Caller.notify(
+                           Helper.CreateNotificationMessage("This property doesnt exist ! ", EMessageType.error));
                 }
                 
+
             }
         }
 

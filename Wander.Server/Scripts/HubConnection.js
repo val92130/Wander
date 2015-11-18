@@ -4,3 +4,4 @@ connection.start(function () {
     $(".overlay").fadeOut("slow");
     console.log("connected to hub");
 });
+//# sourceMappingURL=HubConnection.js.map

@@ -7,7 +7,7 @@ var Player = (function () {
         this.texture.width = 20;
         this.texture.height = 30;
         this.textMessageContent = "";
-        this.messageStyle = { font: "18px Arial", fill: "#FFFFFF", wordWrap: true };
+        this.messageStyle = { font: "18px Arial", fill: "#FFFFFF", wordWrap: true, wordWrapWidth: this.texture.width * 3, align: "center" };
         this.textMessage = game.add.text(0, 0, this.textMessageContent, this.messageStyle);
         this.pseudo = pseudo;
         this.position = position;
@@ -115,3 +115,4 @@ var Player = (function () {
     };
     return Player;
 })();
+//# sourceMappingURL=Player.js.map

@@ -205,10 +205,12 @@ hub.on('getPropertyInfo', function (model) {
         return;
     $("#propertyModalBody").text("");
     $("#propertyModalBody").append("<tr><td>" + model.PropertyName + "</td><td>" + model.PropertyDescription + "</td><td>" + model.Threshold + "</td> <td>" + model.Price + "</td></tr>");
-    $("#propertyModalBody").append(" <button type='button' onclick = 'BuyProperty(" + model.id + ")' class='btn btn-default' data-dismiss='modal'>Buy</button>");
+    $("#propertyModalBody").append(" <button type='button' onclick = 'BuyProperty(" + model.PropertyId + ")' class='btn btn-default' data-dismiss='modal'>Buy</button>");
     $("#propertyModal").modal();
     console.log("model: " + model);
 });
 function BuyProperty(id) {
     hub.invoke("BuyProperty", id);
+    //$("#propertyModal").modal('hide');
 }
+//# sourceMappingURL=MainGame.js.map
