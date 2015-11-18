@@ -276,7 +276,7 @@ namespace Wander.Server.Hubs
 
             if (model != null)
             {
-                Clients.Caller.openModalProperty(model);
+                Clients.Caller.getPropertyInfo(model);
             }
         }
     }

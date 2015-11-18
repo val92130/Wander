@@ -49,6 +49,7 @@ var GameState = (function (_super) {
             var propId = tile.properties.propertyId;
             if (propId != undefined) {
                 console.log("propId : " + propId);
+                openModalProperty(propId);
             }
         }
         console.log("x : " + x + " y : " + y);
@@ -192,7 +193,8 @@ function Lerp(goal, current, time) {
 function openModalProperty(id) {
     hub.invoke("GetPropertyInfo", id);
 }
-hub.on('openModalProperty', function (model) {
+hub.on('getPropertyInfo', function (model) {
     $("#propertyModal").modal();
     console.log("model: " + model);
 });
+//# sourceMappingURL=MainGame.js.map
