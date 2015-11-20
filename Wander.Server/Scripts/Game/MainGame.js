@@ -222,4 +222,3 @@ $(document).keypress(function (event) {
         }
     }
 });
-//# sourceMappingURL=MainGame.js.map

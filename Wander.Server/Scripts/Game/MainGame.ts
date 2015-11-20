@@ -6,7 +6,6 @@ class Game extends Phaser.Game {
         // init game
         currentState = new GameState();
         super("100%", 768, Phaser.WEBGL, "main", currentState);
-
     }
 }
 
@@ -28,7 +27,6 @@ class GameState extends Phaser.State {
         this.game.load.image("Tiles", "Content/Game/Images/tileset3.png");
         this.game.load.image("Overlay", "Content/Game/Images/filter.png");
         this.map = new Map(this.game, "Map", "Tiles", "tileset3", 1);
-
     }
 
     create() {
@@ -47,9 +45,7 @@ class GameState extends Phaser.State {
         hub.invoke("update");
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
 
-
     }
-
 
     pressAction() {
 
@@ -212,7 +208,6 @@ setInterval(function () {
     if (isConnected) {
         hub.invoke("update");
     }
-
 }, 10000);
 
 
