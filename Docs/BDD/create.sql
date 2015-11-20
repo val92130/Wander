@@ -200,8 +200,21 @@ INSERT INTO dbo.Jobs(JobDescription, Salary, Threshold, EarningPoints, Necessary
 
  INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Firefighter', 450, 26,120,20); 
 
- INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house', 'new house je sais pas koi', 1000, 500);
-  INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('houseTest', 'new house je sais pas koi', 1000, 500);
+INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house', 'new house je sais pas koi', 10, 500);
+INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('houseTest', 'new house je sais pas koi', 10, 500);
+INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house3', 'sdfsdf', 10, 200);
+INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house4', 'dfgdfgdfdfg', 10, 1500);
+INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house5', 'dfggfg', 10, 580);
+INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house6', 'dfgdfgdfgg', 10, 5000);
+INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house7', 'ndfgdgs dfg', 10, 5500);
+INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house8', 'sdfsdfsd', 10, 2500);
+INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house9', 'dfsdfi', 10, 500);
+INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house10', 'nedfdssfi', 10, 600);
+INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house11', 'nfdfdsoi', 10, 110);
+INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house12', 'sdfsdfsdfsdf', 10, 700);
+INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house', 'new house je sais pas koi', 1000, 500);
+INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house', 'new house je sais pas koi', 1000, 500);
+INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house', 'new house je sais pas koi', 1000, 500);
  select * from dbo.ListProperties;
 
 
