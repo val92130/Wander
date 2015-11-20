@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using Microsoft.AspNet.SignalR;
+using Wander.Server.Hubs;
 using Wander.Server.Model;
 
 namespace Wander.Server.Services
@@ -119,9 +121,29 @@ namespace Wander.Server.Services
                 return false;
             }
 
+            
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
                 string query = "UPDATE dbo.Users SET JobId = @Id WHERE UserId = @UserId";
+                string verifThresholdQuery = "SELECT COUNT(*) FROM dbo.Users u WHERE u.JobId = @Id";
+                int count = 0;
+                using (SqlCommand cmd = new SqlCommand(verifThresholdQuery, conn))
+                {
+                    conn.Open();
+                    cmd.Parameters.AddWithValue("@Id", jobId);
+
+                    count = Convert.ToInt32(cmd.ExecuteScalar());
+                    conn.Close();
+                }
+
+                if (count >= job.Threshold)
+                {
+                    GlobalHost.ConnectionManager.GetHubContext<GameHub>()
+                        .Clients.Client(connectionId)
+                        .notify(Helper.CreateNotificationMessage("This job is already full !", EMessageType.error));
+                    return false;
+                }
+
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();

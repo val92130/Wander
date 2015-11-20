@@ -258,6 +258,47 @@ namespace Wander.Server.Hubs
             Clients.Caller.onGetJobs(ServiceProvider.GetJobService().GetAllJobs().OrderBy(x => x.NecessaryPoints).ToList());
         }
 
+        public void SellProperty(int id, int price)
+        {
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return;
+
+            ServerPropertyModel model =
+                ServiceProvider.GetPropertiesService()
+                    .GetUserProperties(Context.ConnectionId)
+                    .FirstOrDefault(x => x.PropertyId == id);
+
+            if (model == null)
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage(
+                    "You dont own this property ! you cannot sell it", EMessageType.error));
+                return;
+            }
+
+            if (price < 0)
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage(
+                    "The price must be positive ! ", EMessageType.error));
+                return;
+            }
+
+            ServerNotificationMessage message =
+                ServiceProvider.GetPropertiesService().MakePropertyInSell(Context.ConnectionId, model, price);
+
+            if (message.MessageType != EMessageType.success)
+            {
+                Clients.Caller.notify(
+                    Helper.CreateNotificationMessage("Error, cannot sell this property. Reason : " + message.Content,
+                        EMessageType.error));
+
+            }
+            else
+            {
+                Clients.Caller.notify(
+                    Helper.CreateNotificationMessage("Success " + message.Content,
+                        EMessageType.success));
+            }
+        }
+
         public void ApplyJob(int jobId)
         {
             if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return;

@@ -69,6 +69,7 @@ function disableQuickChat() {
     $(".quickChatOverlay").fadeOut();
     $(".quickChatBox").fadeOut();
     $("#quickChatInput").val("");
+    $("#quickChatInput").blur();
 }
 $("#quickChatForm").submit(function (e) {
     var msg = $("#quickChatInput").val();

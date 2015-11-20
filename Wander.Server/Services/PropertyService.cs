@@ -212,7 +212,15 @@ namespace Wander.Server.Services
                 }
                 else
                 {
-                    message.Content = "You dont have enough money";
+                    if (alreadyHas)
+                    {
+                        message.Content = "You already have this property";
+                    }
+                    else
+                    {
+                        message.Content = "You dont have enough money";
+                    }
+                    
                 }
             }
             else
@@ -224,18 +232,29 @@ namespace Wander.Server.Services
 
         }
 
-        public void MakePropertyInSell(string connectionId, ServerPropertyModel property, int price)
+        public ServerNotificationMessage MakePropertyInSell(string connectionId, ServerPropertyModel property, int price)
         {
             if (connectionId == null) throw new ArgumentException("parameter user is null");
             if (property == null) throw new ArgumentException("parameter property is null");
             if (price <= 0) throw new ArgumentException("price must be greater than 0");
 
+            ServerNotificationMessage message = new ServerNotificationMessage() { Content = "error", MessageType = EMessageType.error };
+
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
                 var properties = GetUserProperties(connectionId);
                 bool alreadyHas = properties.FirstOrDefault(x => x.PropertyId == property.PropertyId) != null;
-               
+                bool alreadyInSell = GetPropertiesInSell().FirstOrDefault(x => x.PropertyId == property.PropertyId) !=
+                                     null;
                 int id = ServiceProvider.GetPlayerService().GetPlayer(connectionId).UserId;
+
+                if (alreadyInSell)
+                {
+                    message.Content = "This property is already in sell";
+                    message.MessageType = EMessageType.error;
+                    return message;
+                }
+
                 if (alreadyHas)
                 {
                     {
@@ -249,11 +268,19 @@ namespace Wander.Server.Services
                             cmd.Parameters.AddWithValue("@Price", price);
                             cmd.ExecuteNonQuery();
                             conn.Close();
-                        }   
+                        }
+                        message.Content = "Success ! ";
+                        message.MessageType = EMessageType.success;
                     } 
                 }
+                else
+                {
+                    message.Content = "You already own this property !";
+                }
             }
-            
+
+            return message;
+
 
         }
 

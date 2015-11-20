@@ -17,6 +17,8 @@ function getAllJobs() {
     hub.invoke("GetAllJobs");
 }
 function applyToJob(id) {
-    hub.invoke("ApplyJob", id);
+    hub.invoke("ApplyJob", id).done(function () {
+        $("#jobsModal").modal("hide");
+    });
 }
 //# sourceMappingURL=JobManagement.js.map

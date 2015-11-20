@@ -26,8 +26,8 @@
         this.direction = EDirection.Idle;
         this.speed = 7;
         this.texture = game.add.sprite(position.x, position.y, "player");
-        this.texture.width = 20;
-        this.texture.height = 30;
+        this.texture.width = 15;
+        this.texture.height = 25;
 
         this.textMessageContent = "";
         this.messageStyle = { font: "18px Arial", fill: "#FFFFFF", wordWrap: true, wordWrapWidth: this.texture.width * 3, align: "center" };

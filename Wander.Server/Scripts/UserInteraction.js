@@ -28,11 +28,10 @@ $(document).ready(function () {
         e.preventDefault();
         var login = values["login"];
         var password = values["pwd"];
-        hub.invoke("Connect", { Login: login, Password: password }).done(function () {
-            console.log("Successfuly connected");
-        });
+        hub.invoke("Connect", { Login: login, Password: password });
     });
     $("#registerForm").submit(function (e) {
+        $(".overlay").fadeIn("slow");
         var values;
         var $inputs = $('#registerForm :input');
         var values = {};
@@ -46,18 +45,20 @@ $(document).ready(function () {
         var email = values["email"];
         e.preventDefault();
         if (checkInput(login, 4) && checkInput(password, 4) && password == passwordConfirm && checkInput(email, 3) && (sex == 0 || sex == 1)) {
-            hub.invoke("RegisterUser", { Login: login, Password: password, Email: email, Sex: sex }).done(function () {
-                console.log("registered");
-            });
+            hub.invoke("RegisterUser", { Login: login, Password: password, Email: email, Sex: sex });
         }
         else {
             alert("incorrect form");
+            $(".overlay").fadeOut("slow");
         }
     });
     $("#playersBtn").click(function () {
         hub.invoke("GetConnectedPlayers");
     });
     function OnLogin() {
+        $('input').each(function () {
+            $(this).trigger('blur');
+        });
         $('#loginModal').modal('hide');
         $("#loginBtn").hide();
         $("#registerBtn").hide();
@@ -67,6 +68,9 @@ $(document).ready(function () {
         createGame();
     }
     function OnLogout() {
+        $('input').each(function () {
+            $(this).trigger('blur');
+        });
         $("#loginBtn").show();
         $("#registerBtn").show();
         $("#logoutBtn").hide();
@@ -91,6 +95,7 @@ $(document).ready(function () {
     });
     hub.on("onRegistered", function () {
         $('#signUpModal').modal('hide');
+        $(".overlay").fadeOut("slow");
     });
     hub.on("forceDisconnect", function () {
         OnLogout();
@@ -105,7 +110,7 @@ $(document).ready(function () {
         $("#pointsLabel").text(user.Points);
         $("#propertyListOption").empty();
         for (var i = 0; i < user.Properties.length; i++) {
-            $("#propertyListOption").append('<option value="' + user.Properties[i].PropertyName + '">' + user.Properties[i].PropertyName + '</option>');
+            $("#propertyListOption").append('<option value="' + user.Properties[i].PropertyId + '">' + user.Properties[i].PropertyName + '</option>');
         }
     });
     hub.on("showConnectedPlayers", function (players) {
@@ -118,9 +123,18 @@ $(document).ready(function () {
     function checkInput(input, minLength) {
         return (input != null && input != "" && input.length >= minLength);
     }
-    $("#refreshPropertyBtn").click(function () {
-        GetInfos();
-        console.log("refreshing");
+    $("#sellPropertyBtn").click(function () {
+        $("#sellPropertyModal").modal();
+        console.log($('#propertyListOption').val());
+        $("#hiddenPropertyId").attr("value", $('#propertyListOption').val());
+    });
+    $("#sellPropertyForm").submit(function (e) {
+        var propertyId = $("#hiddenPropertyId").attr("value");
+        var price = $("#priceInput").val();
+        hub.invoke("SellProperty", propertyId, price).done(function () {
+            $("#sellPropertyModal").modal("hide");
+        });
+        e.preventDefault();
     });
     $("#my_infos").click(function () {
         $("#my_infos_box").slideToggle();
@@ -141,11 +155,9 @@ $(document).ready(function () {
         }
     });
     $("#heading_box_msg").click(function () {
-        console.log("ok");
         $("#msgFooter").hide();
     });
     $("#heading_box_info").click(function () {
-        console.log("ok");
         $("#my_infos_box").hide();
     });
     setInterval(function () {

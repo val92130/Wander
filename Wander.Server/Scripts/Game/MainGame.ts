@@ -27,7 +27,7 @@ class GameState extends Phaser.State {
         this.game.load.tilemap("Map", "Content/Game/Maps/map2.json", null, Phaser.Tilemap.TILED_JSON);
         this.game.load.image("Tiles", "Content/Game/Images/tileset3.png");
         this.game.load.image("Overlay", "Content/Game/Images/filter.png");
-        this.map = new Map(this.game, "Map", "Tiles", "tileset3", 1.5);
+        this.map = new Map(this.game, "Map", "Tiles", "tileset3", 1);
 
     }
 
@@ -47,34 +47,29 @@ class GameState extends Phaser.State {
         hub.invoke("update");
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
 
-        this.game.input.keyboard.addKey(Phaser.Keyboard.E).onDown.add(this.pressAction, { _game: this});
 
     }
 
-    _game : GameState;
-    pressAction() {
-        var _this = this._game;
-        var y = Math.round(_this.currentPlayer.texture.y / (_this.map.tilemap.tileHeight * _this.map.scale));
-        var x = Math.round(_this.currentPlayer.texture.x / (_this.map.tilemap.tileWidth * _this.map.scale));
 
-        var tile = _this.map.tilemap.getTile(x, y, "houseLayer");
+    pressAction() {
+
+        var y = Math.round(this.currentPlayer.texture.y / (this.map.tilemap.tileHeight * this.map.scale));
+        var x = Math.round(this.currentPlayer.texture.x / (this.map.tilemap.tileWidth * this.map.scale));
+
+        var tile = this.map.tilemap.getTile(x, y, "houseLayer");
         if (tile != undefined) {
             var propId = tile.properties.propertyId;
             if (propId != undefined) {
-                console.log("propId : " + propId);
                 openModalProperty(propId);
             } else {
                 var isMairie = tile.properties.Mairie;
                 if (isMairie != undefined) {
-                    console.log("ok marie");
                     getAllJobs();
                 }
             }
         }
-        console.log("x : " + x + " y : " + y);
     }
 
-   
 
     update() {
         this.dayNightCycle.update();
@@ -221,7 +216,10 @@ setInterval(function () {
 }, 10000);
 
 
-$(window).resize(function () { currentState.resizeGame(); });
+$(window).resize(function () {
+    if (currentState != undefined) currentState.resizeGame();
+
+});
 
 function createGame() {
     game = new Game();
@@ -253,8 +251,7 @@ hub.on('getPropertyInfo', function (model) {
     $("#propertyModalBody").text("");
    
 
-    $("#propertyModalBody").append("<tr><td>" + model.PropertyName + "</td><td>" + model.PropertyDescription + "</td><td>" + model.Threshold + "</td> <td>" + model.Price +"</td></tr>");
-    $("#propertyModalBody").append(" <button type='button' onclick = 'BuyProperty("+model.PropertyId+")' class='btn btn-default' data-dismiss='modal'>Buy</button>");
+    $("#propertyModalBody").append("<tr><td>" + model.PropertyName + "</td><td>" + model.PropertyDescription + "</td><td>" + model.Threshold + "</td> <td>" + model.Price + "</td><td><button type='button' onclick = 'BuyProperty(" + model.PropertyId +")' class='btn btn-success' data-dismiss='modal'>Buy</button></tr>");
     
     $("#propertyModal").modal();
     console.log("model: " + model);
@@ -265,3 +262,19 @@ function BuyProperty(id) {
     hub.invoke("BuyProperty", id);
     //$("#propertyModal").modal('hide');
 }
+
+$(document).keypress(function (event) { 
+    if (isConnected) {
+        if ($('input:focus').size() == 0) {
+            console.log(event.which);
+            if (event.which == 101) {
+                if (currentState.game != undefined) {
+                    currentState.pressAction();
+                }
+
+            }
+        }
+    }
+
+
+});

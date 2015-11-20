@@ -13,56 +13,56 @@
     <meta charset="utf-8" />
 </head>
 <body>
-<div class="overlay">
-    <div class="sk-folding-cube">
-        <div class="sk-cube1 sk-cube"></div>
-        <div class="sk-cube2 sk-cube"></div>
-        <div class="sk-cube4 sk-cube"></div>
-        <div class="sk-cube3 sk-cube"></div>
-    </div>
-</div>
-
-<div class="quickChatOverlay">
-
-</div>
-
-<div class="quickChatBox">
-    <form id="quickChatForm">
-        <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></span>
-            <input type="text" id="quickChatInput" class="form-control" placeholder="Message" aria-describedby="basic-addon1">
-        </div>
-    </form>
-</div>
-<nav class="navbar navbar-trans navbar-fixed-top" role="navigation" style="position: relative; margin-bottom: 0px">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapsible">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand text-danger" href="#">WANDER</a>
-        </div>
-        <div class="navbar-collapse collapse" id="navbar-collapsible">
-            <ul class="nav navbar-nav navbar-left">
-                <li><a href="#login" id="loginBtn"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Login</a></li>
-                <li><a href="#register" id="registerBtn"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Register</a></li>
-                <li><a href="#players" id="playersBtn"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Players</a></li>
-                <li><a href="#logout" id="logoutBtn"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Logout</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#logout" id="labelPseudo"></a></li>
-            </ul>
+    <div class="overlay">
+        <div class="sk-folding-cube">
+            <div class="sk-cube1 sk-cube"></div>
+            <div class="sk-cube2 sk-cube"></div>
+            <div class="sk-cube4 sk-cube"></div>
+            <div class="sk-cube3 sk-cube"></div>
         </div>
     </div>
-</nav>
 
-<div id="main">
-    
-</div>
-<!-- LOGIN MODAL-->
+    <div class="quickChatOverlay">
+
+    </div>
+
+    <div class="quickChatBox">
+        <form id="quickChatForm">
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></span>
+                <input type="text" id="quickChatInput" class="form-control" placeholder="Message" aria-describedby="basic-addon1">
+            </div>
+        </form>
+    </div>
+    <nav class="navbar navbar-trans navbar-fixed-top" role="navigation" style="position: relative; margin-bottom: 0px">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapsible">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand text-danger" href="#">WANDER</a>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar-collapsible">
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="#login" id="loginBtn"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Login</a></li>
+                    <li><a href="#register" id="registerBtn"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Register</a></li>
+                    <li><a href="#players" id="playersBtn"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Players</a></li>
+                    <li><a href="#logout" id="logoutBtn"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Logout</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#logout" id="labelPseudo"></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="main">
+
+    </div>
+    <!-- LOGIN MODAL-->
     <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -131,100 +131,127 @@
         </div>
     </div>
     <!-- PLAYERS MODAL-->
-<div class="modal fade" id="playersModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Players</h4>
-            </div>
-            <div class="modal-body">
-
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>UserName</th>
-                        <th>Sex</th>
-                        <th>Position</th>
-                    </tr>
-                    </thead>
-                    <tbody id="playersModalBody"></tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-    <!-- JOBS MODAL-->
-<div class="modal fade" id="jobsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Jobs</h4>
-            </div>
-            <div class="modal-body">
-
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>Description</th>
-                        <th>Salary</th>
-                        <th>Necessary Points</th>
-                        <th>Earning Points</th>
-                        <th>Limit</th>
-                        <th>Apply</th>
-                    </tr>
-
-
-                    </thead>
-                    <tbody id="jobsModalBody">
-                    <tr>
-                        <td>Cook</td>
-                        <td>120</td>
-                        <td>10</td>
-                        <td>5</td>
-                        <td>200</td>
-                        <td><button onclick="alert('e')">Test</button></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-    <!-- PROPERTY MODAL-->
-<div class="modal fade" id="propertyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id="playersModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Buy Property</h4>
+                    <h4 class="modal-title">Players</h4>
                 </div>
                 <div class="modal-body">
 
                     <table class="table">
                         <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Limit</th>
-                            <th>Price</th>
-                        </tr>
+                            <tr>
+                                <th>UserName</th>
+                                <th>Sex</th>
+                                <th>Position</th>
+                            </tr>
+                        </thead>
+                        <tbody id="playersModalBody"></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- JOBS MODAL-->
+    <div class="modal fade" id="jobsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Jobs</h4>
+                </div>
+                <div class="modal-body">
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Salary</th>
+                                <th>Necessary Points</th>
+                                <th>Earning Points</th>
+                                <th>Limit</th>
+                                <th>Apply</th>
+                            </tr>
 
 
                         </thead>
-                        <tbody id="propertyModalBody">
-
+                        <tbody id="jobsModalBody">
+                            <tr>
+                                <td>Cook</td>
+                                <td>120</td>
+                                <td>10</td>
+                                <td>5</td>
+                                <td>200</td>
+                                <td><button onclick="alert('e')">Test</button></td>
+                            </tr>
                         </tbody>
                     </table>
-                   
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- PROPERTY MODAL-->
+<div class="modal fade" id="propertyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Buy Property</h4>
+            </div>
+            <div class="modal-body">
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Limit</th>
+                        <th>Price</th>
+                        <th>Buy</th>
+                    </tr>
+                    </thead>
+                    <tbody id="propertyModalBody">
+
+
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
 </div>
+
+    <!-- SELL PROPERTY MODAL-->
+    <div class="modal fade" id="sellPropertyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Sell Property</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="sellPropertyForm">
+                        <div class="form-group">
+                            <label for="priceInput">Price</label>
+                            <input type="number" class="form-control" id="priceInput">
+                            <input type="hidden" id="hiddenPropertyId" value=""/>
+                        </div>
+                        <button type="submit" class="btn btn-danger">Sell</button>
+                    </form>
+                </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -235,7 +262,7 @@
     </div>
 </body>
 
-<div class="container" >
+<div class="container">
     <div class="row" style="margin-right: auto;margin-left: auto;width: 500px;">
         <div class="col-md-5" style="position: absolute; bottom: 30px; width: 500px; right: 25%; left: 50%; margin-left: -250px;" id="msgFooter">
             <div class="panel panel-primary" style="border-color: #2B2B2B;">
@@ -269,7 +296,7 @@
                         <!-- Chat content-->
                     </ul>
                 </div>
-                <div class="panel-footer" >
+                <div class="panel-footer">
                     <form id="msgForm">
                         <div class="well well-sm">
                             <input type="text" class="form-control" name="message" id="sendMsgInput" maxlength="95" />
@@ -286,7 +313,7 @@
 
 <div class="container">
     <div class="row" style="margin-right: auto;margin-left: auto;width: 500px;">
-        <div class="col-md-5" style="position: absolute; bottom: 30px; width: 500px; right: 25%; left: 50%; margin-left: -250px;" id="my_infos_box" >
+        <div class="col-md-5" style="position: absolute; bottom: 30px; width: 500px; right: 25%; left: 50%; margin-left: -250px;" id="my_infos_box">
             <div class="panel panel-primary" style="border-color: #2B2B2B;">
                 <div class="panel-heading" style="background-image: none;" id="heading_box_info">
                     <span class="glyphicon glyphicon-user"></span> My infos
@@ -340,7 +367,7 @@
                             <option>4</option>
                             <option>5</option>
                         </select>
-                        <button type="button" class="btn btn-success" id="refreshPropertyBtn">Refresh</button>
+                        <button type="button" class="btn btn-success" id="sellPropertyBtn">Sell</button>
                     </div>
                 </div>
             </div>
