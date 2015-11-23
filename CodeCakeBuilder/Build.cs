@@ -6,25 +6,20 @@ using Cake.Common.Tools.NuGet;
 using Cake.Core;
 using Cake.Common.Diagnostics;
 using Code.Cake;
-using Cake.Common.Tools.NuGet.Pack;
 using System.Linq;
 using Cake.Core.Diagnostics;
-using Cake.Common.Tools.NuGet.Restore;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
 using Cake.Common.Build;
-using Cake.Common.Tools.NuGet.Push;
 using Cake.Common.Tools.MSTest;
 
 
 namespace CodeCake
 {
-    using Cake.Common.Tools.Cake;
     using Cake.Core.IO;
     using System.IO;
 

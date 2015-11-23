@@ -163,11 +163,6 @@ class GameState extends Phaser.State {
 }
 
 
-
-hub.on("MessageReceived", function (msg) {
-
-});
-
 hub.on("playerConnected", function (player) {
     if (currentState == undefined) return;
     currentState.addPlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
@@ -182,7 +177,6 @@ hub.on("playerDisconnected", function (player) {
 
 hub.on("playerMoved", function (player) {
     if (currentState != undefined) {
-        console.log(player.Direction);
         currentState.updatePlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y), player.Direction);
     }
 });
@@ -240,30 +234,28 @@ function Lerp(goal, current, time) {
 }
 
 function openModalProperty(id) {
-    hub.invoke("GetPropertyInfo", id);
+    hub.invoke("GetPropertyInfo", id).done(function (model) {
+        if (model != null && model != undefined) {
+            if (currentUser == "unedfined" || currentUser == null) return;
+            $("#propertyModalBody").text("");
+
+
+            $("#propertyModalBody").append("<tr><td>" + model.PropertyName + "</td><td>" + model.PropertyDescription + "</td><td>" + model.Threshold + "</td> <td>" + model.Price + "</td><td><button type='button' onclick = 'BuyProperty(" + model.PropertyId + ")' class='btn btn-success' data-dismiss='modal'>Buy</button></tr>");
+
+            $("#propertyModal").modal();
+        }      
+    });
 }
 
-hub.on('getPropertyInfo', function (model) {
-    if (currentUser == "unedfined" || currentUser == null) return;
-    $("#propertyModalBody").text("");
-   
-
-    $("#propertyModalBody").append("<tr><td>" + model.PropertyName + "</td><td>" + model.PropertyDescription + "</td><td>" + model.Threshold + "</td> <td>" + model.Price + "</td><td><button type='button' onclick = 'BuyProperty(" + model.PropertyId +")' class='btn btn-success' data-dismiss='modal'>Buy</button></tr>");
-    
-    $("#propertyModal").modal();
-    console.log("model: " + model);
-
-});
 
 function BuyProperty(id) {
     hub.invoke("BuyProperty", id);
-    //$("#propertyModal").modal('hide');
+    $("#propertyModal").modal('hide');
 }
 
 $(document).keypress(function (event) { 
     if (isConnected) {
         if ($('input:focus').size() == 0) {
-            console.log(event.which);
             if (event.which == 101) {
                 if (currentState.game != undefined) {
                     currentState.pressAction();

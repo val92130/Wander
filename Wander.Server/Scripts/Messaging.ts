@@ -14,7 +14,7 @@ $("#msgForm").submit(function (e) {
 
     var msg = values["message"];
 
-    hub.invoke("SendPublicMessage", msg);
+    sendMessage(msg);
     $('#msgForm :input').val('');
     e.preventDefault();
 });
@@ -85,6 +85,10 @@ $(document).keyup(function (e) {
     }
 });
 
+function sendMessage(msg) {
+    hub.invoke("SendPublicMessage", msg);
+}
+
 function disableQuickChat() {
     if (!isConnected) return;
     quickChatToggle = false;
@@ -99,7 +103,7 @@ $("#quickChatForm").submit(function (e) {
     var msg = $("#quickChatInput").val();
 
     if (msg != "" && msg.length < 40) {
-        hub.invoke("SendPublicMessage", msg);
+        sendMessage(msg);
     }
     disableQuickChat();
     e.preventDefault();

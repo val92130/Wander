@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Timers;
-using Microsoft.Owin;
+﻿using Microsoft.Owin;
 using Owin;
-using Wander.Server.Model;
 using Wander.Server.Services;
 
 [assembly: OwinStartup(typeof(Wander.Server.Startup))]

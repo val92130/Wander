@@ -8,7 +8,7 @@ $("#msgForm").submit(function (e) {
         values[this.name] = $(this).val();
     });
     var msg = values["message"];
-    hub.invoke("SendPublicMessage", msg);
+    sendMessage(msg);
     $('#msgForm :input').val('');
     e.preventDefault();
 });
@@ -62,6 +62,9 @@ $(document).keyup(function (e) {
         }
     }
 });
+function sendMessage(msg) {
+    hub.invoke("SendPublicMessage", msg);
+}
 function disableQuickChat() {
     if (!isConnected)
         return;
@@ -74,7 +77,7 @@ function disableQuickChat() {
 $("#quickChatForm").submit(function (e) {
     var msg = $("#quickChatInput").val();
     if (msg != "" && msg.length < 40) {
-        hub.invoke("SendPublicMessage", msg);
+        sendMessage(msg);
     }
     disableQuickChat();
     e.preventDefault();
@@ -83,4 +86,3 @@ function buildChatMessage(sex, username, content, hour) {
     var img = sex == 1 ? "user-boy.png" : "user-girl.png";
     return '<li class="left clearfix"> <span class="chat-img pull-left" > <img src=" Content/' + img + '" alt= "User Avatar" class="img-circle" /> </span> <div class="chat-body clearfix"> <div class="header"> <strong class="primary-font">' + username + ' </strong> <small class="pull-right text-muted" > <span class="glyphicon glyphicon-time" > </span> ' + hour + ' </small> </div > <p> ' + content + ' </p> </div> </li>';
 }
-//# sourceMappingURL=Messaging.js.map

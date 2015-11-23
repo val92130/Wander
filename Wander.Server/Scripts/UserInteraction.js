@@ -14,8 +14,9 @@ $(document).ready(function () {
         $("#signUpModal").modal();
     });
     $("#logoutBtn").click(function () {
-        hub.invoke("Disconnect");
-        OnLogout();
+        hub.invoke("Disconnect").done(function () {
+            OnLogout();
+        });
     });
     $("#loginForm").submit(function (e) {
         console.log("clicked");
@@ -45,8 +46,12 @@ $(document).ready(function () {
         var email = values["email"];
         e.preventDefault();
         if (checkInput(login, 4) && checkInput(password, 4) && password == passwordConfirm && checkInput(email, 3) && (sex == 0 || sex == 1)) {
-            hub.invoke("RegisterUser", { Login: login, Password: password, Email: email, Sex: sex }).done(function () {
+            hub.invoke("RegisterUser", { Login: login, Password: password, Email: email, Sex: sex }).done(function (response) {
                 $(".overlay").fadeOut("slow");
+                if (response) {
+                    $('#signUpModal').modal('hide');
+                    $(".overlay").fadeOut("slow");
+                }
             });
         }
         else {
@@ -55,7 +60,15 @@ $(document).ready(function () {
         }
     });
     $("#playersBtn").click(function () {
-        hub.invoke("GetConnectedPlayers");
+        hub.invoke("GetConnectedPlayers").done(function (players) {
+            if (players != null && players != undefined) {
+                $("#playersModalBody").text("");
+                for (var i = 0; i < players.length; i++) {
+                    $("#playersModalBody").append('<tr class="success"> <td>' + players[i].UserName + '</td> <td>' + (players[i].Sex == 1 ? "male" : "female") + '</td> <td>' + "X : " + players[i].Position.X + " Y : " + players[i].Position.Y + '</td> </tr>');
+                }
+                $("#playersModal").modal();
+            }
+        });
     });
     function OnLogin() {
         $('input').each(function () {
@@ -86,25 +99,13 @@ $(document).ready(function () {
         deleteGame();
     }
     function GetInfos() {
-        hub.invoke("GetPlayerInfo");
+        hub.invoke("GetPlayerInfo").done(function (user) {
+            if (user != null && user != undefined) {
+                updateInfos(user);
+            }
+        });
     }
-    hub.on("notify", function (message) {
-        $.notify(message.Content, message.MessageType);
-    });
-    hub.on("onConnected", function (pseudo) {
-        OnLogin();
-        isConnected = true;
-        $("#labelPseudo").text(pseudo);
-        userPseudo = pseudo;
-    });
-    hub.on("onRegistered", function () {
-        $('#signUpModal').modal('hide');
-        $(".overlay").fadeOut("slow");
-    });
-    hub.on("forceDisconnect", function () {
-        OnLogout();
-    });
-    hub.on("getInfos", function (user) {
+    function updateInfos(user) {
         currentUser = user;
         $("#jobLabel").text(user.Job.JobDescription);
         $("#salaryLabel").text(user.Job.Salary + " €");
@@ -116,13 +117,18 @@ $(document).ready(function () {
         for (var i = 0; i < user.Properties.length; i++) {
             $("#propertyListOption").append('<option value="' + user.Properties[i].PropertyId + '">' + user.Properties[i].PropertyName + '</option>');
         }
+    }
+    hub.on("notify", function (message) {
+        $.notify(message.Content, message.MessageType);
     });
-    hub.on("showConnectedPlayers", function (players) {
-        $("#playersModalBody").text("");
-        for (var i = 0; i < players.length; i++) {
-            $("#playersModalBody").append('<tr class="success"> <td>' + players[i].UserName + '</td> <td>' + (players[i].Sex == 1 ? "male" : "female") + '</td> <td>' + "X : " + players[i].Position.X + " Y : " + players[i].Position.Y + '</td> </tr>');
-        }
-        $("#playersModal").modal();
+    hub.on("onConnected", function (pseudo) {
+        OnLogin();
+        isConnected = true;
+        $("#labelPseudo").text(pseudo);
+        userPseudo = pseudo;
+    });
+    hub.on("forceDisconnect", function () {
+        OnLogout();
     });
     function checkInput(input, minLength) {
         return (input != null && input != "" && input.length >= minLength);
@@ -170,4 +176,3 @@ $(document).ready(function () {
         }
     }, 15000);
 });
-//# sourceMappingURL=UserInteraction.js.map

@@ -22,8 +22,10 @@ $(document).ready(function () {
     });
 
     $("#logoutBtn").click(function () {
-        hub.invoke("Disconnect");
-        OnLogout();
+        hub.invoke("Disconnect").done(function() {
+            OnLogout();
+        });
+        
     });
 
     $("#loginForm").submit(function (e) {
@@ -71,8 +73,12 @@ $(document).ready(function () {
         e.preventDefault();
 
         if (checkInput(login, 4) && checkInput(password, 4) && password == passwordConfirm && checkInput(email, 3) && (sex == 0 || sex == 1)) {
-            hub.invoke("RegisterUser", { Login: login, Password: password, Email: email, Sex: sex }).done(function() {
+            hub.invoke("RegisterUser", { Login: login, Password: password, Email: email, Sex: sex }).done(function(response) {
                 $(".overlay").fadeOut("slow");
+                if (response) {
+                    $('#signUpModal').modal('hide');
+                    $(".overlay").fadeOut("slow");
+                }
             });
         } else {
             alert("incorrect form");
@@ -81,7 +87,15 @@ $(document).ready(function () {
     });
 
     $("#playersBtn").click(function() {
-        hub.invoke("GetConnectedPlayers");
+        hub.invoke("GetConnectedPlayers").done(function (players) {
+            if (players != null && players != undefined) {
+                $("#playersModalBody").text("");
+                for (var i = 0; i < players.length; i++) {
+                    $("#playersModalBody").append('<tr class="success"> <td>' + players[i].UserName + '</td> <td>' + (players[i].Sex == 1 ? "male" : "female") + '</td> <td>' + "X : " + players[i].Position.X + " Y : " + players[i].Position.Y + '</td> </tr>');
+                }
+                $("#playersModal").modal();
+            }
+        });
     });
 
     function OnLogin() {
@@ -116,7 +130,26 @@ $(document).ready(function () {
     }
 
     function GetInfos() {
-        hub.invoke("GetPlayerInfo");
+        hub.invoke("GetPlayerInfo").done(function (user) {
+            if (user != null && user != undefined) {
+                updateInfos(user);
+            }
+        });
+    }
+
+    function updateInfos(user) {
+        currentUser = user;
+        $("#jobLabel").text(user.Job.JobDescription);
+        $("#salaryLabel").text(user.Job.Salary + " €");
+        $("#userNameLabel").text(user.UserName);
+        $("#sexLabel").text(user.Sex == 1 ? "Male" : "Female");
+        $("#accountLabel").text(user.Account + " €");
+        $("#pointsLabel").text(user.Points);
+
+        $("#propertyListOption").empty();
+        for (var i = 0; i < user.Properties.length; i++) {
+            $("#propertyListOption").append('<option value="' + user.Properties[i].PropertyId + '">' + user.Properties[i].PropertyName + '</option>');
+        }
     }
 
     hub.on("notify", function (message) {
@@ -130,38 +163,12 @@ $(document).ready(function () {
         userPseudo = pseudo;
     });
 
-    hub.on("onRegistered", function() {
-        $('#signUpModal').modal('hide');
-        $(".overlay").fadeOut("slow");
-    });
+
 
     hub.on("forceDisconnect", function () {
         OnLogout();
     });
 
-    hub.on("getInfos", function (user) {
-        currentUser = user;
-        $("#jobLabel").text(user.Job.JobDescription);
-        $("#salaryLabel").text(user.Job.Salary + " €");
-        $("#userNameLabel").text(user.UserName);
-        $("#sexLabel").text(user.Sex == 1 ? "Male" : "Female");
-        $("#accountLabel").text(user.Account + " €");
-        $("#pointsLabel").text(user.Points);
-
-        $("#propertyListOption").empty();
-        for (var i = 0; i < user.Properties.length; i++) {
-            $("#propertyListOption").append('<option value="' + user.Properties[i].PropertyId + '">' + user.Properties[i].PropertyName + '</option>');
-        }
-    });
-
-
-    hub.on("showConnectedPlayers", function (players) {
-        $("#playersModalBody").text("");
-        for (var i = 0; i < players.length; i++) {
-            $("#playersModalBody").append('<tr class="success"> <td>' + players[i].UserName + '</td> <td>' + (players[i].Sex == 1 ? "male" : "female") + '</td> <td>' + "X : " +players[i].Position.X + " Y : " + players[i].Position.Y + '</td> </tr>');
-        }
-        $("#playersModal").modal();
-    });
 
 
     function checkInput(input, minLength) {

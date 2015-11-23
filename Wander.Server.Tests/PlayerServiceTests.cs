@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Wander.Server.Model;
 using Wander.Server.Services;
 
 namespace Wander.Server.Tests
 {
-    using System.Diagnostics;
-
     [TestClass]
     public class PlayerServiceTests
     {
