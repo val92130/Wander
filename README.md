@@ -34,7 +34,8 @@ Wander is an Open-Source online multiplayer game based on C# and Javascript.
 
 	- Download the last version of the project on GitHub
 	- Execute the create.sql file in an SqlServer database
-	- Replace the connection string attribute in the Web.Config
+	- Replace the default connection string in the SqlConnectionService class
+	- OR Create an environment variable named "DB_CONNECTION_STRING" with your connection string in value
 	- Build the solution
 	
 	And voila :) You're ready to go
