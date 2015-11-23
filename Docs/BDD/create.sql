@@ -48,6 +48,7 @@ Account int,
 Points int,
 Connected bit,
 Activated bit,
+Banned bit DEFAULT(0),
 JobId int DEFAULT(0)
 
 

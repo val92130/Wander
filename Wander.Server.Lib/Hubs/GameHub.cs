@@ -23,6 +23,12 @@ namespace Wander.Server.Hubs
 
             if (ServiceProvider.GetUserRegistrationService().CheckLogin(user))
             {
+                if (ServiceProvider.GetUserRegistrationService().IsBanned(user))
+                {
+                    Clients.Caller.notify(Helper.CreateNotificationMessage(
+                        "Cannot login, this account has been banned", EMessageType.error));
+                    return false;
+                }
                 List<ChatMessageModel> lastMessages = ServiceProvider.GetMessageService().GetMessagesLimit(5);
                 Clients.Caller.LoadMessages(lastMessages);
                 
@@ -376,6 +382,19 @@ namespace Wander.Server.Hubs
             ServerPropertyModel model =
                 ServiceProvider.GetPropertiesService().GetProperty(id);
             return model;
+        }
+
+
+        public void DeleteUser()
+        {
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return;
+            
+            ServerPlayerModel model = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            Disconnect();
+            ServiceProvider.GetUserRegistrationService().Delete(model);
+            Clients.Caller.forceDisconnect();
+            Clients.Caller.notify(Helper.CreateNotificationMessage("Your account was successfuly deleted",
+                EMessageType.info));
         }
     }
 }

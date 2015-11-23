@@ -102,6 +102,7 @@ var Player = (function () {
         this.texture.body.y = Lerp(this.newPosition.y, this.texture.body.y, 2);
     };
     Player.prototype.remove = function () {
+        this.textMessage.kill();
         this.text.kill();
         this.texture.kill();
     };

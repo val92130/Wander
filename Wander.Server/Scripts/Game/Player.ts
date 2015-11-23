@@ -140,6 +140,7 @@
     }
 
     remove() {
+        this.textMessage.kill();
         this.text.kill();
         this.texture.kill();
     }

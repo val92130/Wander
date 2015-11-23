@@ -25,6 +25,8 @@ namespace Wander.Server.Services
         /// <returns>Returns true if the UserModel's login already exists, otherwise return false</returns>
         bool CheckLoginAlreadyExists(UserModel user);
 
+        bool IsBanned(UserModel user);
+
         /// <summary>
         /// Check if the provided UserModel's email already exists in the database
         /// </summary>
@@ -56,5 +58,7 @@ namespace Wander.Server.Services
         /// </summary>
         /// <param name="user"></param>
         void LogOut(ServerPlayerModel user);
+
+        void Delete(ServerPlayerModel user);
     }
 }

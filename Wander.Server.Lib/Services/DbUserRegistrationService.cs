@@ -239,5 +239,55 @@ namespace Wander.Server.Services
                 conn.Close();
             }
         }
+
+        /// <summary>
+        /// Checks whether a user is banned or not
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public bool IsBanned(UserModel user)
+        {
+            if (user == null)
+                throw new ArgumentException("parameter user is null");
+
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = "SELECT Banned from dbo.Users WHERE UserLogin = @Login";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    cmd.Parameters.AddWithValue("@Login", user.Login);
+
+                    var data = cmd.ExecuteScalar();
+                    if (data == null) throw new ArgumentNullException("user is null or not found");
+                    bool value = Convert.ToBoolean(data);
+                    conn.Close();
+                    return value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove a player from the database
+        /// </summary>
+        /// <param name="user"></param>
+        public void Delete(ServerPlayerModel user)
+        {
+            if (user == null)
+                throw new ArgumentException("parameter user is null");
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = "delete from dbo.Users WHERE UserLogin = @Login";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    cmd.Parameters.AddWithValue("@Login", user.Pseudo);
+                    cmd.ExecuteNonQuery();
+                }
+                conn.Close();
+            }
+        }
     }
 }
