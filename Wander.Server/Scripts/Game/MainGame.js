@@ -10,7 +10,7 @@ var Game = (function (_super) {
     function Game() {
         // init game
         currentState = new GameState();
-        _super.call(this, "100%", 768, Phaser.WEBGL, "main", currentState);
+        _super.call(this, "100%", 720, Phaser.AUTO, "main-game", currentState);
     }
     return Game;
 })(Phaser.Game);
@@ -20,6 +20,8 @@ var GameState = (function (_super) {
         _super.apply(this, arguments);
     }
     GameState.prototype.preload = function () {
+        this.game.canvas.id = "canvas";
+        this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.stage.disableVisibilityChange = true;
         this.game.stage.disableVisibilityChange = true;
         this.game.load.image("player", "Content/Game/Images/player.png");
@@ -126,14 +128,7 @@ var GameState = (function (_super) {
         return undefined;
     };
     GameState.prototype.resizeGame = function () {
-        var width = $(window).width();
-        this.game.width = width;
-        this.game.stage.width = width;
-        this.dayNightCycle.overlay.width = width;
-        this.game.camera.width = width;
-        if (this.game.renderType === Phaser.WEBGL) {
-            this.game.renderer.resize(width, this.game.renderer.height);
-        }
+        this.game.scale.refresh();
     };
     return GameState;
 })(Phaser.State);
@@ -180,10 +175,15 @@ $(window).resize(function () {
         currentState.resizeGame();
 });
 function createGame() {
+    $("#main-game").show();
+    $("#main-container").hide();
+    $(".overlay").fadeIn();
     game = new Game();
+    $(".overlay").fadeOut();
 }
 function deleteGame() {
     game.destroy();
+    $("#main-container").fadeIn();
 }
 function Lerp(goal, current, time) {
     var diff = goal - current;
@@ -222,3 +222,4 @@ $(document).keypress(function (event) {
         }
     }
 });
+//# sourceMappingURL=MainGame.js.map

@@ -1,11 +1,14 @@
-﻿var game: Game;
+﻿
+
+var game: Game;
 var currentState;
+
 class Game extends Phaser.Game {
 
     constructor() {
         // init game
         currentState = new GameState();
-        super("100%", 768, Phaser.WEBGL, "main", currentState);
+        super("100%", 720, Phaser.AUTO, "main-game", currentState);
     }
 }
 
@@ -20,6 +23,8 @@ class GameState extends Phaser.State {
 
 
     preload() {
+        this.game.canvas.id = "canvas";
+        this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.stage.disableVisibilityChange = true;
         this.game.stage.disableVisibilityChange = true;
         this.game.load.image("player", "Content/Game/Images/player.png");
@@ -153,14 +158,7 @@ class GameState extends Phaser.State {
     }
 
     resizeGame() {
-        var width = $(window).width();
-        this.game.width = width;
-        this.game.stage.width = width;
-        this.dayNightCycle.overlay.width = width;
-        this.game.camera.width = width;
-        if (this.game.renderType === Phaser.WEBGL) {
-            this.game.renderer.resize(width, this.game.renderer.height);
-        }
+        this.game.scale.refresh();
     }
 }
 
@@ -212,16 +210,20 @@ setInterval(function () {
 
 
 $(window).resize(function () {
-    if (currentState != undefined) currentState.resizeGame();
-
+    if(currentState != undefined) currentState.resizeGame();
 });
 
 function createGame() {
+    $("#main-game").show();
+    $("#main-container").hide();
+    $(".overlay").fadeIn();
     game = new Game();
+    $(".overlay").fadeOut();
 }
 
 function deleteGame() {
     game.destroy();
+    $("#main-container").fadeIn();
 }
 
 

@@ -1,0 +1,47 @@
+﻿
+<div class="row" style="margin-right: auto;margin-left: auto;width: 500px;">
+    <div class="col-md-5" style="position: absolute; bottom: 30px; width: 500px; right: 25%; left: 50%; margin-left: -250px;" id="msgFooter">
+        <div class="panel panel-primary" style="border-color: #2B2B2B;">
+            <div class="panel-heading" style="background-image: none;" id="heading_box_msg">
+                <span class="glyphicon glyphicon-comment"></span> Public Chat
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </button>
+                    <ul class="dropdown-menu slidedown">
+                        <li>
+                            <a href="#privateMessages">
+                                <span class="glyphicon glyphicon-envelope">
+                                </span>Private Messages
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#privateMessages" id="hideChatBoxBtn">
+                                <span class="glyphicon glyphicon-chevron-down">
+                                </span>Hide
+                            </a>
+                        </li>
+                    </ul>
+
+
+                </div>
+            </div>
+            <div class="panel-body">
+                <ul class="chat" id="chatBox">
+                    <!-- Chat content-->
+                </ul>
+            </div>
+            <div class="panel-footer">
+                <form id="msgForm">
+                    <div class="well well-sm">
+                        <input type="text" class="form-control" name="message" id="sendMsgInput" maxlength="95" />
+                        <button type="submit" class="btn btn-default">Send</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -71,7 +71,9 @@ $(document).ready(function () {
         e.preventDefault();
 
         if (checkInput(login, 4) && checkInput(password, 4) && password == passwordConfirm && checkInput(email, 3) && (sex == 0 || sex == 1)) {
-            hub.invoke("RegisterUser", { Login: login, Password: password, Email: email, Sex: sex });
+            hub.invoke("RegisterUser", { Login: login, Password: password, Email: email, Sex: sex }).done(function() {
+                $(".overlay").fadeOut("slow");
+            });
         } else {
             alert("incorrect form");
             $(".overlay").fadeOut("slow");
@@ -92,7 +94,8 @@ $(document).ready(function () {
         $("#logoutBtn").show();
         $("#bottom_navbar").fadeIn("slow");
         GetInfos();
-
+        $("#box-message-container").show();
+        $("#box-info-container").show();
         createGame();
     }
 

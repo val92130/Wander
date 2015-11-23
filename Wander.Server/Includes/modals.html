@@ -1,0 +1,195 @@
+﻿<!-- LOGIN MODAL-->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Login</h4>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="login">Login:</label>
+                        <input type="text" class="form-control" id="login" name="login" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Password:</label>
+                        <input type="password" class="form-control" id="pwd" name="pwd" required>
+                    </div>
+                    <button id="loginFormBtn" class="btn btn-success" type="submit">Login</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- SIGN UP MODAL-->
+<div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Sign Up</h4>
+            </div>
+            <div class="modal-body">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="login">Login:</label>
+                        <input type="text" class="form-control" id="login" name="login" required minlength="4">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Password:</label>
+                        <input type="password" class="form-control" id="pwd" name="pwd" required minlength="4">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwdConfirm">Password Confirmation:</label>
+                        <input type="password" class="form-control" id="pwdConfirm" name="pwdConfirm" required minlength="4">
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" name="sex" value="1" required>Male</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" name="sex" value="0" required>Female</label>
+                    </div>
+                    <button id="registerFormBtn" class="btn btn-success">Register</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- PLAYERS MODAL-->
+<div class="modal fade" id="playersModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Players</h4>
+            </div>
+            <div class="modal-body">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>UserName</th>
+                            <th>Sex</th>
+                            <th>Position</th>
+                        </tr>
+                    </thead>
+                    <tbody id="playersModalBody"></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- JOBS MODAL-->
+<div class="modal fade" id="jobsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Jobs</h4>
+            </div>
+            <div class="modal-body">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Salary</th>
+                            <th>Necessary Points</th>
+                            <th>Earning Points</th>
+                            <th>Limit</th>
+                            <th>Apply</th>
+                        </tr>
+
+
+                    </thead>
+                    <tbody id="jobsModalBody">
+                        <tr>
+                            <td>Cook</td>
+                            <td>120</td>
+                            <td>10</td>
+                            <td>5</td>
+                            <td>200</td>
+                            <td><button onclick="alert('e')">Test</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- PROPERTY MODAL-->
+<div class="modal fade" id="propertyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Buy Property</h4>
+            </div>
+            <div class="modal-body">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Limit</th>
+                            <th>Price</th>
+                            <th>Buy</th>
+                        </tr>
+                    </thead>
+                    <tbody id="propertyModalBody"></tbody>
+                </table>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SELL PROPERTY MODAL-->
+<div class="modal fade" id="sellPropertyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Sell Property</h4>
+            </div>
+            <div class="modal-body">
+                <form id="sellPropertyForm">
+                    <div class="form-group">
+                        <label for="priceInput">Price</label>
+                        <input type="number" class="form-control" id="priceInput">
+                        <input type="hidden" id="hiddenPropertyId" value="" />
+                    </div>
+                    <button type="submit" class="btn btn-danger">Sell</button>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
