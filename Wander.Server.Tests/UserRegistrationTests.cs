@@ -9,6 +9,11 @@ namespace Wander.Server.Tests
     [TestClass]
     public class UserRegistrationTests
     {
+        [TestCleanup()]
+        public void Cleanup()
+        {
+            TestEnvironment.DeleteTestUser();
+        }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
@@ -149,13 +154,13 @@ namespace Wander.Server.Tests
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@User", "user");
-                    cmd.Parameters.AddWithValue("@Password", "pass");
+                    cmd.Parameters.AddWithValue("@Password", Helper.Sha1Encode("pass"));
                     var data = cmd.ExecuteReader();
 
                     while (data.Read())
                     {
                         Assert.AreEqual(data["UserLogin"], "user");
-                        Assert.AreEqual(data["UserPassword"], "pass");
+                        Assert.AreEqual(data["UserPassword"], Helper.Sha1Encode("pass"));
                         Assert.AreEqual(data["Email"], "useremail@provider.fr");
                         Assert.AreEqual(data["Account"], 0);
                         Assert.AreEqual(data["Points"], 0);

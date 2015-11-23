@@ -11,6 +11,11 @@ namespace Wander.Server.Tests
     [TestClass]
     public class PlayerServiceTests
     {
+        [TestCleanup()]
+        public void Cleanup()
+        {
+            TestEnvironment.DeleteTestUser();
+        }
 
         [TestMethod]
         public void GetPlayerReturnsEveryPlayers()

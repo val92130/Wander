@@ -16,11 +16,10 @@ namespace Wander.Server.Tests
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
                 conn.Open();
-                string deleteQuery = "DELETE FROM dbo.Users WHERE UserLogin = @User AND UserPassword = @Password ";
+                string deleteQuery = "DELETE FROM dbo.Users WHERE UserLogin = @User";
                 using (SqlCommand deleteCmd = new SqlCommand(deleteQuery, conn))
                 {
                     deleteCmd.Parameters.AddWithValue("@User", "user");
-                    deleteCmd.Parameters.AddWithValue("@Password", "pass");
                     deleteCmd.ExecuteNonQuery();
                 }
 

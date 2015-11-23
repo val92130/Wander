@@ -10,6 +10,12 @@ namespace Wander.Server.Tests
     [TestClass]
     public class JobServiceTests
     {
+        [TestCleanup()]
+        public void Cleanup()
+        {
+            TestEnvironment.DeleteTestUser();
+        }
+
         [TestMethod]
         public void GetUserJobServerModelWorks()
         {

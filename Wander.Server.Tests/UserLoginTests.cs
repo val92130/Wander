@@ -8,6 +8,12 @@ namespace Wander.Server.Tests
     [TestClass]
     public class UserLoginTests
     {
+        [TestCleanup()]
+        public void Cleanup()
+        {
+            TestEnvironment.DeleteTestUser();
+        }
+
         [TestMethod]
         public void UserLoginWorks()
         {

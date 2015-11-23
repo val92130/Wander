@@ -144,7 +144,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameManager.cs" />
     <Compile Include="index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

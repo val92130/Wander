@@ -22,3 +22,4 @@ function applyToJob(id) {
         $("#jobsModal").modal("hide");
     });
 }
+//# sourceMappingURL=JobManagement.js.map

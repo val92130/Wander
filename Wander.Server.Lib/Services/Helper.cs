@@ -37,5 +37,12 @@ namespace Wander.Server.Services
             return new ClientPlayerModel() {Position =  position, Sex = sex, UserName = username};
         }
 
+        public static string Sha1Encode(string input)
+        {
+            byte[] data = System.Text.Encoding.ASCII.GetBytes(input);
+            data = new System.Security.Cryptography.SHA256Managed().ComputeHash(data);
+            return System.Text.Encoding.ASCII.GetString(data);
+        }
+
     }
 }

@@ -60,7 +60,7 @@ namespace Wander.Server.Services
                     conn.Open();
 
                     cmd.Parameters.AddWithValue("@Login", user.Login);
-                    cmd.Parameters.AddWithValue("@Password", user.Password);
+                    cmd.Parameters.AddWithValue("@Password", Helper.Sha1Encode(user.Password));
                     
                     var data = cmd.ExecuteReader();
                     bool value = data.HasRows;
@@ -182,7 +182,7 @@ namespace Wander.Server.Services
 
                     cmd.Parameters.AddWithValue("@Login", user.Login);
                     cmd.Parameters.AddWithValue("@Email", user.Email);
-                    cmd.Parameters.AddWithValue("@Password", user.Password);
+                    cmd.Parameters.AddWithValue("@Password", Helper.Sha1Encode(user.Password));
                     cmd.Parameters.AddWithValue("@Sex", user.Sex);
                     cmd.Parameters.AddWithValue("@Account", 0);
                     cmd.Parameters.AddWithValue("@Points", 0);

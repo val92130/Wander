@@ -20,6 +20,7 @@ namespace Wander.Server.Hubs
         /// <param name="user"></param>
         public bool Connect(UserModel user)
         {
+
             if (ServiceProvider.GetUserRegistrationService().CheckLogin(user))
             {
                 List<ChatMessageModel> lastMessages = ServiceProvider.GetMessageService().GetMessagesLimit(5);
