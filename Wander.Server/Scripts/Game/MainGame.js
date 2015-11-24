@@ -10,7 +10,7 @@ var Game = (function (_super) {
     function Game() {
         // init game
         currentState = new GameState();
-        _super.call(this, "100%", 720, Phaser.AUTO, "main-game", currentState);
+        _super.call(this, "100%", "100%", Phaser.AUTO, "main-game", currentState);
     }
     return Game;
 })(Phaser.Game);
@@ -21,7 +21,7 @@ var GameState = (function (_super) {
     }
     GameState.prototype.preload = function () {
         this.game.canvas.id = "canvas";
-        this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        this.game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
         this.stage.disableVisibilityChange = true;
         this.game.stage.disableVisibilityChange = true;
         this.game.load.image("player", "Content/Game/Images/player.png");
@@ -30,6 +30,7 @@ var GameState = (function (_super) {
         this.game.load.image("Overlay", "Content/Game/Images/filter.png");
         this.game.load.image("money-bag", "Content/Game/Images/money_bag.png");
         this.map = new Map(this.game, "Map", "Tiles", "tileset3", 1);
+        this.game.load.spritesheet('rain', 'Content/Game/Images/rain.png', 17, 17);
     };
     GameState.prototype.create = function () {
         hub.invoke("GetAllPlayers");
@@ -45,6 +46,19 @@ var GameState = (function (_super) {
             for (var i = 0; i < bags.length; i++) {
                 currentState.map.addMoneyBag(bags[i].Id, bags[i].Position, bags[i].Ammount);
             }
+        });
+        this.rainEmiter = this.game.add.emitter(game.world.centerX, 0, 400);
+        this.rainEmiter.width = this.game.world.width;
+        this.rainEmiter.makeParticles('rain');
+        this.rainEmiter.minParticleScale = 0.1;
+        this.rainEmiter.maxParticleScale = 0.5;
+        this.rainEmiter.setYSpeed(300, 500);
+        this.rainEmiter.setXSpeed(-5, 5);
+        this.rainEmiter.minRotation = 0;
+        this.rainEmiter.maxRotation = 0;
+        this.rainEmiter.start(false, 1600, 2, 0);
+        hub.invoke("IsRaining").done(function (val) {
+            currentState.setRain(val);
         });
     };
     GameState.prototype.pressAction = function () {
@@ -64,6 +78,9 @@ var GameState = (function (_super) {
             }
         }
     };
+    GameState.prototype.setRain = function (val) {
+        this.rainEmiter.on = val;
+    };
     GameState.prototype.update = function () {
         this.dayNightCycle.update();
         this.game.physics.arcade.collide(this.currentPlayer.texture, this.map.collisionLayer);
@@ -71,6 +88,8 @@ var GameState = (function (_super) {
         var camY = Math.floor(this.currentPlayer.position.y / this.game.camera.height);
         this.game.camera.x = Lerp(camX * this.game.camera.width, this.game.camera.x, 40);
         this.game.camera.y = Lerp(camY * this.game.camera.height, this.game.camera.y, 40);
+        this.rainEmiter.position.x = camX * this.game.camera.width;
+        this.rainEmiter.position.y = camY * this.game.camera.height;
         for (var i = 0; i < this.players.length; i++) {
             this.players[i].update();
             this.players[i].updateServer();
@@ -142,10 +161,23 @@ var GameState = (function (_super) {
         return undefined;
     };
     GameState.prototype.resizeGame = function () {
-        this.game.scale.refresh();
+        var height = $(".game").height();
+        var width = $(".game").width();
+        this.game.width = width;
+        this.game.height = height;
+        this.game.stage.width = width;
+        this.game.stage.height = height;
+        if (this.game.renderType === Phaser.WEBGL) {
+            this.game.renderer.resize(width, height);
+        }
     };
     return GameState;
 })(Phaser.State);
+hub.on("setRain", function (rain) {
+    if (currentState == undefined)
+        return;
+    currentState.setRain(rain);
+});
 hub.on("playerConnected", function (player) {
     if (currentState == undefined)
         return;
@@ -217,7 +249,7 @@ function openModalProperty(id) {
             if (currentUser == "unedfined" || currentUser == null)
                 return;
             $("#propertyModalBody").text("");
-            $("#propertyModalBody").append("<tr><td>" + model.PropertyName + "</td><td>" + model.PropertyDescription + "</td><td>" + model.Threshold + "</td> <td>" + model.Price + "</td><td><button type='button' onclick = 'BuyProperty(" + model.PropertyId + ")' class='btn btn-success' data-dismiss='modal'>Buy</button></tr>");
+            $("#propertyModalBody").append("<tr class='success'><td>" + model.PropertyName + "</td><td>" + model.PropertyDescription + "</td><td>" + model.Threshold + "</td> <td>" + model.Price + "</td><td><button type='button' onclick = 'BuyProperty(" + model.PropertyId + ")' class='btn btn-success' data-dismiss='modal'>Buy</button></tr>");
             $("#propertyModal").modal();
         }
     });

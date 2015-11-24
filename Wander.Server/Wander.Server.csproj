@@ -100,7 +100,9 @@
     <Content Include="Content\Game\Images\filter.png" />
     <Content Include="Content\Game\Images\money_bag.png" />
     <Content Include="Content\Game\Images\player.png" />
+    <Content Include="Content\Game\Images\rain.png" />
     <Content Include="Content\Game\Images\tileset3.png" />
+    <Content Include="Content\jquery-ui.theme.min.css" />
     <Content Include="Content\Style.css" />
     <Content Include="Content\user-boy.png" />
     <Content Include="Content\user-girl.png" />
@@ -136,6 +138,7 @@
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="Scripts\notify.min.js" />
     <Content Include="Scripts\phaser.js" />

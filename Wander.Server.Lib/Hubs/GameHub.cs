@@ -5,10 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.SignalR;
-using Wander.Server.Lib.Model;
 using Wander.Server.Model;
 using Wander.Server.Services;
 using Wander.Server.Model.Players;
+using Wander.Server.Lib.Model;
 
 namespace Wander.Server.Hubs
 {
@@ -369,6 +369,17 @@ namespace Wander.Server.Hubs
             {
                 Clients.Client(players[i].SignalRId).updateTime(ServiceProvider.GetGameManager().IsDay);
             }
+        }
+
+        /// <summary>
+        /// Returns to the caller whether it's raining or not
+        /// </summary>
+        /// <returns></returns>
+        public bool IsRaining()
+        {
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return false;
+
+            return ServiceProvider.GetGameManager().IsRaining;
         }
 
         /// <summary>

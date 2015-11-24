@@ -21,8 +21,10 @@ namespace Wander.Server
         bool _isDay;
         Timer _updateTimer = new Timer();
         Timer _randomMoneyDelivery = new Timer();
+        Timer _randomRainTimer = new Timer();
         public static int DefaultUnemployedEarningPoints = 2;
-        List<MoneyBag> _moneyBags; 
+        List<MoneyBag> _moneyBags;
+        bool _isRaining = false;
         public GameManager()
         {
             context = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
@@ -38,9 +40,50 @@ namespace Wander.Server
 
             _randomMoneyDelivery.Interval = 1000 * 60 * 20;
             _randomMoneyDelivery.Elapsed += DeliverMoneyEvent;
-            
+
+            _randomRainTimer.Interval = 2000;
+            _randomRainTimer.Elapsed += RainEvent;
+
             _moneyBags = new List<MoneyBag>();
 
+        }
+
+        private void RainEvent(object sender, ElapsedEventArgs e)
+        {
+            List<ServerPlayerModel> connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            Random r = new Random();
+
+            int nextRain = 0;
+            if (_isRaining)
+            {
+                nextRain = r.Next(2*60*1000, 10 * 60 * 1000);
+            }
+            else
+            {
+                nextRain = r.Next (30 * 1000, 2 * 60 * 1000);
+            }
+            DateTime next = DateTime.Now.AddMilliseconds(nextRain);
+            _isRaining = !_isRaining;
+            Debug.Print((_isRaining
+                ? "Its raining ! Stopping rain at :  " + next
+                : "Its not raining, next rain at : " + next));
+
+            for (int i = 0; i < connectedPlayers.Count; i++)
+            {
+                context.Clients.Client(connectedPlayers[i].SignalRId).setRain(_isRaining);
+            }
+
+            _randomRainTimer.Interval = nextRain;
+        }
+
+        public void Start()
+        {
+
+            _payTimer.Start();
+            _alertTimer.Start();
+            _updateTimer.Start();
+            _randomMoneyDelivery.Start();
+            _randomRainTimer.Start();
         }
 
         private void DeliverMoneyEvent(object sender, ElapsedEventArgs e)
@@ -84,14 +127,11 @@ namespace Wander.Server
             }
         }
 
-        public void Start()
+        public bool IsRaining
         {
-            
-            _payTimer.Start();
-            _alertTimer.Start();
-            _updateTimer.Start();
-            _randomMoneyDelivery.Start();
+            get { return _isRaining; }
         }
+
 
         private void Alert(object sender, ElapsedEventArgs e)
         {
@@ -126,6 +166,7 @@ namespace Wander.Server
             {
                 return _moneyBags;
             }
-        } 
+        }
+
     }
 }

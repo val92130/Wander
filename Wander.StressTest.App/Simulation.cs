@@ -82,7 +82,16 @@ namespace Wander.StressTest.App
                 var hubProx = hubCo.CreateHubProxy(_hubName);
 
                 _connections.Add(hubCo, hubProx);
-                await hubCo.Start();
+                try
+                {
+                    await hubCo.Start();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Couldnt connect to host, exiting : Debug - " + e.Message);
+                    return;
+                }
+                
                 Console.WriteLine("Connected to hub : " + i);
             }
 

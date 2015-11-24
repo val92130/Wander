@@ -8,7 +8,7 @@ class Game extends Phaser.Game {
     constructor() {
         // init game
         currentState = new GameState();
-        super("100%", 720, Phaser.AUTO, "main-game", currentState);
+        super("100%", "100%", Phaser.AUTO, "main-game", currentState);
     }
 }
 
@@ -20,11 +20,13 @@ class GameState extends Phaser.State {
     overlay: Phaser.Sprite;
     filter: Phaser.Filter;
     dayNightCycle: DayNightCycle;
+    rainEmiter: Phaser.Particles.Arcade.Emitter;
 
 
     preload() {
+
         this.game.canvas.id = "canvas";
-        this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        this.game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
         this.stage.disableVisibilityChange = true;
         this.game.stage.disableVisibilityChange = true;
         this.game.load.image("player", "Content/Game/Images/player.png");
@@ -33,10 +35,14 @@ class GameState extends Phaser.State {
         this.game.load.image("Overlay", "Content/Game/Images/filter.png");
         this.game.load.image("money-bag", "Content/Game/Images/money_bag.png");
         this.map = new Map(this.game, "Map", "Tiles", "tileset3", 1);
+        this.game.load.spritesheet('rain', 'Content/Game/Images/rain.png', 17, 17);
+
+        
     }
 
     create() {
         hub.invoke("GetAllPlayers");
+
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -57,6 +63,25 @@ class GameState extends Phaser.State {
             }
         });
 
+        this.rainEmiter = this.game.add.emitter(game.world.centerX, 0, 400);
+        this.rainEmiter.width = this.game.world.width;
+        this.rainEmiter.makeParticles('rain');
+
+        this.rainEmiter.minParticleScale = 0.1;
+        this.rainEmiter.maxParticleScale = 0.5;
+
+        this.rainEmiter.setYSpeed(300, 500);
+        this.rainEmiter.setXSpeed(-5, 5);
+
+        this.rainEmiter.minRotation = 0;
+        this.rainEmiter.maxRotation = 0;
+
+        this.rainEmiter.start(false, 1600, 2, 0);
+
+        hub.invoke("IsRaining").done(function (val) {
+            currentState.setRain(val);
+        })
+        
     }
 
     pressAction() {
@@ -78,6 +103,10 @@ class GameState extends Phaser.State {
         }
     }
 
+    setRain(val: boolean) {
+        this.rainEmiter.on = val;
+    }
+
 
     update() {
         this.dayNightCycle.update();
@@ -89,6 +118,9 @@ class GameState extends Phaser.State {
 
         this.game.camera.x = Lerp(camX * this.game.camera.width, this.game.camera.x, 40);
         this.game.camera.y = Lerp(camY * this.game.camera.height, this.game.camera.y, 40);
+
+        this.rainEmiter.position.x = camX * this.game.camera.width;
+        this.rainEmiter.position.y = camY * this.game.camera.height;
 
         for (var i = 0; i < this.players.length; i++) {
             this.players[i].update();
@@ -168,10 +200,25 @@ class GameState extends Phaser.State {
     }
 
     resizeGame() {
-        this.game.scale.refresh();
+        var height = $(".game").height();
+        var width = $(".game").width();
+
+        this.game.width = width;
+        this.game.height = height;
+        this.game.stage.width = width;
+        this.game.stage.height = height;
+
+        if (this.game.renderType === Phaser.WEBGL) {
+            this.game.renderer.resize(width, height);
+        }
     }
 }
 
+hub.on("setRain", function(rain)
+{
+    if(currentState == undefined) return;
+    currentState.setRain(rain);
+});
 
 hub.on("playerConnected", function (player) {
     if (currentState == undefined) return;
@@ -257,7 +304,7 @@ function openModalProperty(id) {
             $("#propertyModalBody").text("");
 
 
-            $("#propertyModalBody").append("<tr><td>" + model.PropertyName + "</td><td>" + model.PropertyDescription + "</td><td>" + model.Threshold + "</td> <td>" + model.Price + "</td><td><button type='button' onclick = 'BuyProperty(" + model.PropertyId + ")' class='btn btn-success' data-dismiss='modal'>Buy</button></tr>");
+            $("#propertyModalBody").append("<tr class='success'><td>" + model.PropertyName + "</td><td>" + model.PropertyDescription + "</td><td>" + model.Threshold + "</td> <td>" + model.Price + "</td><td><button type='button' onclick = 'BuyProperty(" + model.PropertyId + ")' class='btn btn-success' data-dismiss='modal'>Buy</button></tr>");
 
             $("#propertyModal").modal();
         }      

@@ -36,11 +36,64 @@ namespace Wander.StressTest.App
     class Starter
     {
         Simulation _simulation;
-
+        bool _useDistantHost = true;
         public Starter()
         {
             Console.WriteLine(
-    "Welcome to the Wander Player Stress Test, please enter the desired ammount of simulated players ");
+    "Welcome to the Wander Player Stress Test");
+            Console.WriteLine("Use localhost ? y/n");
+            int port = -1;
+            char input = 'Y';
+            do
+            {
+                try
+                {
+                    input = Console.ReadKey().KeyChar;
+                    
+                }
+                catch (System.FormatException f)
+                {
+
+                }
+                
+
+                if (input == 'y' || input == 'n')
+                {
+                    
+                    if (input == 'y')
+                    {
+                        Console.WriteLine(" ");
+                        
+                        
+                        do
+                        {
+                            Console.WriteLine("Port ? ");
+                            try
+                            {
+                                port = Convert.ToInt32(Console.ReadLine());
+                                if (port <= 0)
+                                {
+                                    port = -1;
+                                    Console.WriteLine("Invalid port");
+                                }
+                            }
+                            catch (System.FormatException f)
+                            {
+                                port = -1;
+                                Console.WriteLine("Invalid port");
+                            }
+                        } while (port == -1);
+                    }
+                    
+                }
+                else
+                {
+                    Console.WriteLine("Invalid number, please input a valid one");
+                }
+            } while (port == -1);
+
+
+            Console.WriteLine("Please enter the desired number of simulated players");
             int nbr = 0;
             bool valid = true;
             do
@@ -57,7 +110,7 @@ namespace Wander.StressTest.App
                 
                 if (nbr > 0 && valid)
                 {
-                    _simulation = new Simulation("http://wander.nightlydev.fr", "GameHub", nbr);
+                    _simulation = new Simulation(input == 'y' ? "http://localhost:" + port : "http://wander.nightlydev.fr", "GameHub", nbr);
                 }
                 else
                 {

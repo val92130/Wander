@@ -7,11 +7,12 @@ var userPseudo: any;
 var currentUser: any;
 
 $(document).ready(function () {
-
+    
     $("#logoutBtn").hide();
-
     $("#msgFooter").hide();
     $("#my_infos_box").hide();
+    $("#main-container").show("slide", { easing: "easeOutBack", duration:1000 });
+
 
     $("#loginBtn").click(function () {
         $("#loginModal").modal();
@@ -93,7 +94,7 @@ $(document).ready(function () {
             if (players != null && players != undefined) {
                 $("#playersModalBody").text("");
                 for (var i = 0; i < players.length; i++) {
-                    $("#playersModalBody").append('<tr class="success"> <td>' + players[i].UserName + '</td> <td>' + (players[i].Sex == 1 ? "male" : "female") + '</td> <td>' + "X : " + players[i].Position.X + " Y : " + players[i].Position.Y + '</td> </tr>');
+                    $("#playersModalBody").append('<tr class="success"> <td>' + players[i].UserName + '</td> <td>' + (players[i].Sex == 1 ? "male" : "female") + '</td> <td>' + "X : " + Math.round(players[i].Position.X) + " Y : " + Math.round(players[i].Position.Y) + '</td> </tr>');
                 }
                 $("#playersModal").modal();
             }
