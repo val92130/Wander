@@ -1,21 +1,67 @@
-﻿use master
-GO
-
-IF EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'WanderDB')
-DROP DATABASE WanderDB
-GO
-
+﻿IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'WanderDB')
 CREATE DATABASE WanderDB
 GO
 
-use WanderDB
+if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'PropertiesToSell')
+begin
+drop table dbo.PropertiesToSell;
+end;
 GO
+
+
+
+
+if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'UserMessages')
+begin
+drop table dbo.UserMessages;
+end;
+GO
+
+
+
+if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'UserProperties')
+begin
+drop table dbo.UserProperties;
+end;
+GO
+
+
+
+
+if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'MessageLogs')
+begin
+drop table dbo.MessageLogs;
+end;
+GO
+
+
+if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'ListProperties')
+begin
+drop table dbo.ListProperties;
+end;
+GO
+
+
+
+
+if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Users')
+begin
+drop table dbo.Users;
+end;
+GO
+
+
+
 
 if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Jobs')
 begin
 drop table dbo.Jobs;
 end;
 GO
+
+
+
+
 
 create table dbo.Jobs
 (
@@ -30,12 +76,6 @@ Threshold int not null
 constraint PK_JobId primary key(JobId),
 constraint CK_Jobs_JobDescription check(JobDescription <> N'')
 );
-
-if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Users')
-begin
-drop table dbo.Users;
-end;
-GO
 
 create table dbo.Users
 (
@@ -61,13 +101,6 @@ constraint FK_Users_JobId foreign key(JobId) references dbo.Jobs(JobId),
 
 );
 
-if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'ListProperties')
-begin
-drop table dbo.ListProperties;
-end;
-GO
-
-
 create table dbo.ListProperties
 (
 ListPropertyId int identity(0,1),
@@ -82,11 +115,8 @@ constraint CK_ListProperties_ListPropertiesThreshold check(Threshold <> N'')
 
 );
 
-if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'PropertiesToSell')
-begin
-drop table dbo.PropertiesToSell;
-end;
-GO
+
+
 
 
 create table dbo.PropertiesToSell
@@ -102,12 +132,17 @@ constraint FK_PropertiesToSell_ListPropertyId foreign key(ListPropertyId) refere
 
 );
 
+create table dbo.UserMessages
+(
+UserMessageId int identity(0,1),
+UserId int not null,
+messageDescription nvarchar(255) not null,
+MessageDate datetime2 not null
 
-if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'UserProperties')
-begin
-drop table dbo.UserProperties;
-end;
-GO
+
+constraint PK_UserMessagesId primary key(UserMessageId),
+constraint FK_UserMessages_UserId foreign key(UserId) references dbo.Users(UserId)
+);
 
 
 create table dbo.UserProperties
@@ -121,32 +156,6 @@ constraint PK_UserPropertiesId primary key(UserPropertyId),
 constraint FK_UserProperties_UserId foreign key(UserId) references dbo.Users(UserId)  ON UPDATE CASCADE ON DELETE CASCADE,
 constraint FK_UserProperties_ListPropertyId foreign key(ListPropertyId) references dbo.ListProperties(ListPropertyId)
 );
-
-
-if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'UserMessages')
-begin
-drop table dbo.UserMessages;
-end;
-GO
-
-
-create table dbo.UserMessages
-(
-UserMessageId int identity(0,1),
-UserId int not null,
-messageDescription nvarchar(255) not null,
-MessageDate datetime2 not null
-
-
-constraint PK_UserMessagesId primary key(UserMessageId),
-constraint FK_UserMessages_UserId foreign key(UserId) references dbo.Users(UserId)
-);
-
-if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'MessageLogs')
-begin
-drop table dbo.MessageLogs;
-end;
-GO
 
 create table dbo.MessageLogs
 (
@@ -216,6 +225,3 @@ INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Pr
 INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house', 'new house je sais pas koi', 1000, 500);
 INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house', 'new house je sais pas koi', 1000, 500);
 INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house', 'new house je sais pas koi', 1000, 500);
- select * from dbo.ListProperties;
-
-
