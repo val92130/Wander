@@ -88,6 +88,8 @@ var GameState = (function (_super) {
         }
     };
     GameState.prototype.addPlayer = function (pseudo, position) {
+        if (this.players == undefined)
+            return;
         var flag = false;
         for (var i = 0; i < this.players.length; i++) {
             if (this.players[i].pseudo == pseudo) {
@@ -101,6 +103,8 @@ var GameState = (function (_super) {
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
     };
     GameState.prototype.removePlayer = function (pseudo) {
+        if (this.players == undefined)
+            return;
         for (var i = 0; i < this.players.length; i++) {
             if (this.players[i].pseudo == pseudo) {
                 this.players[i].remove();
@@ -111,6 +115,8 @@ var GameState = (function (_super) {
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
     };
     GameState.prototype.updatePlayer = function (pseudo, position, direction) {
+        if (this.players == undefined)
+            return;
         for (var i = 0; i < this.players.length; i++) {
             if (this.players[i].pseudo == pseudo) {
                 this.players[i].newPosition = position;
@@ -120,6 +126,8 @@ var GameState = (function (_super) {
         }
     };
     GameState.prototype.getPlayer = function (pseudo) {
+        if (this.players == undefined)
+            return;
         for (var i = 0; i < this.players.length; i++) {
             if (this.players[i].pseudo == pseudo) {
                 return this.players[i];

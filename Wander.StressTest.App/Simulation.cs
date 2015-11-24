@@ -34,8 +34,8 @@ namespace Wander.StressTest.App
             _moveTimer.Elapsed += MovePlayers;
 
             _chatTimer = new Timer();
-            _chatTimer.Interval = 500;
-            Console.WriteLine("Each player will send a random message every 500ms ");
+            _chatTimer.Interval = 10000;
+            Console.WriteLine("Each player will send a random message every 1000ms ");
             _chatTimer.Elapsed += SendMessages;
         }
 

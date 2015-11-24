@@ -8,7 +8,6 @@ namespace Wander.Server
 {
     public class Startup
     {
-        GameManager game;
         public Startup()
         {
             ServiceProvider.GetGameManager().Start();            

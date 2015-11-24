@@ -28,6 +28,10 @@ $("#hideInfosBoxBtn").click(function () {
 });
 
 hub.on("MessageReceived", function (msg) {
+    var msgCount = $("#chatBox> li").length;
+    if (msgCount >= 50) {
+        $("#chatBox").text("");
+    }
     $(".panel-body").animate({ scrollTop: $('.panel-body').prop("scrollHeight") }, 20);
 
     if ($("#msgFooter").css('display') == 'none') {

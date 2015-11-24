@@ -112,7 +112,7 @@ class GameState extends Phaser.State {
     }
 
     addPlayer(pseudo: string, position: Phaser.Point) {
-
+        if (this.players == undefined) return;
         var flag: Boolean = false;
         for (var i = 0; i < this.players.length; i++) {
             if (this.players[i].pseudo == pseudo) {
@@ -128,6 +128,7 @@ class GameState extends Phaser.State {
     }
 
     removePlayer(pseudo: string) {
+        if (this.players == undefined) return;
         for (var i = 0; i < this.players.length; i++) {
             if (this.players[i].pseudo == pseudo) {
                 this.players[i].remove();
@@ -139,6 +140,7 @@ class GameState extends Phaser.State {
     }
 
     updatePlayer(pseudo: string, position: Phaser.Point, direction: EDirection) {
+        if (this.players == undefined) return;
         for (var i = 0; i < this.players.length; i++) {
             if (this.players[i].pseudo == pseudo) {
                 this.players[i].newPosition = position;
@@ -149,6 +151,7 @@ class GameState extends Phaser.State {
     }
 
     getPlayer(pseudo: string) {
+        if (this.players == undefined) return;
         for (var i = 0; i < this.players.length; i++) {
             if (this.players[i].pseudo == pseudo) {
                 return this.players[i];
