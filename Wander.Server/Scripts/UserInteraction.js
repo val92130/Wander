@@ -19,7 +19,7 @@ $(document).ready(function () {
         });
     });
     $("#loginForm").submit(function (e) {
-        console.log("clicked");
+        $(".overlay").fadeIn("slow");
         var values;
         var $inputs = $('#loginForm :input');
         var values = {};
@@ -29,7 +29,9 @@ $(document).ready(function () {
         e.preventDefault();
         var login = values["login"];
         var password = values["pwd"];
-        hub.invoke("Connect", { Login: login, Password: password });
+        hub.invoke("Connect", { Login: login, Password: password }).done(function () {
+            $(".overlay").fadeOut("slow");
+        });
     });
     $("#registerForm").submit(function (e) {
         $(".overlay").fadeIn("slow");

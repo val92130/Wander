@@ -29,17 +29,17 @@ namespace Wander.StressTest.App
             _connectionCount = connectionCount;
 
             _moveTimer = new Timer();
-            _moveTimer.Interval = 200;
-            Console.WriteLine("Each player's position will be updated every 200ms ");
+            _moveTimer.Interval = 1000;
+            Console.WriteLine("Each player's position will be updated every " + _moveTimer.Interval + " ms");
             _moveTimer.Elapsed += MovePlayers;
 
             _chatTimer = new Timer();
             _chatTimer.Interval = 10000;
-            Console.WriteLine("Each player will send a random message every 10000ms ");
+            Console.WriteLine("Each player will send a random message every " + _chatTimer.Interval + " ms");
             _chatTimer.Elapsed += SendMessages;
         }
 
-        async private void SendMessages(object sender, ElapsedEventArgs e)
+        private async void SendMessages(object sender, ElapsedEventArgs e)
         {
             int j = 0;
             Random r = new Random();
@@ -72,7 +72,7 @@ namespace Wander.StressTest.App
             }
         }
 
-        async public void Start()
+        public async void Start()
         {
 
             for (int i = 0; i < _connectionCount; i++)

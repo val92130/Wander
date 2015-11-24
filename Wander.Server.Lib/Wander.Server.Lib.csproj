@@ -51,6 +51,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -68,6 +69,7 @@
     <Compile Include="Model\EMessageType.cs" />
     <Compile Include="Model\Forms\UserModel.cs" />
     <Compile Include="Model\Job\JobModel.cs" />
+    <Compile Include="Model\MoneyBag.cs" />
     <Compile Include="Model\Players\ClientPlayerModel.cs" />
     <Compile Include="Model\Players\EPlayerDirection.cs" />
     <Compile Include="Model\Players\ServerPlayerModel.cs" />

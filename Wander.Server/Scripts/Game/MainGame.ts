@@ -31,6 +31,7 @@ class GameState extends Phaser.State {
         this.game.load.tilemap("Map", "Content/Game/Maps/map2.json", null, Phaser.Tilemap.TILED_JSON);
         this.game.load.image("Tiles", "Content/Game/Images/tileset3.png");
         this.game.load.image("Overlay", "Content/Game/Images/filter.png");
+        this.game.load.image("money-bag", "Content/Game/Images/money_bag.png");
         this.map = new Map(this.game, "Map", "Tiles", "tileset3", 1);
     }
 
@@ -49,6 +50,12 @@ class GameState extends Phaser.State {
         this.dayNightCycle.create();
         hub.invoke("update");
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
+
+        hub.invoke("GetMoneyBags").done(function(bags) {
+            for (var i = 0; i < bags.length; i++) {
+                currentState.map.addMoneyBag(bags[i].Id, bags[i].Position, bags[i].Ammount);
+            }
+        });
 
     }
 
@@ -151,7 +158,7 @@ class GameState extends Phaser.State {
     }
 
     getPlayer(pseudo: string) {
-        if (this.players == undefined) return;
+         if (this.players == undefined) return;
         for (var i = 0; i < this.players.length; i++) {
             if (this.players[i].pseudo == pseudo) {
                 return this.players[i];
@@ -199,6 +206,12 @@ hub.on("MessageReceived", function (msg) {
     }
 });
 
+hub.on("addMoneyBag", function(moneyBag) {
+    if (currentState != undefined) {
+        currentState.map.addMoneyBag(moneyBag.Id,moneyBag.Position, moneyBag.Ammount);
+    }
+});
+
 setInterval(function () {
     if (isConnected) {
         hub.invoke("update");
@@ -209,6 +222,7 @@ setInterval(function () {
 $(window).resize(function () {
     if(currentState != undefined) currentState.resizeGame();
 });
+
 
 function createGame() {
     $("#main-game").show();

@@ -30,7 +30,7 @@ $(document).ready(function () {
 
     $("#loginForm").submit(function (e) {
         
-        console.log("clicked");
+        $(".overlay").fadeIn("slow");
         var values: {};
 
         var $inputs = $('#loginForm :input');
@@ -48,7 +48,9 @@ $(document).ready(function () {
         var password: any = values["pwd"];
 
 
-        hub.invoke("Connect", { Login: login, Password: password });
+        hub.invoke("Connect", { Login: login, Password: password }).done(function() {
+            $(".overlay").fadeOut("slow");
+        });
 
     });
 

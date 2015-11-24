@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.SignalR;
+using Wander.Server.Lib.Model;
 using Wander.Server.Model;
 using Wander.Server.Services;
 using Wander.Server.Model.Players;
@@ -396,5 +397,12 @@ namespace Wander.Server.Hubs
             Clients.Caller.notify(Helper.CreateNotificationMessage("Your account was successfuly deleted",
                 EMessageType.info));
         }
+
+        public List<MoneyBag> GetMoneyBags()
+        {
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return null;
+
+            return ServiceProvider.GetGameManager().MoneyBags;
+        } 
     }
 }

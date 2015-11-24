@@ -8,7 +8,9 @@
     tilesetImage: string;
     tilesetName: string;
     scale: number;
-    mapName:string;
+    mapName: string;
+    moneyBags:MoneyBag[];
+
     constructor(game: Phaser.Game, mapName: string, tilesetImage: string, tilesetName: string, scale: number) {
         this.game = game;
         this.mapName = mapName;
@@ -42,9 +44,62 @@
 
         //this.tilemap.setCollision(2123, true, this.collisionLayer);
         this.tilemap.setCollisionBetween(2000, 2500, true, this.collisionLayer);
+
+        this.moneyBags = new Array<MoneyBag>();
+    }
+
+    addMoneyBag(id, position, ammount) {
+        var flag = false;
+        for (var i = 0; i < this.moneyBags.length; i++) {
+            if (this.moneyBags[i].id === id) {
+                flag = true;
+                break;
+            }
+        }
+
+        if (!flag) {
+            var moneyBag = new MoneyBag(id, position,ammount, this.game);
+            this.moneyBags.push(moneyBag);
+        }
+    }
+
+    removeMoneyBag(id) {
+        for (var i = 0; i < this.moneyBags.length; i++) {
+            if (this.moneyBags[i].id === id) {
+                this.moneyBags[i].remove();
+                this.moneyBags.splice(i, 1);
+                break;
+            }
+        }
     }
 
     update() {
         
+    }
+}
+
+
+class MoneyBag {
+    
+    position: Phaser.Point;
+    id: number;
+    texture: Phaser.Sprite;
+    game: Phaser.Game;
+    ammount:number;
+
+    constructor(id, position,ammount, game) {
+        this.id = id;
+        this.position = position;
+        this.game = game;
+        this.ammount = ammount;
+        this.texture = this.game.add.sprite(position.X, position.Y, "money-bag");
+        this.texture.width = 16;
+        this.texture.height = 16;
+        this.texture.position.x = position.X;
+        this.texture.position.y = position.Y;
+    }
+
+    remove() {
+        this.texture.kill();
     }
 }

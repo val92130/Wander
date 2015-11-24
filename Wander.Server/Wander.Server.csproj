@@ -98,6 +98,7 @@
   <ItemGroup>
     <Content Include="Content\background.jpg" />
     <Content Include="Content\Game\Images\filter.png" />
+    <Content Include="Content\Game\Images\money_bag.png" />
     <Content Include="Content\Game\Images\player.png" />
     <Content Include="Content\Game\Images\tileset3.png" />
     <Content Include="Content\Style.css" />

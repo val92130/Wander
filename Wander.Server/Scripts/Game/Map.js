@@ -22,9 +22,49 @@ var Map = (function () {
         this.backgroundLayer.resizeWorld();
         //this.tilemap.setCollision(2123, true, this.collisionLayer);
         this.tilemap.setCollisionBetween(2000, 2500, true, this.collisionLayer);
+        this.moneyBags = new Array();
+    };
+    Map.prototype.addMoneyBag = function (id, position, ammount) {
+        var flag = false;
+        for (var i = 0; i < this.moneyBags.length; i++) {
+            if (this.moneyBags[i].id === id) {
+                flag = true;
+                break;
+            }
+        }
+        if (!flag) {
+            var moneyBag = new MoneyBag(id, position, ammount, this.game);
+            this.moneyBags.push(moneyBag);
+        }
+    };
+    Map.prototype.removeMoneyBag = function (id) {
+        for (var i = 0; i < this.moneyBags.length; i++) {
+            if (this.moneyBags[i].id === id) {
+                this.moneyBags[i].remove();
+                this.moneyBags.splice(i, 1);
+                break;
+            }
+        }
     };
     Map.prototype.update = function () {
     };
     return Map;
+})();
+var MoneyBag = (function () {
+    function MoneyBag(id, position, ammount, game) {
+        this.id = id;
+        this.position = position;
+        this.game = game;
+        this.ammount = ammount;
+        this.texture = this.game.add.sprite(position.X, position.Y, "money-bag");
+        this.texture.width = 16;
+        this.texture.height = 16;
+        this.texture.position.x = position.X;
+        this.texture.position.y = position.Y;
+    }
+    MoneyBag.prototype.remove = function () {
+        this.texture.kill();
+    };
+    return MoneyBag;
 })();
 //# sourceMappingURL=Map.js.map
