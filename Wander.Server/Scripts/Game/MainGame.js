@@ -42,6 +42,7 @@ var GameState = (function (_super) {
         this.dayNightCycle.create();
         hub.invoke("update");
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
+        this.game.world.bringToTop(currentState.dayNightCycle.rainOverlay);
         hub.invoke("GetMoneyBags").done(function (bags) {
             for (var i = 0; i < bags.length; i++) {
                 currentState.map.addMoneyBag(bags[i].Id, bags[i].Position, bags[i].Ammount);
@@ -50,8 +51,8 @@ var GameState = (function (_super) {
         this.rainEmiter = this.game.add.emitter(game.world.centerX, 0, 400);
         this.rainEmiter.width = this.game.world.width;
         this.rainEmiter.makeParticles('rain');
-        this.rainEmiter.minParticleScale = 0.1;
-        this.rainEmiter.maxParticleScale = 0.5;
+        this.rainEmiter.minParticleScale = 0.5;
+        this.rainEmiter.maxParticleScale = 1.2;
         this.rainEmiter.setYSpeed(300, 500);
         this.rainEmiter.setXSpeed(-5, 5);
         this.rainEmiter.minRotation = 0;
@@ -80,6 +81,9 @@ var GameState = (function (_super) {
     };
     GameState.prototype.setRain = function (val) {
         this.rainEmiter.on = val;
+    };
+    GameState.prototype.isRaining = function () {
+        return this.rainEmiter.on;
     };
     GameState.prototype.update = function () {
         this.dayNightCycle.update();
@@ -126,6 +130,7 @@ var GameState = (function (_super) {
             this.players.push(new Player(game, pseudo, position));
         }
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
+        this.game.world.bringToTop(currentState.dayNightCycle.rainOverlay);
     };
     GameState.prototype.removePlayer = function (pseudo) {
         if (this.players == undefined)
@@ -138,6 +143,7 @@ var GameState = (function (_super) {
             }
         }
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
+        this.game.world.bringToTop(currentState.dayNightCycle.rainOverlay);
     };
     GameState.prototype.updatePlayer = function (pseudo, position, direction) {
         if (this.players == undefined)

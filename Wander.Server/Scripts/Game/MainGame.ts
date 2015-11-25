@@ -56,6 +56,7 @@ class GameState extends Phaser.State {
         this.dayNightCycle.create();
         hub.invoke("update");
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
+        this.game.world.bringToTop(currentState.dayNightCycle.rainOverlay);
 
         hub.invoke("GetMoneyBags").done(function(bags) {
             for (var i = 0; i < bags.length; i++) {
@@ -67,8 +68,8 @@ class GameState extends Phaser.State {
         this.rainEmiter.width = this.game.world.width;
         this.rainEmiter.makeParticles('rain');
 
-        this.rainEmiter.minParticleScale = 0.1;
-        this.rainEmiter.maxParticleScale = 0.5;
+        this.rainEmiter.minParticleScale = 0.5;
+        this.rainEmiter.maxParticleScale = 1.2;
 
         this.rainEmiter.setYSpeed(300, 500);
         this.rainEmiter.setXSpeed(-5, 5);
@@ -105,6 +106,10 @@ class GameState extends Phaser.State {
 
     setRain(val: boolean) {
         this.rainEmiter.on = val;
+    }
+
+    isRaining() :boolean {
+        return this.rainEmiter.on;
     }
 
 
@@ -164,6 +169,7 @@ class GameState extends Phaser.State {
             this.players.push(new Player(game, pseudo, position));
         }
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
+        this.game.world.bringToTop(currentState.dayNightCycle.rainOverlay);
     }
 
     removePlayer(pseudo: string) {
@@ -176,6 +182,7 @@ class GameState extends Phaser.State {
             }
         }
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
+        this.game.world.bringToTop(currentState.dayNightCycle.rainOverlay);
     }
 
     updatePlayer(pseudo: string, position: Phaser.Point, direction: EDirection) {

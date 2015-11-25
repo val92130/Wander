@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.SignalR.Client;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Timers;
 using Wander.Server.Model;
@@ -15,7 +16,8 @@ namespace Wander.StressTest.App
         private Dictionary<HubConnection, IHubProxy> _connections = new Dictionary<HubConnection, IHubProxy>();
         private string _hubName, _host;
         private List<UserModel> _users;
-        Timer _moveTimer, _chatTimer;
+        Timer _moveTimer, _chatTimer, _updateTimer;
+        double sumMs, totalCount;
         public Simulation(string host, string hubName, int connectionCount)
         {
             if (host == null) throw new ArgumentNullException("host");
@@ -37,6 +39,14 @@ namespace Wander.StressTest.App
             _chatTimer.Interval = 10000;
             Console.WriteLine("Each player will send a random message every " + _chatTimer.Interval + " ms");
             _chatTimer.Elapsed += SendMessages;
+
+            _updateTimer = new Timer(3000);
+            _updateTimer.Elapsed += Update;
+        }
+
+        private void Update(object sender, ElapsedEventArgs e)
+        {
+            Console.WriteLine("Average response time : " + sumMs / totalCount);
         }
 
         private async void SendMessages(object sender, ElapsedEventArgs e)
@@ -58,17 +68,22 @@ namespace Wander.StressTest.App
               .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
-        async private void MovePlayers(object sender, ElapsedEventArgs e)
+        private async void MovePlayers(object sender, ElapsedEventArgs e)
         {
+            Stopwatch watch = new Stopwatch();
             int j = 0;
             Random r = new Random();
 
             foreach (KeyValuePair<HubConnection, IHubProxy> entry in _connections)
             {
+                
                 Vector2 vec = new Vector2(r.Next(0, 2000), r.Next(0, 2000));
+                watch.Start();
                 await entry.Value.Invoke("UpdatePosition", vec, EPlayerDirection.Down);
-                Console.WriteLine("Moving player : " + j + " to position : " + vec);
+                sumMs += watch.ElapsedMilliseconds;
+                totalCount++;
                 j++;
+                watch.Stop();
             }
         }
 
@@ -110,6 +125,7 @@ namespace Wander.StressTest.App
             Console.WriteLine("Moving players...");
             _moveTimer.Start();
             _chatTimer.Start();
+            _updateTimer.Start();
 
         }
 

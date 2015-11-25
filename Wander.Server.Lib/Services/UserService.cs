@@ -304,15 +304,15 @@ namespace Wander.Server.Services
             SetUserBankAccount(user, newAccount);
 
         }
-        public void GetTax(ServerPlayerModel user)
+        public void PayTax(ServerPlayerModel user)
         {
             if (user == null) throw new ArgumentException("parameter user is null");
             if (!ServiceProvider.GetPlayerService().Exists(user.SignalRId)) throw new ArgumentException("parameter user is not connected");
 
             int currentPlayerAccount = GetUserBankAccount(user);
-                int salary = ServiceProvider.GetJobService().GetUserJobInfos(user).Salary;
-                int newAccount = currentPlayerAccount - 20;
-                SetUserBankAccount(user, newAccount);
+            int salary = ServiceProvider.GetJobService().GetUserJobInfos(user).Salary;
+            int newAccount = currentPlayerAccount - (int)(salary * 0.1);
+            SetUserBankAccount(user, newAccount);
            
 
         }

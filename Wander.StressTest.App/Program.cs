@@ -86,6 +86,10 @@ namespace Wander.StressTest.App
                             }
                         } while (port == -1);
                     }
+                    else
+                    {
+                        break;
+                    }
                     
                 }
                 else

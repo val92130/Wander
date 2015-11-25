@@ -19,7 +19,7 @@ namespace Wander.Server.Lib.Model
         {
             LastId++;
             this.Ammount = ammount;
-            this.Position = Position;
+            this.Position = position;
             this.Id = LastId;
         }
     }

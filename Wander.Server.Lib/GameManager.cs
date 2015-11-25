@@ -39,7 +39,7 @@ namespace Wander.Server
             _updateTimer.Interval = 2000;
             _updateTimer.Elapsed += Update;
 
-            _randomMoneyDelivery.Interval = 1000 * 60 * 20;
+            _randomMoneyDelivery.Interval = 1000 * 60 * 25;
             _randomMoneyDelivery.Elapsed += DeliverMoneyEvent;
 
             _randomRainTimer.Interval = 2000;
@@ -82,7 +82,6 @@ namespace Wander.Server
 
         public void Start()
         {
-
             _payTimer.Start();
             _alertTimer.Start();
             _updateTimer.Start();
@@ -172,9 +171,8 @@ namespace Wander.Server
             for (int i = 0; i < connectedPlayers.Count; i++)
             {
                 context.Clients.Client(connectedPlayers[i].SignalRId)
-                    .notify(Helper.CreateNotificationMessage("You have to pay your TAX ! ", EMessageType.success));
-                ServiceProvider.GetUserService().GetTax(connectedPlayers[i]);
-                ServiceProvider.GetUserService().GetTax(connectedPlayers[i]);
+                    .notify(Helper.CreateNotificationMessage("You have to pay your TAX ! ", EMessageType.info));
+                ServiceProvider.GetUserService().PayTax(connectedPlayers[i]);
             }
         }
         public List<MoneyBag> MoneyBags
@@ -184,12 +182,6 @@ namespace Wander.Server
                 return _moneyBags;
             }
         }
-
-        public void BeTheMaster(string connectionId)
-        {
-            
-        }
-
 
     }
 }
