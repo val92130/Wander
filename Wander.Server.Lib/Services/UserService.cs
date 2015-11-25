@@ -240,12 +240,15 @@ namespace Wander.Server.Services
         public bool SetUserBankAccount(ServerPlayerModel user, int ammount)
         {
             if (user == null) throw new ArgumentException("parameter user is null");
-            int userBankAccount = GetUserBankAccount(user);
-            if ((userBankAccount - ammount) < 0)
+            
+
+            int newAmmount = ammount;
+            if ((ammount) <= 0)
             {
-                ammount = 0;
+                newAmmount = 0;
             }
-            return ExecuteUpdate("Account", ammount.ToString(), user);
+            return ExecuteUpdate("Account", newAmmount.ToString(), user);
+            
         }
 
         public bool SetUserBankAccount(string ConnectionId, int ammount)
@@ -253,12 +256,13 @@ namespace Wander.Server.Services
             if (ConnectionId == null) throw new ArgumentException("there is no id");
             ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
-           int userBankAccount =  GetUserBankAccount(ConnectionId);
-            if ((userBankAccount - ammount) < 0)
+           
+            int newAmmount = ammount;
+            if ((ammount) <= 0)
             {
-                ammount = 0;
+                newAmmount = 0;
             }
-            return ExecuteUpdate("Account", ammount.ToString(), user);
+            return ExecuteUpdate("Account", newAmmount.ToString(), user);
         }
 
         public bool SetUserPoints(ServerPlayerModel user, int ammount)
