@@ -16,6 +16,7 @@ namespace Wander.Server
         DateTime _time;
         Timer _payTimer = new Timer();
         Timer _alertTimer = new Timer();
+        Timer _taxTimer = new Timer();
         IHubContext context;
         int _intervalMinutes = 15;
         bool _isDay;
@@ -43,6 +44,9 @@ namespace Wander.Server
 
             _randomRainTimer.Interval = 2000;
             _randomRainTimer.Elapsed += RainEvent;
+
+            this._taxTimer.Interval = 1000 * 60 * 20;
+            this._taxTimer.Elapsed += this.TakeTaxEvent;
 
             _moneyBags = new List<MoneyBag>();
 
@@ -84,6 +88,7 @@ namespace Wander.Server
             _updateTimer.Start();
             _randomMoneyDelivery.Start();
             _randomRainTimer.Start();
+            this._taxTimer.Start();
         }
 
         private void DeliverMoneyEvent(object sender, ElapsedEventArgs e)
@@ -159,13 +164,30 @@ namespace Wander.Server
                 ServiceProvider.GetUserService().DeliverPoints(connectedPlayers[i]);
             }
         }
+        private void TakeTaxEvent(object sender, ElapsedEventArgs e)
+        {
+            _time = DateTime.Now;
+            List<ServerPlayerModel> connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
 
+            for (int i = 0; i < connectedPlayers.Count; i++)
+            {
+                context.Clients.Client(connectedPlayers[i].SignalRId)
+                    .notify(Helper.CreateNotificationMessage("You have to pay your TAX ! ", EMessageType.success));
+                ServiceProvider.GetUserService().GetTax(connectedPlayers[i]);
+                ServiceProvider.GetUserService().GetTax(connectedPlayers[i]);
+            }
+        }
         public List<MoneyBag> MoneyBags
         {
             get
             {
                 return _moneyBags;
             }
+        }
+
+        public void BeTheMaster(string connectionId)
+        {
+            
         }
 
 
