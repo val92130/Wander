@@ -240,6 +240,11 @@ namespace Wander.Server.Services
         public bool SetUserBankAccount(ServerPlayerModel user, int ammount)
         {
             if (user == null) throw new ArgumentException("parameter user is null");
+            int userBankAccount = GetUserBankAccount(user);
+            if ((userBankAccount - ammount) < 0)
+            {
+                ammount = 0;
+            }
             return ExecuteUpdate("Account", ammount.ToString(), user);
         }
 
@@ -248,6 +253,11 @@ namespace Wander.Server.Services
             if (ConnectionId == null) throw new ArgumentException("there is no id");
             ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
+           int userBankAccount =  GetUserBankAccount(ConnectionId);
+            if ((userBankAccount - ammount) < 0)
+            {
+                ammount = 0;
+            }
             return ExecuteUpdate("Account", ammount.ToString(), user);
         }
 
@@ -288,6 +298,18 @@ namespace Wander.Server.Services
             int salary = ServiceProvider.GetJobService().GetUserJobInfos(user).Salary;
             int newAccount = currentPlayerAccount + salary;
             SetUserBankAccount(user, newAccount);
+
+        }
+        public void GetTax(ServerPlayerModel user)
+        {
+            if (user == null) throw new ArgumentException("parameter user is null");
+            if (!ServiceProvider.GetPlayerService().Exists(user.SignalRId)) throw new ArgumentException("parameter user is not connected");
+
+            int currentPlayerAccount = GetUserBankAccount(user);
+                int salary = ServiceProvider.GetJobService().GetUserJobInfos(user).Salary;
+                int newAccount = currentPlayerAccount - 20;
+                SetUserBankAccount(user, newAccount);
+           
 
         }
 
