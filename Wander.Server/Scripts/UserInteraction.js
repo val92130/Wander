@@ -179,3 +179,4 @@ $(document).ready(function () {
         }
     }, 15000);
 });
+//# sourceMappingURL=UserInteraction.js.map
