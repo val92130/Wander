@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Timers;
 using Microsoft.AspNet.SignalR;
 using Wander.Server.Hubs;
-using Wander.Server.Lib.Model;
 using Wander.Server.Model;
 using Wander.Server.Services;
 
@@ -21,10 +20,8 @@ namespace Wander.Server
         int _intervalMinutes = 15;
         bool _isDay;
         Timer _updateTimer = new Timer();
-        Timer _randomMoneyDelivery = new Timer();
         Timer _randomRainTimer = new Timer();
         public static int DefaultUnemployedEarningPoints = 2;
-        List<MoneyBag> _moneyBags;
         bool _isRaining = false;
         public GameManager()
         {
@@ -39,16 +36,12 @@ namespace Wander.Server
             _updateTimer.Interval = 2000;
             _updateTimer.Elapsed += Update;
 
-            _randomMoneyDelivery.Interval = 1000 * 60 * 25;
-            _randomMoneyDelivery.Elapsed += DeliverMoneyEvent;
 
             _randomRainTimer.Interval = 2000;
             _randomRainTimer.Elapsed += RainEvent;
 
             this._taxTimer.Interval = 1000 * 60 * 20;
             this._taxTimer.Elapsed += this.TakeTaxEvent;
-
-            _moneyBags = new List<MoneyBag>();
 
         }
 
@@ -85,37 +78,11 @@ namespace Wander.Server
             _payTimer.Start();
             _alertTimer.Start();
             _updateTimer.Start();
-            _randomMoneyDelivery.Start();
             _randomRainTimer.Start();
             this._taxTimer.Start();
         }
 
-        private void DeliverMoneyEvent(object sender, ElapsedEventArgs e)
-        {
-            List<ServerPlayerModel> connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
-            Random r = new Random();
-            int mapSize = 250*16;
 
-            int randomX = r.Next(0, mapSize);
-            int randomY = r.Next(0, mapSize);
-            int ammount = r.Next(0, 200);
-
-            MoneyBag moneyBag = new MoneyBag(new Vector2(randomX, randomY), ammount );
-            for (int i = 0; i < connectedPlayers.Count; i++)
-            {
-                context.Clients.Client(connectedPlayers[i].SignalRId)
-                    .notify(Helper.CreateNotificationMessage("Delivering free money ! Find it on the map ", EMessageType.info));
-                context.Clients.Client(connectedPlayers[i].SignalRId)
-                    .addMoneyBag(moneyBag);
-
-                _moneyBags.Add(moneyBag);
-            }
-        }
-
-        public void RemoveMoneyBag(int id)
-        {
-            _moneyBags.RemoveAll(x => x.Id == id);
-        }
 
         private void Update(object sender, ElapsedEventArgs e)
         {
@@ -173,13 +140,6 @@ namespace Wander.Server
                 context.Clients.Client(connectedPlayers[i].SignalRId)
                     .notify(Helper.CreateNotificationMessage("You have to pay your TAX ! ", EMessageType.info));
                 ServiceProvider.GetUserService().PayTax(connectedPlayers[i]);
-            }
-        }
-        public List<MoneyBag> MoneyBags
-        {
-            get
-            {
-                return _moneyBags;
             }
         }
 

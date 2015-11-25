@@ -69,7 +69,6 @@
     <Compile Include="Model\EMessageType.cs" />
     <Compile Include="Model\Forms\UserModel.cs" />
     <Compile Include="Model\Job\JobModel.cs" />
-    <Compile Include="Model\MoneyBag.cs" />
     <Compile Include="Model\Players\ClientPlayerModel.cs" />
     <Compile Include="Model\Players\EPlayerDirection.cs" />
     <Compile Include="Model\Players\ServerPlayerModel.cs" />

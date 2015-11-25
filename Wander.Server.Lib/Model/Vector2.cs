@@ -2,19 +2,13 @@
 
 namespace Wander.Server.Model
 {
-    public class Vector2
+    public struct Vector2
     {
         private double _x, _y;
         public Vector2(double x, double y)
         {
             _x = x;
             _y = y;
-        }
-
-        public Vector2()
-        {
-            _x = 0;
-            _y = 0;
         }
 
         public double X
@@ -35,8 +29,7 @@ namespace Wander.Server.Model
 
         public override bool Equals(object obj)
         {
-
-            Vector2 t = obj as Vector2;
+            Vector2 t = (Vector2)obj;
             return (t.X == this.X && t.Y == this.Y);
         }
 

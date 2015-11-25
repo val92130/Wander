@@ -8,7 +8,6 @@ using Microsoft.AspNet.SignalR;
 using Wander.Server.Model;
 using Wander.Server.Services;
 using Wander.Server.Model.Players;
-using Wander.Server.Lib.Model;
 
 namespace Wander.Server.Hubs
 {
@@ -363,12 +362,9 @@ namespace Wander.Server.Hubs
 
         public void Update()
         {
-            var players = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return;
 
-            for (int i = 0; i < players.Count; i++)
-            {
-                Clients.Client(players[i].SignalRId).updateTime(ServiceProvider.GetGameManager().IsDay);
-            }
+            Clients.Caller.updateTime(ServiceProvider.GetGameManager().IsDay);
         }
 
         /// <summary>
@@ -408,12 +404,5 @@ namespace Wander.Server.Hubs
             Clients.Caller.notify(Helper.CreateNotificationMessage("Your account was successfuly deleted",
                 EMessageType.info));
         }
-
-        public List<MoneyBag> GetMoneyBags()
-        {
-            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return null;
-
-            return ServiceProvider.GetGameManager().MoneyBags;
-        } 
     }
 }
