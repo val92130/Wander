@@ -45,7 +45,7 @@ namespace Wander.Server
             _randomRainTimer.Interval = 2000;
             _randomRainTimer.Elapsed += RainEvent;
 
-            this._taxTimer.Interval = 10000;
+            this._taxTimer.Interval = 1000 * 60 * 20;
             this._taxTimer.Elapsed += this.TakeTaxEvent;
 
             _moneyBags = new List<MoneyBag>();
