@@ -30,5 +30,10 @@ namespace Wander.Server.Services
         void DeliverPay(string ConnectionId);
         void DeliverPoints(ServerPlayerModel user);
         void DeliverPoints(string ConnectionId);
+        bool SetBan(string connectionId, bool value);
+        bool SetBan(ServerPlayerModel user, bool value);
+
+        bool IsBanned(string connectionId);
+        bool IsBanned(ServerPlayerModel user);
     }
 }

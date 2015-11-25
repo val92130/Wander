@@ -33,6 +33,8 @@ namespace Wander.StressTest.App
         private static extern bool SetConsoleCtrlHandler(ConsoleEventDelegate callback, bool add);
     }
 
+
+
     class Starter
     {
         Simulation _simulation;

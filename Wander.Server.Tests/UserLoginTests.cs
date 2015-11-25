@@ -152,5 +152,31 @@ namespace Wander.Server.Tests
             string correctEmail = "val@live.fr";
             Assert.IsTrue(Helper.IsValidEmail(correctEmail));
         }
+
+        [TestMethod]
+
+        public void BanUserWorksCorrectly()
+        {
+            TestEnvironment.DeleteTestUser();
+
+            UserModel u = TestEnvironment.GetTestUserModel();
+
+            ServiceProvider.GetUserRegistrationService().Register(u);
+            int id = ServiceProvider.GetUserRegistrationService().Connect(u);
+
+            ServiceProvider.GetPlayerService().AddPlayer("signalrId", id);
+
+            Assert.IsFalse(ServiceProvider.GetUserService().IsBanned("signalrId"));           
+
+            ServiceProvider.GetUserService().SetBan("signalrId", true);
+
+            Assert.IsTrue(ServiceProvider.GetUserService().IsBanned("signalrId"));
+
+            ServiceProvider.GetPlayerService().RemovePlayer("signalrId");
+
+            TestEnvironment.DeleteTestUser();
+
+        }
+
     }
 }

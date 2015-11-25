@@ -316,5 +316,33 @@ namespace Wander.Server.Services
             if (user == null) throw new ArgumentException("parameter user is null");
             DeliverPoints(user);
         }
+
+        public bool SetBan(string connectionId, bool value)
+        {
+            if (connectionId == null) throw new ArgumentException("parameter user is null");
+            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(connectionId);
+            if (user == null) throw new ArgumentException("parameter user is null");
+            return ExecuteUpdate("Banned", (value ? "1" : "0"), user);
+        }
+
+        public bool SetBan(ServerPlayerModel user, bool value)
+        {
+            if (user == null) throw new ArgumentException("parameter user is null");         
+            return ExecuteUpdate("Banned", (value ? "1" : "0"), user);
+        }
+
+        public bool IsBanned(string connectionId)
+        {
+            if (connectionId == null) throw new ArgumentException("there is no id");
+            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(connectionId);
+            if (user == null) throw new ArgumentException("parameter user is null");
+            return Convert.ToBoolean(this.ExecuteQueryInt("Banned", user));
+        }
+
+        public bool IsBanned(ServerPlayerModel user)
+        {
+            if (user == null) throw new ArgumentException("parameter user is null");
+            return Convert.ToBoolean(this.ExecuteQueryInt("Banned", user));
+        }
     }
 }
