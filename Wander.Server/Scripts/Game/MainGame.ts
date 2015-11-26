@@ -35,10 +35,9 @@ class GameState extends Phaser.State {
     filter: Phaser.Filter;
     dayNightCycle: DayNightCycle;
     rainEmiter: Phaser.Particles.Arcade.Emitter;
-
+    soundManager: SoundManager;
 
     preload() {
-
         this.game.canvas.id = "canvas";
         this.game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
         this.stage.disableVisibilityChange = true;
@@ -49,13 +48,14 @@ class GameState extends Phaser.State {
         this.game.load.image("Overlay", "Content/Game/Images/filter.png");
         this.map = new Map(this,this.game, "Map", "Tiles", "tileset3", 1);
         this.game.load.spritesheet('rain', 'Content/Game/Images/rain.png', 17, 17);
+        this.soundManager = new SoundManager(this.game, this);
+        this.soundManager.preload();
 
-        
     }
 
     create() {
         hub.invoke("GetAllPlayers");
-
+        this.soundManager.create();
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
         this.map.create();
@@ -118,7 +118,7 @@ class GameState extends Phaser.State {
 
     update() {
         this.dayNightCycle.update();
-
+        this.soundManager.update();
 
         var camX = Math.floor(this.map.currentPlayer.position.x / this.game.camera.width);
         var camY = Math.floor(this.map.currentPlayer.position.y / this.game.camera.height);

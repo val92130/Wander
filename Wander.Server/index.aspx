@@ -242,7 +242,7 @@
                <div class="modal-content">
                   <div class="modal-header">
                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                     <h4 class="modal-title">Sell Property</h4>
+                     <h4 class="modal-title" id="sell-property-title">Sell Property</h4>
                   </div>
                   <div class="modal-body">
                      <form id="sellPropertyForm">
@@ -296,5 +296,6 @@
    <script src="Scripts/Messaging.js"></script>
    <script src="Scripts/Game/Player.js"></script>
    <script src="Scripts/Game/MainGame.js"></script>
+   <script src="Scripts/Game/SoundManager.js"></script>
    <script></script>
 </html>

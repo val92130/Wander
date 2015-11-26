@@ -41,9 +41,12 @@ var GameState = (function (_super) {
         this.game.load.image("Overlay", "Content/Game/Images/filter.png");
         this.map = new Map(this, this.game, "Map", "Tiles", "tileset3", 1);
         this.game.load.spritesheet('rain', 'Content/Game/Images/rain.png', 17, 17);
+        this.soundManager = new SoundManager(this.game, this);
+        this.soundManager.preload();
     };
     GameState.prototype.create = function () {
         hub.invoke("GetAllPlayers");
+        this.soundManager.create();
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.map.create();
         this.dayNightCycle = new DayNightCycle(this.game);
@@ -90,6 +93,7 @@ var GameState = (function (_super) {
     };
     GameState.prototype.update = function () {
         this.dayNightCycle.update();
+        this.soundManager.update();
         var camX = Math.floor(this.map.currentPlayer.position.x / this.game.camera.width);
         var camY = Math.floor(this.map.currentPlayer.position.y / this.game.camera.height);
         this.game.camera.x = Lerp(camX * this.game.camera.width, this.game.camera.x, 40);
@@ -207,4 +211,3 @@ function Lerp(goal, current, time) {
     }
     return goal;
 }
-//# sourceMappingURL=MainGame.js.map

@@ -137,6 +137,7 @@ $(document).ready(function () {
         return (input != null && input != "" && input.length >= minLength);
     }
     $("#sellPropertyBtn").click(function () {
+        $("#sell-property-title").text("Sell property n° " + $('#propertyListOption').val() + " ?");
         $("#sellPropertyModal").modal();
         console.log($('#propertyListOption').val());
         $("#hiddenPropertyId").attr("value", $('#propertyListOption').val());
@@ -179,4 +180,3 @@ $(document).ready(function () {
         }
     }, 15000);
 });
-//# sourceMappingURL=UserInteraction.js.map

@@ -164,6 +164,7 @@
     <TypeScriptCompile Include="Scripts\Game\Map.ts" />
     <TypeScriptCompile Include="Scripts\Game\NightFilter.ts" />
     <TypeScriptCompile Include="Scripts\Game\Player.ts" />
+    <TypeScriptCompile Include="Scripts\Game\SoundManager.ts" />
     <TypeScriptCompile Include="Scripts\HubConnection.ts" />
     <TypeScriptCompile Include="Scripts\JobManagement.ts" />
     <TypeScriptCompile Include="Scripts\Messaging.ts" />

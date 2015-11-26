@@ -38,21 +38,21 @@
             this.rainOverlay.alpha = 1;
             this.rainOverlay.filters[0].uniforms.ambient.value = Lerp(this.rainAmbient, this.rainOverlay.filters[0].uniforms.ambient.value, 0.01);
         } else {
-            this.rainOverlay.filters[0].uniforms.ambient.value = Lerp(0, this.rainOverlay.filters[0].uniforms.ambient.value, 0.01);
+            this.rainOverlay.filters[0].uniforms.ambient.value = Lerp(0, this.rainOverlay.filters[0].uniforms.ambient.value, 0.001);
             if (this.rainOverlay.filters[0].uniforms.ambient.value <= 0) {
                 this.rainOverlay.alpha = 0;
             }
         }
 
         if (this.isDay) {
-            this.ambient = Lerp(0, this.ambient, 0.01);
+            this.ambient = Lerp(0, this.ambient, 0.001);
             this.overlay.filters[0].uniforms.ambient.value = this.ambient;
             if (this.ambient == 0) {
                 this.overlay.alpha = 0;
             }
         } else {
             this.overlay.alpha = 1;
-            this.ambient = Lerp(this.nightAmbient, this.ambient, 0.01);
+            this.ambient = Lerp(this.nightAmbient, this.ambient, 0.001);
             this.overlay.filters[0].uniforms.ambient.value = this.ambient;
             this.rainOverlay.alpha = 0;
         }

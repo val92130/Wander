@@ -332,11 +332,13 @@ namespace Wander.Server.Services
 
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
-                string query = string.Format("SELECT * from dbo.ListProperties");
+                string query = string.Format("SELECT * from dbo.ListProperties WHERE ListPropertyId = @Id");
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     ServerPropertyModel property = new ServerPropertyModel();
+
                     conn.Open();
+                    cmd.Parameters.AddWithValue("@Id", propertyId);
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
