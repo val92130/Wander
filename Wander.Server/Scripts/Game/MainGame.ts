@@ -46,6 +46,9 @@ class GameState extends Phaser.State {
         this.game.load.tilemap("Map", "Content/Game/Maps/map2.json", null, Phaser.Tilemap.TILED_JSON);
         this.game.load.image("Tiles", "Content/Game/Images/tileset3.png");
         this.game.load.image("Overlay", "Content/Game/Images/filter.png");
+        this.game.load.image('light', 'Content/Game/Images/light.png');
+        this.game.load.image('blurred-circle', 'Content/Game/Images/blurred-circle.png');
+
         this.map = new Map(this,this.game, "Map", "Tiles", "tileset3", 1);
         this.game.load.spritesheet('rain', 'Content/Game/Images/rain.png', 17, 17);
         this.soundManager = new SoundManager(this.game, this);
@@ -74,7 +77,7 @@ class GameState extends Phaser.State {
         this.rainEmiter.minParticleScale = 0.5;
         this.rainEmiter.maxParticleScale = 1.2;
 
-        this.rainEmiter.setYSpeed(300, 500);
+        this.rainEmiter.setYSpeed(450, 650);
         this.rainEmiter.setXSpeed(-5, 5);
 
         this.rainEmiter.minRotation = 0;
@@ -85,7 +88,10 @@ class GameState extends Phaser.State {
         hub.invoke("IsRaining").done(function (val) {
             currentState.setRain(val);
         })
-        
+
+
+
+
     }
 
     pressAction() {
@@ -117,6 +123,8 @@ class GameState extends Phaser.State {
 
 
     update() {
+
+
         this.dayNightCycle.update();
         this.soundManager.update();
 

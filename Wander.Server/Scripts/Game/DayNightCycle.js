@@ -1,6 +1,6 @@
 var DayNightCycle = (function () {
     function DayNightCycle(game) {
-        this.nightAmbient = 0.45;
+        this.nightAmbient = 0.48;
         this.rainAmbient = 0.3;
         this.game = game;
         this.ambient = this.nightAmbient;
@@ -31,7 +31,6 @@ var DayNightCycle = (function () {
             this.ambient = Lerp(0, this.ambient, 0.001);
             this.overlay.filters[0].uniforms.ambient.value = this.ambient;
             if (this.ambient == 0) {
-                this.overlay.alpha = 0;
             }
         }
         else {
@@ -49,3 +48,4 @@ var DayNightCycle = (function () {
     };
     return DayNightCycle;
 })();
+//# sourceMappingURL=DayNightCycle.js.map

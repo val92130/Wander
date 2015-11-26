@@ -11,7 +11,7 @@
     isRaining:boolean;
 
     constructor(game: Phaser.Game) {
-        this.nightAmbient = 0.45;
+        this.nightAmbient = 0.48;
         this.rainAmbient = 0.3;
         this.game = game;
         this.ambient = this.nightAmbient;
@@ -48,7 +48,7 @@
             this.ambient = Lerp(0, this.ambient, 0.001);
             this.overlay.filters[0].uniforms.ambient.value = this.ambient;
             if (this.ambient == 0) {
-                this.overlay.alpha = 0;
+                //this.overlay.alpha = 0;
             }
         } else {
             this.overlay.alpha = 1;

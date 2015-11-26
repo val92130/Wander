@@ -97,11 +97,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\background.jpg" />
+    <Content Include="Content\Game\Images\blurred-circle.png" />
     <Content Include="Content\Game\Images\filter.png" />
+    <Content Include="Content\Game\Images\light.png" />
     <Content Include="Content\Game\Images\money_bag.png" />
     <Content Include="Content\Game\Images\player.png" />
     <Content Include="Content\Game\Images\rain.png" />
     <Content Include="Content\Game\Images\tileset3.png" />
+    <Content Include="Content\Game\Sounds\ambient-day.mp3" />
+    <Content Include="Content\Game\Sounds\ambient-night.mp3" />
+    <Content Include="Content\Game\Sounds\ambient-rain.mp3" />
     <Content Include="Content\jquery-ui.theme.min.css" />
     <Content Include="Content\Style.css" />
     <Content Include="Content\user-boy.png" />
@@ -115,6 +120,9 @@
     <Content Include="packages.config" />
     <Content Include="Scripts\jquery-1.9.1.min.map" />
     <Content Include="Content\Game\Maps\map2.json" />
+    <Content Include="Content\Game\Sounds\ambient-day.ogg" />
+    <Content Include="Content\Game\Sounds\ambient-night.ogg" />
+    <Content Include="Content\Game\Sounds\ambient-rain.ogg" />
     <None Include="Properties\PublishProfiles\FTP.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -165,6 +173,7 @@
     <TypeScriptCompile Include="Scripts\Game\NightFilter.ts" />
     <TypeScriptCompile Include="Scripts\Game\Player.ts" />
     <TypeScriptCompile Include="Scripts\Game\SoundManager.ts" />
+    <TypeScriptCompile Include="Scripts\Game\Torch.ts" />
     <TypeScriptCompile Include="Scripts\HubConnection.ts" />
     <TypeScriptCompile Include="Scripts\JobManagement.ts" />
     <TypeScriptCompile Include="Scripts\Messaging.ts" />

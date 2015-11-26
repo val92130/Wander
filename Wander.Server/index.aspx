@@ -297,5 +297,5 @@
    <script src="Scripts/Game/Player.js"></script>
    <script src="Scripts/Game/MainGame.js"></script>
    <script src="Scripts/Game/SoundManager.js"></script>
-   <script></script>
+   <script src="Scripts/Game/Torch.js"></script>
 </html>

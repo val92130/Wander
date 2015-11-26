@@ -1,18 +1,19 @@
 var Player = (function () {
-    function Player(game, pseudo, position) {
+    function Player(state, game, pseudo, position) {
         this.game = game;
+        this.state = state;
         this.direction = EDirection.Idle;
         this.speed = 7;
         this.texture = game.add.sprite(position.x, position.y, "player");
         this.texture.width = 15;
         this.texture.height = 25;
         this.textMessageContent = "";
-        this.messageStyle = { font: "18px Arial", fill: "#FFFFFF", wordWrap: true, wordWrapWidth: this.texture.width * 3, align: "center" };
+        this.messageStyle = { font: "18px Arial", fill: "#FFFFFF", wordWrap: true, wordWrapWidth: this.texture.width * 10, align: "center" };
         this.textMessage = game.add.text(0, 0, this.textMessageContent, this.messageStyle);
         this.pseudo = pseudo;
         this.position = position;
         this.newPosition = new Phaser.Point(this.position.x, this.position.y);
-        this.style = { font: "16px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.texture.width, align: "center" };
+        this.style = { font: "16px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.texture.width * 10, align: "center" };
         this.text = game.add.text(0, 0, pseudo, this.style);
         this.startTime = new Date().getTime();
         this.endTime = new Date().getTime();
@@ -116,3 +117,4 @@ var Player = (function () {
     };
     return Player;
 })();
+//# sourceMappingURL=Player.js.map

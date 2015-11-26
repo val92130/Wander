@@ -18,11 +18,12 @@
     messageTime: any;
     messageTimeEnd: any;
     direction: EDirection;
+    state: GameState;
 
-    constructor(game: Phaser.Game, pseudo: string, position: Phaser.Point) {
+    constructor(state:GameState, game: Phaser.Game, pseudo: string, position: Phaser.Point) {
 
         this.game = game;
-
+        this.state = state;
         this.direction = EDirection.Idle;
         this.speed = 7;
         this.texture = game.add.sprite(position.x, position.y, "player");
@@ -30,13 +31,13 @@
         this.texture.height = 25;
 
         this.textMessageContent = "";
-        this.messageStyle = { font: "18px Arial", fill: "#FFFFFF", wordWrap: true, wordWrapWidth: this.texture.width * 3, align: "center" };
+        this.messageStyle = { font: "18px Arial", fill: "#FFFFFF", wordWrap: true, wordWrapWidth: this.texture.width * 10, align: "center" };
         this.textMessage = game.add.text(0, 0, this.textMessageContent, this.messageStyle);
 
         this.pseudo = pseudo;
         this.position = position;
         this.newPosition = new Phaser.Point(this.position.x, this.position.y);
-        this.style = { font: "16px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.texture.width, align: "center" };
+        this.style = { font: "16px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.texture.width * 10, align: "center" };
         this.text = game.add.text(0, 0, pseudo, this.style);
         this.startTime = new Date().getTime();
         this.endTime = new Date().getTime();
@@ -50,6 +51,7 @@
     }
 
     update() {
+
         var velX = this.texture.body.velocity.x;
         var velY = this.texture.body.velocity.y;
 
