@@ -392,6 +392,37 @@ namespace Wander.Server.Hubs
             return model;
         }
 
+        /// <summary>
+        /// Checks whether a specified is a drug dealer or not
+        /// </summary>
+        /// <param name="pseudo"></param>
+        /// <returns></returns>
+        public bool CheckIfDrugDealer(string pseudo)
+        {
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be connected to do this action",EMessageType.error));
+                return false;
+            }
+
+            ServerPlayerModel candidate =
+                ServiceProvider.GetPlayerService().GetAllPlayersServer().FirstOrDefault(x => x.Pseudo == pseudo);
+
+            if (candidate == null)
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("This user doesnt exist or isnt connected", EMessageType.error));
+                return false;
+            }
+
+            return ServiceProvider.GetJobService().GetUserJobInfos(candidate.SignalRId).JobDescription == "Dealer";
+
+        }
+
+        public bool BuyDrug(string dealerPseudo)
+        {
+            return true;
+        }
+
 
         public void DeleteUser()
         {
