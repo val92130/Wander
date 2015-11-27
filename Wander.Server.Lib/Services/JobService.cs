@@ -209,6 +209,28 @@ namespace Wander.Server.Services
 
             return DeleteJob(model.JobId);
         }
+        public void BuyDrugs(string ConnectionId, string ConnectionId2)
+        {
+
+            if (ConnectionId == null) throw new ArgumentException("parameter user is null");
+            if (ConnectionId2 == null) throw new ArgumentException("parameter user2 is null");
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            { 
+                int id = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId).UserId;
+                int id2 = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId2).UserId;
+                int moneyUser1 = ServiceProvider.GetUserService().GetUserBankAccount(ConnectionId2);
+                int moneyUser2 = ServiceProvider.GetUserService().GetUserBankAccount(ConnectionId2);
+               
+                string DealerJob = ServiceProvider.GetJobService().GetUserJobInfos(ConnectionId).JobDescription;
+                if (DealerJob == "Dealer" && moneyUser2 > 30)
+                {
+                    int remainingMoneyUser1 = moneyUser2 + 30;
+                    int remainingMoneyUser2 = moneyUser2 - 30;
+                    ServiceProvider.GetUserService().SetUserBankAccount(ConnectionId, remainingMoneyUser1);
+                    ServiceProvider.GetUserService().SetUserBankAccount(ConnectionId2, remainingMoneyUser2);
+                }
+            }
+        }
 
         /// <summary>
         /// Delete the job corresponding to the specified JobId

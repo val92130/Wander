@@ -303,6 +303,7 @@ namespace Wander.Server.Services
             int newAccount = currentPlayerAccount + salary;
             SetUserBankAccount(user, newAccount);
 
+
         }
         public void PayTax(ServerPlayerModel user)
         {
