@@ -420,7 +420,33 @@ namespace Wander.Server.Hubs
 
         public bool BuyDrug(string dealerPseudo)
         {
-            return true;
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be connected to do this action", EMessageType.error));
+                return false;
+            }
+
+            ServerPlayerModel candidate =
+                ServiceProvider.GetPlayerService().GetAllPlayersServer().FirstOrDefault(x => x.Pseudo == dealerPseudo);
+
+            if (candidate == null)
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("This user doesnt exist or isnt connected", EMessageType.error));
+                return false;
+            }
+
+            ServerNotificationMessage mess = ServiceProvider.GetJobService()
+                .BuyDrugs(candidate.SignalRId, Context.ConnectionId);
+            if (mess.MessageType == EMessageType.success)
+            {
+
+                return true;
+            }
+            else
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage(mess.Content, mess.MessageType));
+                return false;
+            }
         }
 
 

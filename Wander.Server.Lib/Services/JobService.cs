@@ -209,27 +209,42 @@ namespace Wander.Server.Services
 
             return DeleteJob(model.JobId);
         }
-        public void BuyDrugs(string ConnectionId, string ConnectionId2)
+        public ServerNotificationMessage BuyDrugs(string seller, string buyer)
         {
 
-            if (ConnectionId == null) throw new ArgumentException("parameter user is null");
-            if (ConnectionId2 == null) throw new ArgumentException("parameter user2 is null");
+            if (seller == null) throw new ArgumentException("parameter user is null");
+            if (buyer == null) throw new ArgumentException("parameter user2 is null");
+            
+            ServerNotificationMessage message = new ServerNotificationMessage();
+            message.MessageType = EMessageType.error;
+            message.Content = "Error";
+
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             { 
-                int id = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId).UserId;
-                int id2 = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId2).UserId;
-                int moneyUser1 = ServiceProvider.GetUserService().GetUserBankAccount(ConnectionId2);
-                int moneyUser2 = ServiceProvider.GetUserService().GetUserBankAccount(ConnectionId2);
+                int idSeller = ServiceProvider.GetPlayerService().GetPlayer(seller).UserId;
+                int idBuyer = ServiceProvider.GetPlayerService().GetPlayer(buyer).UserId;
+                int moneyBuyer = ServiceProvider.GetUserService().GetUserBankAccount(buyer);
+                int moneySeller = ServiceProvider.GetUserService().GetUserBankAccount(seller);
                
-                string DealerJob = ServiceProvider.GetJobService().GetUserJobInfos(ConnectionId).JobDescription;
-                if (DealerJob == "Dealer" && moneyUser2 > 30)
+                string DealerJob = ServiceProvider.GetJobService().GetUserJobInfos(seller).JobDescription;
+                if (DealerJob == "Dealer" && moneyBuyer > 30)
                 {
-                    int remainingMoneyUser1 = moneyUser2 + 30;
-                    int remainingMoneyUser2 = moneyUser2 - 30;
-                    ServiceProvider.GetUserService().SetUserBankAccount(ConnectionId, remainingMoneyUser1);
-                    ServiceProvider.GetUserService().SetUserBankAccount(ConnectionId2, remainingMoneyUser2);
+                    int remainingMoneySeller = moneySeller + 30;
+                    int remainingMoneyBuyer = moneyBuyer - 30;
+                    ServiceProvider.GetUserService().SetUserBankAccount(seller, remainingMoneySeller);
+                    ServiceProvider.GetUserService().SetUserBankAccount(buyer, remainingMoneyBuyer);
+
+                    message.MessageType = EMessageType.success;
+                    message.Content = "Success buying drugs";
+                }
+                else if(moneyBuyer < 30)
+                {
+                    message.MessageType = EMessageType.error;
+                    message.Content = "You do not have enough money";
                 }
             }
+
+            return message;
         }
 
         /// <summary>
