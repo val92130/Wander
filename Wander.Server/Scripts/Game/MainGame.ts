@@ -54,6 +54,8 @@ class GameState extends Phaser.State {
         this.soundManager = new SoundManager(this.game, this);
         this.soundManager.preload();
 
+        this.game.load.script('gray', 'https://cdn.rawgit.com/photonstorm/phaser/master/filters/Gray.js');
+
     }
 
     create() {
@@ -282,6 +284,7 @@ $("#buyDrugsForm").submit(function (e) {
     hub.invoke("BuyDrug", pseudo).done(function(res) {
         if (res) {
             $.notify("Your are now on drugs", "warn");
+            currentState.map.currentPlayer.putOnDrug();
         }
     });
     $("#buyDrugModal").modal("hide");

@@ -45,6 +45,7 @@ var GameState = (function (_super) {
         this.game.load.spritesheet('rain', 'Content/Game/Images/rain.png', 17, 17);
         this.soundManager = new SoundManager(this.game, this);
         this.soundManager.preload();
+        this.game.load.script('gray', 'https://cdn.rawgit.com/photonstorm/phaser/master/filters/Gray.js');
     };
     GameState.prototype.create = function () {
         hub.invoke("GetAllPlayers");
@@ -223,6 +224,7 @@ $("#buyDrugsForm").submit(function (e) {
     hub.invoke("BuyDrug", pseudo).done(function (res) {
         if (res) {
             $.notify("Your are now on drugs", "warn");
+            currentState.map.currentPlayer.putOnDrug();
         }
     });
     $("#buyDrugModal").modal("hide");
@@ -249,4 +251,3 @@ function Lerp(goal, current, time) {
     }
     return goal;
 }
-//# sourceMappingURL=MainGame.js.map

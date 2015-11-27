@@ -20,8 +20,14 @@
     direction: EDirection;
     state: GameState;
 
+    isDrugged: boolean;
+    drugStartTime: any;
+    drugEndTime: any;
+    drugFilter:Phaser.Filter;
+
     constructor(state:GameState, game: Phaser.Game, pseudo: string, position: Phaser.Point) {
 
+        this.isDrugged = false;
         this.game = game;
         this.state = state;
         this.direction = EDirection.Idle;
@@ -48,6 +54,13 @@
         this.texture.body.collideWorldBounds = true;
         this.texture.body.maxVelocity = 20;
 
+        this.drugStartTime = new Date().getTime();
+        this.drugEndTime = new Date().getTime();
+
+        this.drugFilter = this.game.add.filter('Gray');
+
+
+        
     }
 
     update() {
@@ -109,6 +122,19 @@
         }
         this.textMessage.text = this.textMessageContent;
 
+        this.drugStartTime = new Date().getTime();
+        if (this.isDrugged) {
+            if (this.drugStartTime -this.drugEndTime  >= 5000) {
+                this.drugEndTime = this.drugStartTime;
+                this.isDrugged = false;
+                this.game.world.filters.splice(this.game.world.filters.indexOf(this.drugFilter), 1);
+                this.drugFilter.destroy();
+
+            }
+            console.log("drugged");
+            
+        }
+
     }
 
     public setTextMessage(text: string) {
@@ -134,6 +160,12 @@
                 break;
         }
 
+    }
+
+    putOnDrug() {
+        this.game.world.filters = [this.drugFilter];
+        this.isDrugged = true;
+        this.drugEndTime = new Date().getTime();
     }
 
     updateServer() {

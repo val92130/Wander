@@ -1,5 +1,6 @@
 var Player = (function () {
     function Player(state, game, pseudo, position) {
+        this.isDrugged = false;
         this.game = game;
         this.state = state;
         this.direction = EDirection.Idle;
@@ -22,6 +23,9 @@ var Player = (function () {
         this.game.physics.enable(this.texture);
         this.texture.body.collideWorldBounds = true;
         this.texture.body.maxVelocity = 20;
+        this.drugStartTime = new Date().getTime();
+        this.drugEndTime = new Date().getTime();
+        this.drugFilter = this.game.add.filter('Gray');
     }
     Player.prototype.update = function () {
         var velX = this.texture.body.velocity.x;
@@ -76,6 +80,16 @@ var Player = (function () {
             }
         }
         this.textMessage.text = this.textMessageContent;
+        this.drugStartTime = new Date().getTime();
+        if (this.isDrugged) {
+            if (this.drugStartTime - this.drugEndTime >= 5000) {
+                this.drugEndTime = this.drugStartTime;
+                this.isDrugged = false;
+                this.game.world.filters.splice(this.game.world.filters.indexOf(this.drugFilter), 1);
+                this.drugFilter.destroy();
+            }
+            console.log("drugged");
+        }
     };
     Player.prototype.setTextMessage = function (text) {
         this.textMessageContent = text;
@@ -98,6 +112,11 @@ var Player = (function () {
                 break;
         }
     };
+    Player.prototype.putOnDrug = function () {
+        this.game.world.filters = [this.drugFilter];
+        this.isDrugged = true;
+        this.drugEndTime = new Date().getTime();
+    };
     Player.prototype.updateServer = function () {
         this.texture.body.x = Lerp(this.newPosition.x, this.texture.body.x, 2);
         this.texture.body.y = Lerp(this.newPosition.y, this.texture.body.y, 2);
@@ -117,4 +136,3 @@ var Player = (function () {
     };
     return Player;
 })();
-//# sourceMappingURL=Player.js.map

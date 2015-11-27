@@ -95,4 +95,3 @@ var Map = (function () {
     };
     return Map;
 })();
-//# sourceMappingURL=Map.js.map
