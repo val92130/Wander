@@ -36,6 +36,7 @@ class GameState extends Phaser.State {
     dayNightCycle: DayNightCycle;
     rainEmiter: Phaser.Particles.Arcade.Emitter;
     soundManager: SoundManager;
+    sprite: any;
 
     preload() {
         this.game.canvas.id = "canvas";
@@ -48,11 +49,11 @@ class GameState extends Phaser.State {
         this.game.load.image("Overlay", "Content/Game/Images/filter.png");
         this.game.load.image('light', 'Content/Game/Images/light.png');
         this.game.load.image('blurred-circle', 'Content/Game/Images/blurred-circle.png');
-
         this.map = new Map(this,this.game, "Map", "Tiles", "tileset3", 1);
         this.game.load.spritesheet('rain', 'Content/Game/Images/rain.png', 17, 17);
         this.soundManager = new SoundManager(this.game, this);
         this.soundManager.preload();
+        this.game.load.spritesheet('player-anim', 'Content/Game/Images/player-spritesheet.png', 64,64);
 
         this.game.load.script('gray', 'https://cdn.rawgit.com/photonstorm/phaser/master/filters/Gray.js');
 
@@ -64,6 +65,8 @@ class GameState extends Phaser.State {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
         this.map.create();
+
+        
 
         this.dayNightCycle = new DayNightCycle(this.game);
         this.dayNightCycle.create();

@@ -45,6 +45,7 @@ var GameState = (function (_super) {
         this.game.load.spritesheet('rain', 'Content/Game/Images/rain.png', 17, 17);
         this.soundManager = new SoundManager(this.game, this);
         this.soundManager.preload();
+        this.game.load.spritesheet('player-anim', 'Content/Game/Images/player-spritesheet.png', 64, 64);
         this.game.load.script('gray', 'https://cdn.rawgit.com/photonstorm/phaser/master/filters/Gray.js');
     };
     GameState.prototype.create = function () {
@@ -251,3 +252,4 @@ function Lerp(goal, current, time) {
     }
     return goal;
 }
+//# sourceMappingURL=MainGame.js.map

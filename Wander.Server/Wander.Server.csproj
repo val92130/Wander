@@ -101,6 +101,7 @@
     <Content Include="Content\Game\Images\filter.png" />
     <Content Include="Content\Game\Images\light.png" />
     <Content Include="Content\Game\Images\money_bag.png" />
+    <Content Include="Content\Game\Images\player-spritesheet.png" />
     <Content Include="Content\Game\Images\player.png" />
     <Content Include="Content\Game\Images\rain.png" />
     <Content Include="Content\Game\Images\tileset3.png" />
@@ -123,6 +124,7 @@
     <Content Include="Content\Game\Sounds\ambient-day.ogg" />
     <Content Include="Content\Game\Sounds\ambient-night.ogg" />
     <Content Include="Content\Game\Sounds\ambient-rain.ogg" />
+    <Content Include="Content\Game\Sounds\footstep.ogg" />
     <None Include="Properties\PublishProfiles\FTP.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

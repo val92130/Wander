@@ -4,10 +4,20 @@ var Player = (function () {
         this.game = game;
         this.state = state;
         this.direction = EDirection.Idle;
-        this.speed = 7;
-        this.texture = game.add.sprite(position.x, position.y, "player");
+        this.speed = 5;
+        this.texture = this.game.add.sprite(position.x, position.y, 'player-anim');
+        this.texture.alpha = 0;
         this.texture.width = 15;
         this.texture.height = 25;
+        this.texture.visible = true;
+        this.animTexture = this.game.add.sprite(position.x, position.y, 'player-anim');
+        this.animTexture.animations.add('walk-up', Phaser.ArrayUtils.numberArray(105, 112));
+        this.animTexture.animations.add('walk-left', Phaser.ArrayUtils.numberArray(118, 125));
+        this.animTexture.animations.add('walk-down', Phaser.ArrayUtils.numberArray(131, 137));
+        this.animTexture.animations.add('walk-right', Phaser.ArrayUtils.numberArray(144, 151));
+        this.animTexture.animations.add('idle', [130]);
+        this.animTexture.animations.play('idle', 10, true);
+        this.animTexture.scale.set(0.55, 0.55);
         this.textMessageContent = "";
         this.messageStyle = { font: "18px Arial", fill: "#FFFFFF", wordWrap: true, wordWrapWidth: this.texture.width * 10, align: "center" };
         this.textMessage = game.add.text(0, 0, this.textMessageContent, this.messageStyle);
@@ -25,43 +35,57 @@ var Player = (function () {
         this.texture.body.maxVelocity = 20;
         this.drugStartTime = new Date().getTime();
         this.drugEndTime = new Date().getTime();
+        this.footstepEndTime = new Date().getTime();
+        this.footstepStartTime = new Date().getTime();
         this.drugFilter = this.game.add.filter('Gray');
     }
     Player.prototype.update = function () {
+        this.footstepStartTime = new Date().getTime();
+        this.animTexture.x = this.texture.x - this.texture.width / 2;
+        this.animTexture.y = this.texture.y - this.texture.height / 2;
         var velX = this.texture.body.velocity.x;
         var velY = this.texture.body.velocity.y;
-        if (velX > 0) {
-            if (velY > 0) {
-                this.direction = EDirection.DownRight;
+        if (currentState.map.currentPlayer == this) {
+            if (velX > 0) {
+                if (velY > 0) {
+                    this.direction = EDirection.DownRight;
+                }
+                else if (velY < 0) {
+                    this.direction = EDirection.UpRight;
+                }
+                else {
+                    this.direction = EDirection.Right;
+                }
             }
-            else if (velY < 0) {
-                this.direction = EDirection.UpRight;
+            else if (velX < 0) {
+                if (velY > 0) {
+                    this.direction = EDirection.DownLeft;
+                }
+                else if (velY < 0) {
+                    this.direction = EDirection.UpLeft;
+                }
+                else {
+                    this.direction = EDirection.Left;
+                }
             }
-            else {
-                this.direction = EDirection.Right;
+            else if (velY != 0) {
+                if (velY > 0) {
+                    this.direction = EDirection.Down;
+                }
+                else {
+                    this.direction = EDirection.Up;
+                }
+            }
+            if (velX == 0 && velY == 0) {
+                this.direction = EDirection.Idle;
             }
         }
-        else if (velX < 0) {
-            if (velY > 0) {
-                this.direction = EDirection.DownLeft;
+        if (this.direction != EDirection.Idle) {
+            var elaps = this.footstepStartTime - this.footstepEndTime;
+            if (elaps >= 600) {
+                this.footstepEndTime = new Date().getTime();
+                this.state.soundManager.playFootStep(this);
             }
-            else if (velY < 0) {
-                this.direction = EDirection.UpLeft;
-            }
-            else {
-                this.direction = EDirection.Left;
-            }
-        }
-        else if (velY != 0) {
-            if (velY > 0) {
-                this.direction = EDirection.Down;
-            }
-            else {
-                this.direction = EDirection.Up;
-            }
-        }
-        if (velX == 0 && velY == 0) {
-            this.direction = EDirection.Idle;
         }
         this.texture.body.velocity.x = 0;
         this.texture.body.velocity.y = 0;
@@ -90,6 +114,38 @@ var Player = (function () {
             }
             console.log("drugged");
         }
+        switch (this.direction) {
+            case EDirection.Down:
+                this.animTexture.animations.play('walk-down', 10, true);
+                break;
+            case EDirection.Up:
+                this.animTexture.animations.play('walk-up', 10, true);
+                break;
+            case EDirection.Left:
+                this.animTexture.animations.play('walk-left', 10, true);
+                break;
+            case EDirection.Right:
+                this.animTexture.animations.play('walk-right', 10, true);
+                break;
+            case EDirection.Idle:
+                this.animTexture.animations.play('idle', 10, true);
+                break;
+            case EDirection.DownLeft:
+                this.animTexture.animations.play('walk-down', 10, true);
+                break;
+            case EDirection.DownRight:
+                this.animTexture.animations.play('walk-down', 10, true);
+                break;
+            case EDirection.UpLeft:
+                this.animTexture.animations.play('walk-up', 10, true);
+                break;
+            case EDirection.UpRight:
+                this.animTexture.animations.play('walk-up', 10, true);
+                break;
+            default:
+                this.animTexture.animations.play('idle', 10, true);
+                break;
+        }
     };
     Player.prototype.setTextMessage = function (text) {
         this.textMessageContent = text;
@@ -113,18 +169,22 @@ var Player = (function () {
         }
     };
     Player.prototype.putOnDrug = function () {
-        this.game.world.filters = [this.drugFilter];
-        this.isDrugged = true;
+        //this.game.world.filters = [this.drugFilter];
+        //this.isDrugged = true;
         this.drugEndTime = new Date().getTime();
     };
     Player.prototype.updateServer = function () {
-        this.texture.body.x = Lerp(this.newPosition.x, this.texture.body.x, 2);
-        this.texture.body.y = Lerp(this.newPosition.y, this.texture.body.y, 2);
+        this.texture.body.x = Lerp(this.newPosition.x, this.texture.body.x, 1.45);
+        this.texture.body.y = Lerp(this.newPosition.y, this.texture.body.y, 1.45);
+        if (this.texture.position.x == this.newPosition.x && this.texture.position.y == this.newPosition.y) {
+            this.direction = EDirection.Idle;
+        }
     };
     Player.prototype.remove = function () {
         this.textMessage.kill();
         this.text.kill();
         this.texture.kill();
+        this.animTexture.kill();
     };
     Player.prototype.updatePosition = function () {
         this.startTime = new Date().getTime();
@@ -136,3 +196,4 @@ var Player = (function () {
     };
     return Player;
 })();
+//# sourceMappingURL=Player.js.map

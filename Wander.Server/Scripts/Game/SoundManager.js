@@ -7,6 +7,7 @@ var SoundManager = (function () {
         this.game.load.audio("dayAmbient", ["Content/Game/Sounds/ambient-day.mp3", "Content/Game/Sounds/ambient-day.ogg"]);
         this.game.load.audio("nightAmbient", ["Content/Game/Sounds/ambient-night.mp3", "Content/Game/Sounds/ambient-night.ogg"]);
         this.game.load.audio("rainAmbient", ["Content/Game/Sounds/ambient-rain.mp3", "Content/Game/Sounds/ambient-rain.ogg"]);
+        this.game.load.audio("footstep", "Content/Game/Sounds/footstep.ogg");
     };
     SoundManager.prototype.create = function () {
         this.dayAmbientSound = this.game.add.audio("dayAmbient");
@@ -18,6 +19,20 @@ var SoundManager = (function () {
         this.dayAmbientSound.volume = 0;
         this.nightAmbientSound.volume = 0;
         this.rainAmbientSound.volume = 0;
+        this.footstepSound = this.game.add.audio("footstep");
+    };
+    SoundManager.prototype.playFootStep = function (player) {
+        if (currentState.map.currentPlayer == player) {
+            this.footstepSound.volume = 1;
+        }
+        else {
+            var dist = this.game.physics.arcade.distanceBetween(player.texture, currentState.map.currentPlayer.texture);
+            var maxHearingDist = this.game.camera.width / 2;
+            var t = 1 - (1 / (maxHearingDist)) * dist;
+            t = t < 0 ? 0 : t;
+            this.footstepSound.volume = t > 1 ? 1 : t;
+        }
+        this.footstepSound.play();
     };
     SoundManager.prototype.update = function () {
         if (this.state.dayNightCycle.isDay) {
@@ -50,3 +65,4 @@ var SoundManager = (function () {
     };
     return SoundManager;
 })();
+//# sourceMappingURL=SoundManager.js.map
