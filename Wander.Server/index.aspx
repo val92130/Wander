@@ -260,6 +260,29 @@
                </div>
             </div>
          </div>
+          
+          <!-- BUY DRUG MODAL-->
+         <div class="modal fade" id="buyDrugModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <h4 class="modal-title">Buy drugs</h4>
+                  </div>
+                  <div class="modal-body" style="text-align: center">
+                     <form id="buyDrugsForm">
+                        <div class="form-group">
+                           <input type="hidden" id="sellerPseudo" value="" />
+                        </div>
+                        <button type="submit" class="btn btn-danger">Buy drugs !</button>
+                     </form>
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+               </div>
+            </div>
+         </div>
       </div>
       <div class="container" id="box-message-container" style="display: none; height:0px">
          <%Response.WriteFile("includes/message-box.html"); %>

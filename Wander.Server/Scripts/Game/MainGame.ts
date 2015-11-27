@@ -100,6 +100,23 @@ class GameState extends Phaser.State {
         var x = Math.round(this.map.currentPlayer.texture.x / (this.map.tilemap.tileWidth * this.map.scale));
 
         var tile = this.map.tilemap.getTile(x, y, "houseLayer");
+
+        var curPlayerBounds:any = this.map.currentPlayer.texture.getBounds();
+        for (var i = 0; i < this.map.players.length; i++) {
+            var pBounds:any = this.map.players[i].texture.getBounds();
+            if (Phaser.Rectangle.intersects(curPlayerBounds, pBounds)) {
+                console.log("intersect with player : " + this.map.players[i].pseudo);
+                hub.invoke("CheckIfDrugDealer", this.map.players[i].pseudo).done(function(res) {
+                    if (res) {
+                        openModalDrugs(currentState.map.players[i].pseudo);
+                        $.notify("This user is a drug dealer ! ", "warn");
+                        // open modal to buy drug
+                    }
+                });
+            }
+            break;
+        }
+
         if (tile != undefined) {
             var propId = tile.properties.propertyId;
             if (propId != undefined) {
@@ -247,6 +264,29 @@ function BuyProperty(id) {
     hub.invoke("BuyProperty", id);
     $("#propertyModal").modal('hide');
 }
+
+function openModalDrugs(pseudo) {
+    if (pseudo == undefined) return;
+    $("#buyDrugModal").modal();
+    console.log($('#sellerPseudo').val());
+    $("#sellerPseudo").attr("value", pseudo);
+}
+
+$("#buyDrugsForm").submit(function (e) {
+    var pseudo = $('#sellerPseudo').val();
+    if (pseudo == undefined) {
+        e.preventDefault();
+        $("#buyDrugModal").modal("hide");
+        return;
+    }
+    hub.invoke("BuyDrug", pseudo).done(function(res) {
+        if (res) {
+            $.notify("Your are now on drugs", "warn");
+        }
+    });
+    $("#buyDrugModal").modal("hide");
+    e.preventDefault();
+});
 
 $(document).keypress(function (event) { 
     if (isConnected) {
