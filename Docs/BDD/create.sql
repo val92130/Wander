@@ -89,7 +89,8 @@ Points int,
 Connected bit,
 Activated bit,
 Banned bit DEFAULT(0),
-JobId int DEFAULT(0)
+JobId int DEFAULT(0),
+Admin bit DEFAULT(0)
 
 
 constraint PK_UserId primary key(UserId),

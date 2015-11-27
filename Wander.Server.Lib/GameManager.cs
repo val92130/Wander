@@ -47,17 +47,22 @@ namespace Wander.Server
 
         private void RainEvent(object sender, ElapsedEventArgs e)
         {
+            ToggleRain();
+        }
+
+        public void ToggleRain()
+        {
             List<ServerPlayerModel> connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
             Random r = new Random();
 
             int nextRain = 0;
             if (_isRaining)
             {
-                nextRain = r.Next(2*60*1000, 10 * 60 * 1000);
+                nextRain = r.Next(2 * 60 * 1000, 10 * 60 * 1000);
             }
             else
             {
-                nextRain = r.Next (30 * 1000, 2 * 60 * 1000);
+                nextRain = r.Next(30 * 1000, 2 * 60 * 1000);
             }
             DateTime next = DateTime.Now.AddMilliseconds(nextRain);
             _isRaining = !_isRaining;
