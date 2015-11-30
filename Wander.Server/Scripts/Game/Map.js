@@ -30,7 +30,6 @@ var Map = (function () {
             for (var j = 0; j < this.lightsLayer.layer.height; j++) {
                 if (this.lightsLayer.map.getTile(i, j, "lightsLayer") != null) {
                     this.game.add.existing(new Light(this.state, (i * this.lightsLayer.map.tileWidth * this.scale) + this.lightsLayer.map.tileWidth / 2, (j * this.lightsLayer.map.tileHeight * this.scale) + this.lightsLayer.map.tileHeight / 2, 0.40));
-                    console.log("found light");
                 }
             }
         }
@@ -95,4 +94,3 @@ var Map = (function () {
     };
     return Map;
 })();
-//# sourceMappingURL=Map.js.map

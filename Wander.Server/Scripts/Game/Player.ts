@@ -81,7 +81,6 @@
         this.footstepStartTime = new Date().getTime();
 
         this.drugFilter = this.game.add.filter('Gray');
-
         
     }
 
@@ -94,7 +93,7 @@
         var velX = this.texture.body.velocity.x;
         var velY = this.texture.body.velocity.y;
 
-        if (currentState.map.currentPlayer == this) {
+        if (currentState.map.currentPlayer === this) {
             if (velX > 0) {
                 if (velY > 0) {
                     this.direction = EDirection.DownRight;
@@ -112,7 +111,7 @@
                 } else {
                     this.direction = EDirection.Left;
                 }
-            } else if (velY != 0) {
+            } else if (velY !== 0) {
                 if (velY > 0) {
                     this.direction = EDirection.Down;
                 } else {
@@ -120,13 +119,13 @@
                 }
             }
 
-            if (velX == 0 && velY == 0) {
+            if (velX === 0 && velY === 0) {
                 this.direction = EDirection.Idle;
             }
         }
 
 
-        if (this.direction != EDirection.Idle) {
+        if (this.direction !== EDirection.Idle) {
             var elaps = this.footstepStartTime - this.footstepEndTime;
             if (elaps >= 600) {
                 this.footstepEndTime = new Date().getTime();
@@ -147,7 +146,7 @@
         this.textMessage.x = this.texture.x;
         this.textMessage.y = this.texture.y - 45;
 
-        if (this.textMessageContent != "") {
+        if (this.textMessageContent !== "") {
             this.messageTime = new Date().getTime();
             var nTime = this.messageTime - this.messageTimeEnd;
             if (nTime >= 5000) {
@@ -167,8 +166,7 @@
                 this.drugFilter.destroy();
 
             }
-            console.log("drugged");
-            
+            console.log("drugged");           
         }
 
         switch (this.direction) {
@@ -237,10 +235,10 @@
     }
 
     updateServer() {
-        this.texture.body.x = Lerp(this.newPosition.x, this.texture.body.x, 1.45);
-        this.texture.body.y = Lerp(this.newPosition.y, this.texture.body.y, 1.45);
+        this.texture.body.x = Lerp(this.newPosition.x, this.texture.body.x, 1.40);
+        this.texture.body.y = Lerp(this.newPosition.y, this.texture.body.y, 1.40);
 
-        if (this.texture.position.x == this.newPosition.x && this.texture.position.y == this.newPosition.y ) {
+        if (this.texture.position.x === this.newPosition.x && this.texture.position.y === this.newPosition.y ) {
             this.direction = EDirection.Idle;
         }
     }

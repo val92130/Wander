@@ -45,7 +45,7 @@ var Player = (function () {
         this.animTexture.y = this.texture.y - this.texture.height / 2;
         var velX = this.texture.body.velocity.x;
         var velY = this.texture.body.velocity.y;
-        if (currentState.map.currentPlayer == this) {
+        if (currentState.map.currentPlayer === this) {
             if (velX > 0) {
                 if (velY > 0) {
                     this.direction = EDirection.DownRight;
@@ -68,7 +68,7 @@ var Player = (function () {
                     this.direction = EDirection.Left;
                 }
             }
-            else if (velY != 0) {
+            else if (velY !== 0) {
                 if (velY > 0) {
                     this.direction = EDirection.Down;
                 }
@@ -76,11 +76,11 @@ var Player = (function () {
                     this.direction = EDirection.Up;
                 }
             }
-            if (velX == 0 && velY == 0) {
+            if (velX === 0 && velY === 0) {
                 this.direction = EDirection.Idle;
             }
         }
-        if (this.direction != EDirection.Idle) {
+        if (this.direction !== EDirection.Idle) {
             var elaps = this.footstepStartTime - this.footstepEndTime;
             if (elaps >= 600) {
                 this.footstepEndTime = new Date().getTime();
@@ -95,7 +95,7 @@ var Player = (function () {
         this.text.y = this.texture.y - 20;
         this.textMessage.x = this.texture.x;
         this.textMessage.y = this.texture.y - 45;
-        if (this.textMessageContent != "") {
+        if (this.textMessageContent !== "") {
             this.messageTime = new Date().getTime();
             var nTime = this.messageTime - this.messageTimeEnd;
             if (nTime >= 5000) {
@@ -174,9 +174,9 @@ var Player = (function () {
         this.drugEndTime = new Date().getTime();
     };
     Player.prototype.updateServer = function () {
-        this.texture.body.x = Lerp(this.newPosition.x, this.texture.body.x, 1.45);
-        this.texture.body.y = Lerp(this.newPosition.y, this.texture.body.y, 1.45);
-        if (this.texture.position.x == this.newPosition.x && this.texture.position.y == this.newPosition.y) {
+        this.texture.body.x = Lerp(this.newPosition.x, this.texture.body.x, 1.40);
+        this.texture.body.y = Lerp(this.newPosition.y, this.texture.body.y, 1.40);
+        if (this.texture.position.x === this.newPosition.x && this.texture.position.y === this.newPosition.y) {
             this.direction = EDirection.Idle;
         }
     };
@@ -196,4 +196,3 @@ var Player = (function () {
     };
     return Player;
 })();
-//# sourceMappingURL=Player.js.map
