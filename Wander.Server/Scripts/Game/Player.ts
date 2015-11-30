@@ -6,7 +6,7 @@
     speed: number;
     style: any;
     messageStyle: any;
-    text: any;
+    pseudoText: any;
     game: Phaser.Game;
     startTime: any;
     endTime: any;
@@ -35,6 +35,7 @@
         this.texture.width = 15;
         this.texture.height = 25;
         this.texture.visible = true;
+        this.texture.autoCull = true;
 
         this.animTexture = this.game.add.sprite(position.x, position.y, 'player-anim');
 
@@ -44,18 +45,18 @@
         this.animTexture.animations.add('walk-right', Phaser.ArrayUtils.numberArray(144, 151));
         this.animTexture.animations.add('idle', [130]);
         this.animTexture.animations.play('idle', 10, true);
-
         this.animTexture.scale.set(0.55, 0.55);
+        this.animTexture.autoCull = true;
 
 
         this.textMessageContent = "";
-        this.messageStyle = { font: "18px Arial", fill: "#FFFFFF", wordWrap: true, wordWrapWidth: this.texture.width * 10, align: "center" };
+        this.messageStyle = { font: "18px Segoe UI", fill: "#FFFFFF", wordWrap: true, wordWrapWidth: this.texture.width * 10, align: "center" };
         this.textMessage = game.add.text(0, 0, this.textMessageContent, this.messageStyle);
 
         this.pseudo = pseudo;
         this.position = position;       
-        this.style = { font: "16px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.texture.width * 10, align: "center" };
-        this.text = game.add.text(0, 0, pseudo, this.style);
+        this.style = { font: "16px Segoe UI", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.texture.width * 10, align: "center" };
+        this.pseudoText = game.add.text(0, 0, pseudo, this.style);
         this.startTime = new Date().getTime();
         this.endTime = new Date().getTime();
         this.messageTime = new Date().getTime();
@@ -80,11 +81,11 @@
         this.position.x = this.texture.x;
         this.position.y = this.texture.y;
 
-        this.text.x = this.texture.x;
-        this.text.y = this.texture.y - 20;
+        this.pseudoText.x = this.texture.x - (this.pseudoText.width / 2) + this.animTexture.width / 2;
+        this.pseudoText.y = this.texture.y - 35;
 
-        this.textMessage.x = this.texture.x;
-        this.textMessage.y = this.texture.y - 45;
+        this.textMessage.x = this.texture.x - (this.textMessage.width / 2) + this.animTexture.width / 2;
+        this.textMessage.y = this.texture.y - 55 - this.textMessage.height;
 
         if (this.direction !== EDirection.Idle) {
             var elaps = this.footstepStartTime - this.footstepEndTime;
@@ -109,7 +110,6 @@
     }
 
     updateAnimationFrame() {
-        console.log("changing frame");
         switch (this.direction) {
             case EDirection.Down:
                 this.animTexture.animations.play('walk-down', 10, true);
@@ -155,7 +155,7 @@
 
     remove() {
         this.textMessage.kill();
-        this.text.kill();
+        this.pseudoText.kill();
         this.texture.kill();
         this.animTexture.kill();
     }

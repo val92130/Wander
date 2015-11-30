@@ -99,8 +99,6 @@
     <Content Include="Content\background.jpg" />
     <Content Include="Content\Game\Images\blurred-circle.png" />
     <Content Include="Content\Game\Images\filter.png" />
-    <Content Include="Content\Game\Images\light.png" />
-    <Content Include="Content\Game\Images\money_bag.png" />
     <Content Include="Content\Game\Images\player-spritesheet.png" />
     <Content Include="Content\Game\Images\player.png" />
     <Content Include="Content\Game\Images\rain.png" />
@@ -178,6 +176,7 @@
     <TypeScriptCompile Include="Scripts\Game\ServerPlayer.ts" />
     <TypeScriptCompile Include="Scripts\Game\SoundManager.ts" />
     <TypeScriptCompile Include="Scripts\Game\Torch.ts" />
+    <TypeScriptCompile Include="Scripts\Game\WeatherManager.ts" />
     <TypeScriptCompile Include="Scripts\HubConnection.ts" />
     <TypeScriptCompile Include="Scripts\JobManagement.ts" />
     <TypeScriptCompile Include="Scripts\Messaging.ts" />

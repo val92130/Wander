@@ -44,28 +44,6 @@
             console.log("drugged");
         }
 
-
-        super.update();
-    }
-
-    move(direction: EDirection) {
-        switch (direction) {
-            case EDirection.Left:
-                this.texture.body.velocity.x = -(this.speed * this.game.time.elapsedMS);
-                break;
-            case EDirection.Right:
-                this.texture.body.velocity.x = this.speed * this.game.time.elapsedMS;
-                break;
-            case EDirection.Up:
-                this.texture.body.velocity.y = -(this.speed * this.game.time.elapsedMS);
-                break;
-            case EDirection.Down:
-                this.texture.body.velocity.y = this.speed * this.game.time.elapsedMS;
-                break;
-        }
-        var velX = this.texture.body.velocity.x;
-        var velY = this.texture.body.velocity.y;
-
         var newDir;
         if (velX > 0) {
             if (velY > 0) {
@@ -90,12 +68,36 @@
             } else {
                 newDir = EDirection.Up;
             }
+        } else if (velX === 0 && velY === 0) {
+            newDir = EDirection.Idle;
         }
-        
-        if (newDir != this.direction) {
+
+        if (newDir != this.direction && typeof (newDir) != undefined) {
             this.direction = newDir;
             super.updateAnimationFrame();
         }
+
+        super.update();
+    }
+
+    move(direction: EDirection) {
+        switch (direction) {
+            case EDirection.Left:
+                this.texture.body.velocity.x = -(this.speed * this.game.time.elapsedMS);
+                break;
+            case EDirection.Right:
+                this.texture.body.velocity.x = this.speed * this.game.time.elapsedMS;
+                break;
+            case EDirection.Up:
+                this.texture.body.velocity.y = -(this.speed * this.game.time.elapsedMS);
+                break;
+            case EDirection.Down:
+                this.texture.body.velocity.y = this.speed * this.game.time.elapsedMS;
+                break;
+        }
+        var velX = this.texture.body.velocity.x;
+        var velY = this.texture.body.velocity.y;
+
         this.updatePositionToServer();
         
     }
@@ -105,7 +107,10 @@
         var time = this.startTime - this.endTime;
         if (time >= this.updateTimeMs) {
             this.endTime = this.startTime;
-            hub.invoke("UpdatePosition", { X: this.position.x, Y: this.position.y }, this.direction.toString());
+            if (this.position.x != null && this.position.y != null && this.direction != undefined && this.position.x != undefined && this.position.y != undefined && this.direction != undefined) {
+                hub.invoke("UpdatePosition", { X: this.position.x, Y: this.position.y }, this.direction.toString());
+            }
+            
         }
     }
 

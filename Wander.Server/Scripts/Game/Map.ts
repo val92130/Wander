@@ -43,6 +43,11 @@
         this.backgroundLayer.resizeWorld();
         this.tilemap.setCollisionBetween(2000, 2500, true, this.collisionLayer);
 
+        this.backgroundLayer.autoCull = true;
+        this.collisionLayer.autoCull = true;
+        this.objectsLayer.autoCull = true;
+        this.houseLayer.autoCull = true;
+
         this.players = new Array<ServerPlayer>();
         this.currentPlayer = new ClientPlayer(this.state, this.game, userPseudo, new Phaser.Point(10, 10));
 

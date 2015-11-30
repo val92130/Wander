@@ -87,9 +87,9 @@ namespace Wander.Server.Services
         /// </summary>
         /// <param name="player"></param>
         /// <param name="to"></param>
-        public void MovePlayerTo(ServerPlayerModel player, Vector2 to, EPlayerDirection direction)
+        public bool MovePlayerTo(ServerPlayerModel player, Vector2 to, EPlayerDirection direction)
         {
-            MovePlayerTo(player.SignalRId, to, direction);
+            return MovePlayerTo(player.SignalRId, to, direction);
         }
 
         /// <summary>
@@ -97,15 +97,16 @@ namespace Wander.Server.Services
         /// </summary>
         /// <param name="connectionId"></param>
         /// <param name="to"></param>
-        public void MovePlayerTo(string connectionId, Vector2 to, EPlayerDirection direction)
+        public bool MovePlayerTo(string connectionId, Vector2 to, EPlayerDirection direction)
         {
             lock (Players)
             {
                 ServerPlayerModel p = GetPlayer(connectionId);
                 if (p == null)
-                    return;
+                    return false;
                 p.Position = to;
                 p.Direction = direction;
+                return true;
             }
         }
 
@@ -178,5 +179,28 @@ namespace Wander.Server.Services
 
         }
 
+        /// <summary>
+        /// Try to move a player to a specified location
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="to"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public bool TryMovePlayerTo(ServerPlayerModel player, Vector2 to, EPlayerDirection direction)
+        {
+            return MovePlayerTo(player, to, direction);
+        }
+
+        /// <summary>
+        /// Try to move a player to a specified location
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="to"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public bool TryMovePlayerTo(string connectionId, Vector2 to, EPlayerDirection direction)
+        {
+            return MovePlayerTo(connectionId, to, direction);
+        }
     }
 }
