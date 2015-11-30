@@ -121,19 +121,15 @@ var GameState = (function (_super) {
         this.map.update();
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
             this.map.currentPlayer.move(EDirection.Left);
-            this.map.currentPlayer.updatePosition();
         }
         else if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
             this.map.currentPlayer.move(EDirection.Right);
-            this.map.currentPlayer.updatePosition();
         }
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
             this.map.currentPlayer.move(EDirection.Up);
-            this.map.currentPlayer.updatePosition();
         }
         else if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
             this.map.currentPlayer.move(EDirection.Down);
-            this.map.currentPlayer.updatePosition();
         }
     };
     GameState.prototype.resizeGame = function () {
@@ -186,9 +182,7 @@ hub.on("updateTime", function (isDay) {
     }
 });
 hub.on("MessageReceived", function (msg) {
-    var u = currentState.map.getPlayer(msg.UserName);
-    if (msg.UserName == currentState.map.currentPlayer.pseudo)
-        u = currentState.map.currentPlayer;
+    var u = msg.UserName == currentState.map.currentPlayer.pseudo ? currentState.map.currentPlayer : currentState.map.getPlayer(msg.UserName);
     if (u != undefined) {
         u.setTextMessage(msg.Content);
     }
@@ -252,3 +246,4 @@ function Lerp(goal, current, time) {
     }
     return goal;
 }
+//# sourceMappingURL=MainGame.js.map

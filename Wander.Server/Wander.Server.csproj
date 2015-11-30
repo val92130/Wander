@@ -169,11 +169,13 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\Game\ClientPlayer.ts" />
     <TypeScriptCompile Include="Scripts\Game\DayNightCycle.ts" />
     <TypeScriptCompile Include="Scripts\Game\EDirection.ts" />
     <TypeScriptCompile Include="Scripts\Game\Map.ts" />
     <TypeScriptCompile Include="Scripts\Game\NightFilter.ts" />
     <TypeScriptCompile Include="Scripts\Game\Player.ts" />
+    <TypeScriptCompile Include="Scripts\Game\ServerPlayer.ts" />
     <TypeScriptCompile Include="Scripts\Game\SoundManager.ts" />
     <TypeScriptCompile Include="Scripts\Game\Torch.ts" />
     <TypeScriptCompile Include="Scripts\HubConnection.ts" />

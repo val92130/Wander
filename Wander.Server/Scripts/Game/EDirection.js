@@ -10,3 +10,4 @@ var EDirection;
     EDirection[EDirection["UpRight"] = 7] = "UpRight";
     EDirection[EDirection["Idle"] = 8] = "Idle";
 })(EDirection || (EDirection = {}));
+//# sourceMappingURL=EDirection.js.map

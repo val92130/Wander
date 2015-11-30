@@ -318,6 +318,8 @@
    <script src="Scripts/Game/EDirection.js"></script>
    <script src="Scripts/Messaging.js"></script>
    <script src="Scripts/Game/Player.js"></script>
+<script src="Scripts/Game/ServerPlayer.js"></script>
+   <script src="Scripts/Game/ClientPlayer.js"></script>
    <script src="Scripts/Game/MainGame.js"></script>
    <script src="Scripts/Game/SoundManager.js"></script>
    <script src="Scripts/Game/Torch.js"></script>
