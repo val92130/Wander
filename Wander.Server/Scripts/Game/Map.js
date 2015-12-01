@@ -24,8 +24,12 @@ var Map = (function () {
         this.houseLayer.setScale(this.scale);
         this.backgroundLayer.resizeWorld();
         this.tilemap.setCollisionBetween(2000, 2500, true, this.collisionLayer);
+        this.backgroundLayer.autoCull = true;
+        this.collisionLayer.autoCull = true;
+        this.objectsLayer.autoCull = true;
+        this.houseLayer.autoCull = true;
         this.players = new Array();
-        this.currentPlayer = new Player(this.state, this.game, userPseudo, new Phaser.Point(10, 10));
+        this.currentPlayer = new ClientPlayer(this.state, this.game, userPseudo, new Phaser.Point(10, 10));
         for (var i = 0; i < this.lightsLayer.layer.width; i++) {
             for (var j = 0; j < this.lightsLayer.layer.height; j++) {
                 if (this.lightsLayer.map.getTile(i, j, "lightsLayer") != null) {
@@ -36,11 +40,10 @@ var Map = (function () {
     };
     Map.prototype.update = function () {
         this.game.physics.arcade.collide(this.currentPlayer.texture, this.collisionLayer);
+        this.currentPlayer.update();
         for (var i = 0; i < this.players.length; i++) {
             this.players[i].update();
-            this.players[i].updateServer();
         }
-        this.currentPlayer.update();
     };
     Map.prototype.addPlayer = function (pseudo, position) {
         if (this.players == undefined)
@@ -53,7 +56,7 @@ var Map = (function () {
             }
         }
         if (!flag) {
-            this.players.push(new Player(this.state, this.game, pseudo, position));
+            this.players.push(new ServerPlayer(this.state, this.game, pseudo, position));
         }
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
         this.game.world.bringToTop(currentState.dayNightCycle.rainOverlay);
@@ -62,7 +65,7 @@ var Map = (function () {
         if (this.players == undefined)
             return;
         for (var i = 0; i < this.players.length; i++) {
-            if (this.players[i].pseudo == pseudo) {
+            if (this.players[i].pseudo === pseudo) {
                 this.players[i].remove();
                 this.players.splice(i, 1);
                 break;
@@ -76,8 +79,7 @@ var Map = (function () {
             return;
         for (var i = 0; i < this.players.length; i++) {
             if (this.players[i].pseudo == pseudo) {
-                this.players[i].newPosition = position;
-                this.players[i].direction = direction;
+                this.players[i].updateInfos(position, direction);
                 break;
             }
         }
@@ -94,3 +96,4 @@ var Map = (function () {
     };
     return Map;
 })();
+//# sourceMappingURL=Map.js.map

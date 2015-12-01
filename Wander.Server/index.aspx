@@ -55,7 +55,7 @@
          <form id="quickChatForm">
             <div class="input-group">
                <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></span>
-               <input type="text" id="quickChatInput" class="form-control" placeholder="Message" aria-describedby="basic-addon1">
+               <input type="text" id="quickChatInput" class="form-control" placeholder="Message" aria-describedby="basic-addon1" maxlength="95">
             </div>
          </form>
       </div>
@@ -318,7 +318,10 @@
    <script src="Scripts/Game/EDirection.js"></script>
    <script src="Scripts/Messaging.js"></script>
    <script src="Scripts/Game/Player.js"></script>
+   <script src="Scripts/Game/ServerPlayer.js"></script>
+   <script src="Scripts/Game/ClientPlayer.js"></script>
    <script src="Scripts/Game/MainGame.js"></script>
    <script src="Scripts/Game/SoundManager.js"></script>
+   <script src="Scripts/Game/WeatherManager.js"></script>
    <script src="Scripts/Game/Torch.js"></script>
 </html>

@@ -45,14 +45,31 @@ namespace Wander.Server.Services
         /// </summary>
         /// <param name="player"></param>
         /// <param name="to"></param>
-        void MovePlayerTo(ServerPlayerModel player, Vector2 to, EPlayerDirection direction);
+        bool MovePlayerTo(ServerPlayerModel player, Vector2 to, EPlayerDirection direction);
 
         /// <summary>
         /// Move a given user to the specified destination (using the signalR connection Id)
         /// </summary>
         /// <param name="connectionId"></param>
         /// <param name="to"></param>
-        void MovePlayerTo(string connectionId, Vector2 to, EPlayerDirection direction);
+        bool MovePlayerTo(string connectionId, Vector2 to, EPlayerDirection direction);
+
+        /// <summary>
+        /// Try to move a player to a specified location
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="to"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        bool TryMovePlayerTo(ServerPlayerModel player, Vector2 to, EPlayerDirection direction);
+        /// <summary>
+        /// Try to move a player to a specified location
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="to"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        bool TryMovePlayerTo(string connectionId, Vector2 to, EPlayerDirection direction);
 
         /// <summary>
         /// Gets a copy of all the connected players'id

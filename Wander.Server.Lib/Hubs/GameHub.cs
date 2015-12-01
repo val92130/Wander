@@ -236,10 +236,14 @@ namespace Wander.Server.Hubs
         /// <param name="position"></param>
         public void UpdatePosition(Vector2 position, EPlayerDirection direction)
         {
-            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return;
+            
+            ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
 
-            ServiceProvider.GetPlayerService().MovePlayerTo(Context.ConnectionId, position, direction);
-            string login = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId).Pseudo;
+            if (candidate == null) return;
+
+            bool success = ServiceProvider.GetPlayerService().TryMovePlayerTo(Context.ConnectionId, position, direction);
+            if (!success) return;
+            string login = candidate.Pseudo;
 
             // Notify all the connected players that a player moved
             var players = ServiceProvider.GetPlayerService().GetAllPlayersServer();
