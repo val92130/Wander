@@ -86,7 +86,6 @@
     <Compile Include="Services\Interfaces\IPropertyService.cs" />
     <Compile Include="Services\Interfaces\IUserService.cs" />
     <Compile Include="Services\JobService.cs" />
-    <Compile Include="Services\JobTargets.cs" />
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\PlayerService.cs" />
     <Compile Include="Services\PropertyService.cs" />

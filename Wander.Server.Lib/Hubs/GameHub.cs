@@ -465,5 +465,11 @@ namespace Wander.Server.Hubs
             Clients.Caller.notify(Helper.CreateNotificationMessage("Your account was successfuly deleted",
                 EMessageType.info));
         }
+
+        public int GetOwnersCount(int propertyId)
+        {
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return -1;
+            return ServiceProvider.GetPropertiesService().GetOwnersCount(propertyId);
+        }
     }
 }

@@ -327,6 +327,35 @@ namespace Wander.Server.Services
             return property;
         }
 
+        public int GetOwnersCount(int propertyId)
+        {
+            int count = -1;
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = "SELECT COUNT(p.UserPropertyId) FROM dbo.UserProperties p JOIN dbo.Users u ON u.UserId = p.UserId WHERE p.ListPropertyId = @Id; ";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+                    cmd.Parameters.AddWithValue("@Id", propertyId);
+                    var res = cmd.ExecuteScalar();
+                    if (res != null)
+                    {
+                        try
+                        {
+                            count = (int) res;
+                        }
+                        catch
+                        {
+                            count = -1;
+                        }
+                    }
+
+                    conn.Close();
+                }
+            }
+            return count;
+        }
+
         public ServerPropertyModel GetProperty(int propertyId)
         {
 

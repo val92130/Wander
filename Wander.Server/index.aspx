@@ -115,7 +115,7 @@
                      <form id="registerForm">
                         <div class="form-group">
                            <label for="login">Login:</label>
-                           <input type="text" class="form-control" name="login" required >
+                           <input type="text" pattern=".{4,}"   required title="4 characters minimum" class="form-control" name="login" >
                         </div>
                         <div class="form-group">
                            <label for="email">Email:</label>
@@ -123,11 +123,11 @@
                         </div>
                         <div class="form-group">
                            <label for="pwd">Password:</label>
-                           <input type="password" class="form-control" name="pwd" required>
+                           <input type="password" class="form-control" name="pwd"  pattern=".{4,}"   required title="4 characters minimum">
                         </div>
                         <div class="form-group">
                            <label for="pwdConfirm">Password Confirmation:</label>
-                           <input type="password" class="form-control" id="pwdConfirm" name="pwdConfirm" required>
+                           <input type="password" class="form-control" id="pwdConfirm" name="pwdConfirm"  pattern=".{4,}"   required title="4 characters minimum">
                         </div>
                         <div class="radio">
                            <label><input type="radio" name="sex" value="1" required>Male</label>
@@ -214,21 +214,26 @@
                <div class="modal-content">
                   <div class="modal-header">
                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                     <h4 class="modal-title">Buy Property</h4>
+                     <h4 class="modal-title"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Buy Property</h4>
                   </div>
                   <div class="modal-body">
                      <table class="table">
                         <thead>
                            <tr>
-                              <th>Name</th>
-                              <th>Description</th>
-                              <th>Limit</th>
-                              <th>Price</th>
-                              <th>Buy</th>
+                              <th><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Name</th>
+                              <th><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Description</th>
+                              <th><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Limit</th>
+                              <th><span class="glyphicon glyphicon-usd" aria-hidden="true"></span> Price</th>
+                              <th><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Buy</th>
                            </tr>
                         </thead>
+                         
+                         
                         <tbody id="propertyModalBody"></tbody>
                      </table>
+                      <hr />
+
+                      <div class="well">Number of owners : <span id="nbrOwnersProperty"></span></div>
                   </div>
                   <div class="modal-footer">
                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

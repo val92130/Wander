@@ -90,4 +90,3 @@ function buildChatMessage(sex, username, content, hour) {
     var img = sex == 1 ? "user-boy.png" : "user-girl.png";
     return '<li class="left clearfix"> <span class="chat-img pull-left" > <img src=" Content/' + img + '" alt= "User Avatar" class="img-circle" /> </span> <div class="chat-body clearfix"> <div class="header"> <strong class="primary-font">' + username + ' </strong> <small class="pull-right text-muted" > <span class="glyphicon glyphicon-time" > </span> ' + hour + ' </small> </div > <p style="overflow-x: auto;"> ' + content + ' </p> </div> </li>';
 }
-//# sourceMappingURL=Messaging.js.map

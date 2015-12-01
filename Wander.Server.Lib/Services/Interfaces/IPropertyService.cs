@@ -17,5 +17,6 @@ namespace Wander.Server.Services
         ServerNotificationMessage MakePropertyInSell(string connectionId, ServerPropertyModel property, int price);
         void BuyPropertyFromUser(string connectionId, string connectionId2, ServerPropertyModel property);
         List<ServerPropertyModel> GetUserProperties(string ConnectionId);
+        int GetOwnersCount(int propertyId);
     }
 }

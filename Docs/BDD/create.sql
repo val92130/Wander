@@ -113,9 +113,10 @@ Price int not null
 
 constraint PK_ListPropertyId primary key(ListPropertyId),
 constraint CK_ListProperties_ListPropertiesThreshold check(Threshold <> N'')
-
 );
 
+
+SET IDENTITY_INSERT dbo.ListProperties ON
 
 
 
@@ -214,18 +215,44 @@ INSERT INTO dbo.Jobs(JobDescription, Salary, Threshold, EarningPoints, Necessary
  INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Dealer', 150, 5,1,2); 
 
 
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house', 'new house je sais pas koi', 10, 500);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('houseTest', 'new house je sais pas koi', 10, 500);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house3', 'sdfsdf', 10, 200);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house4', 'dfgdfgdfdfg', 10, 1500);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house5', 'dfggfg', 10, 580);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house6', 'dfgdfgdfgg', 10, 5000);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house7', 'ndfgdgs dfg', 10, 5500);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house8', 'sdfsdfsd', 10, 2500);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house9', 'dfsdfi', 10, 500);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house10', 'nedfdssfi', 10, 600);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house11', 'nfdfdsoi', 10, 110);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house12', 'sdfsdfsdfsdf', 10, 700);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house', 'new house je sais pas koi', 1000, 500);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house', 'new house je sais pas koi', 1000, 500);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house', 'new house je sais pas koi', 1000, 500);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (0,'Medium blue house n°1', 'A beautiful house in a quiet place', 5, 500);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (1,'Small blue house n°1', 'A small house in a quiet place', 5, 350);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (2,'Small green house n°1', 'A small house downtown in a peaceful neighboorhood', 10, 325);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (3,'Small red house n°1', 'A small house with a nice little garden', 5, 330);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (4,'Small red house n°2', 'A beautiful house near the forest with a swimming pool', 5, 510);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (5,'Big red house n°1', 'A gorgeous luxuous house, includes a garage', 3, 900);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (6,'Small blue house n°2', 'A pleasant small house in a nice neighboorhood', 15, 350);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (7,'Small blue house n°3', 'A pleasant small house in a nice neighboorhood', 15, 350);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (8,'Small green house n°2', 'A small house, beware of the neighboorhood', 15, 250);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (9,'Small green house n°3', 'A small house, beware of the neighboorhood', 15, 250);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (10,'Small green house n°4', 'A small house, beware of the neighboorhood', 15, 250);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (11,'Small green house n°5', 'A small house, beware of the neighboorhood', 15, 250);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (12,'Small green house n°6', 'A small house, beware of the neighboorhood', 15, 250);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (13,'Small green house n°7', 'A small house, beware of the neighboorhood', 15, 250);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (14,'Small green house n°8', 'A small house, beware of the neighboorhood', 15, 250);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (15,'Small green house n°9', 'A small house, beware of the neighboorhood', 15, 250);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (16,'Small green house n°10', 'A small house, beware of the neighboorhood', 15, 250);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (17,'Small brown house n°1', 'Nice small house with a gorgeous view', 5, 600);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (18,'Medium blue house n°2', 'Stunning house with a gorgeous view', 5, 900);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (19,'Small blue house n°4', 'Beautiful small house downtown, nice garden', 5, 650);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (20,'Small red house n°3', 'Nice small house in a very animated street', 10, 600);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (21,'Medium red house n°1', 'A lovely house near the city hall', 10, 800);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (22,'Medium brown house n°1', 'Beautiful house in a peaceful neighboorhood', 5, 1000);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (23,'Medium blue house n°3', 'Stunning house with a gorgeous view in an awesome neighboorhood', 5, 1200);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (24,'Big red house n°2', 'Big house downtown with a swimming pool', 3, 1800);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (25,'Small blue house n°5', 'A small house in one of the best neighboorhood of the town', 8, 1200);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (26,'Unique chinese house', 'One of the most beautiful house available on the market', 2, 3500);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (27,'Small appartment n°1', 'A simple small appartment', 30, 220);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (28,'Small appartment n°2', 'A simple small appartment', 30, 220);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (29,'Small appartment n°3', 'A simple small appartment', 30, 220);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (30,'Small appartment n°4', 'A simple small appartment', 30, 220);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (31,'Small appartment n°5', 'A simple small appartment', 30, 220);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (32,'Small appartment n°6', 'A simple small appartment', 30, 220);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (33,'Small brown house n°2', 'Very simple house', 10, 200);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (34,'Unique beautiful mansion', 'One of the biggest house in town', 5, 2800);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (35,'Small red house n°4', 'Nice small house in a very quiet environment', 10, 700);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (36,'Small green house n°11', 'Nice small house in a very quiet environment', 10, 550);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (37,'Small red house n°5', 'Beautiful house in a very quiet environment', 10, 570);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (38,'Small red house n°6', 'Beautiful house in a very quiet environment', 10, 570);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (39,'Big red house n°3', 'Big beautiful house downtown', 15, 900);
+INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (40,'Unique quiet house downtown', 'A beautiful and unique house on a hill downtown', 2, 5000);

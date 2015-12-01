@@ -28,10 +28,13 @@
     }
 
     update() {
-        var camX = Math.floor(this.state.map.currentPlayer.position.x / this.game.camera.width);
-        var camY = Math.floor(this.state.map.currentPlayer.position.y / this.game.camera.height);
+        if (this.rainEmiter.on) {
+            var camX = Math.floor(this.state.map.currentPlayer.position.x / this.game.camera.width);
+            var camY = Math.floor(this.state.map.currentPlayer.position.y / this.game.camera.height);
 
-        this.rainEmiter.position.x = camX * this.game.camera.width;
-        this.rainEmiter.position.y = camY * this.game.camera.height;
+            this.rainEmiter.position.x = camX * this.game.camera.width;
+            this.rainEmiter.position.y = camY * this.game.camera.height;
+        }
+
     }
 }

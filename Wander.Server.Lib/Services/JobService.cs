@@ -61,6 +61,7 @@ namespace Wander.Server.Services
             return GetUserJobInfos(user.SignalRId);
         }
 
+
         /// <summary>
         /// Gets a list of every possible jobs
         /// </summary>

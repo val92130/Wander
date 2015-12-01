@@ -102,6 +102,7 @@ var GameState = (function (_super) {
         return this.weatherManager.rainEmiter.on;
     };
     GameState.prototype.update = function () {
+        this.weatherManager.update();
         this.dayNightCycle.update();
         this.soundManager.update();
         var camX = Math.floor(this.map.currentPlayer.position.x / this.game.camera.width);
@@ -178,13 +179,18 @@ hub.on("MessageReceived", function (msg) {
     }
 });
 function openModalProperty(id) {
-    hub.invoke("GetPropertyInfo", id).done(function (model) {
-        if (model != null && model != undefined) {
-            if (typeof (currentUser) == undefined || currentUser == null)
-                return;
-            $("#propertyModalBody").text("");
-            $("#propertyModalBody").append("<tr class='success'><td>" + model.PropertyName + "</td><td>" + model.PropertyDescription + "</td><td>" + model.Threshold + "</td> <td>" + model.Price + "</td><td><button type='button' onclick = 'BuyProperty(" + model.PropertyId + ")' class='btn btn-success' data-dismiss='modal'>Buy</button></tr>");
-            $("#propertyModal").modal();
+    hub.invoke("GetOwnersCount", id).done(function (res) {
+        if (res !== -1) {
+            $("#nbrOwnersProperty").text(res);
+            hub.invoke("GetPropertyInfo", id).done(function (model) {
+                if (model != null && model != undefined) {
+                    if (typeof (currentUser) == undefined || currentUser == null)
+                        return;
+                    $("#propertyModalBody").text("");
+                    $("#propertyModalBody").append("<tr class='" + (res >= model.Threshold ? 'danger' : 'success') + "'><td>" + model.PropertyName + "</td><td>" + model.PropertyDescription + "</td><td>" + model.Threshold + "</td> <td>" + model.Price + "</td><td><button type='button ' " + (res >= model.Threshold ? 'disabled' : '') + " onclick = 'BuyProperty(" + model.PropertyId + ")' class='btn btn-success' data-dismiss='modal'>Buy</button></tr>");
+                    $("#propertyModal").modal();
+                }
+            });
         }
     });
 }
@@ -236,4 +242,3 @@ function Lerp(goal, current, time) {
     }
     return goal;
 }
-//# sourceMappingURL=MainGame.js.map

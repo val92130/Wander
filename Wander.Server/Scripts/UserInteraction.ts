@@ -7,7 +7,7 @@ var userPseudo: any;
 var currentUser: any;
 
 $(document).ready(function () {
-    
+
     $("#logoutBtn").hide();
     $("#msgFooter").hide();
     $("#my_infos_box").hide();
