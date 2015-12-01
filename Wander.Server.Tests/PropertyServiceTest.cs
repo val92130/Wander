@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Wander.Server.ClassLibrary.Model;
+using Wander.Server.ClassLibrary.Model.Forms;
+using Wander.Server.ClassLibrary.Model.Players;
+using Wander.Server.ClassLibrary.Services;
 
 namespace Wander.Server.Tests
 {
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-    using Wander.Server.Model;
-    using Wander.Server.Model.Players;
-    using Wander.Server.Services;
 
     [TestClass]
    public class PropertyServiceTest

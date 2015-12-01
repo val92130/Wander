@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Timers;
-using Wander.Server.Model;
-using Wander.Server.Model.Players;
-using Wander.Server.Services;
+using Wander.Server.ClassLibrary.Model;
+using Wander.Server.ClassLibrary.Model.Forms;
+using Wander.Server.ClassLibrary.Model.Players;
 
 namespace Wander.StressTest.App
 {

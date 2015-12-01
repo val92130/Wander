@@ -1,8 +1,8 @@
 ﻿using System.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Wander.Server.Model;
-using Wander.Server.Services;
 using System;
+using Wander.Server.ClassLibrary.Model.Forms;
+using Wander.Server.ClassLibrary.Services;
 
 namespace Wander.Server.Tests
 {

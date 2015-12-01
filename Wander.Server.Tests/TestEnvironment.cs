@@ -1,12 +1,12 @@
 ﻿using System.Data.SqlClient;
-using Wander.Server.Model;
-using Wander.Server.Services;
+using Wander.Server.ClassLibrary.Model.Forms;
+using Wander.Server.ClassLibrary.Model.Players;
+using Wander.Server.ClassLibrary.Services;
 
 namespace Wander.Server.Tests
 {
     using System;
 
-    using Wander.Server.Model.Players;
 
     public class TestEnvironment
     {

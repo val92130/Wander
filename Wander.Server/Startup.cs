@@ -1,6 +1,6 @@
 ﻿using Microsoft.Owin;
 using Owin;
-using Wander.Server.Services;
+using Wander.Server.ClassLibrary.Services;
 
 [assembly: OwinStartup(typeof(Wander.Server.Startup))]
 

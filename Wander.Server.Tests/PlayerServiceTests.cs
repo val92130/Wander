@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Wander.Server.Model;
-using Wander.Server.Services;
+using Wander.Server.ClassLibrary.Model;
+using Wander.Server.ClassLibrary.Model.Forms;
+using Wander.Server.ClassLibrary.Model.Job;
+using Wander.Server.ClassLibrary.Model.Players;
+using Wander.Server.ClassLibrary.Services;
+
 
 namespace Wander.Server.Tests
 {
@@ -468,11 +472,11 @@ namespace Wander.Server.Tests
             ServiceProvider.GetPlayerService().AddPlayer("signalrId", id);
 
             Vector2 to = new Vector2(50,90);
-            ServiceProvider.GetPlayerService().MovePlayerTo("signalrId", to, Model.Players.EPlayerDirection.Idle);
+            ServiceProvider.GetPlayerService().MovePlayerTo("signalrId", to, EPlayerDirection.Idle);
 
             ServerPlayerModel player = ServiceProvider.GetPlayerService().GetPlayer("signalrId");
             Assert.IsTrue((player.Position.X == 50 && player.Position.Y == 90));
-            Assert.IsTrue(player.Direction == Model.Players.EPlayerDirection.Idle);
+            Assert.IsTrue(player.Direction == EPlayerDirection.Idle);
 
             ServiceProvider.GetPlayerService().RemovePlayer("signalrId");
             TestEnvironment.DeleteTestUser();
@@ -491,11 +495,11 @@ namespace Wander.Server.Tests
 
 
             Vector2 to = new Vector2(50, 90);
-            ServiceProvider.GetPlayerService().MovePlayerTo(player, to, Model.Players.EPlayerDirection.Idle);
+            ServiceProvider.GetPlayerService().MovePlayerTo(player, to, EPlayerDirection.Idle);
 
             player = ServiceProvider.GetPlayerService().GetPlayer("signalrId");
             Assert.IsTrue((player.Position.X == 50 && player.Position.Y == 90));
-            Assert.IsTrue(player.Direction == Model.Players.EPlayerDirection.Idle);
+            Assert.IsTrue(player.Direction == EPlayerDirection.Idle);
 
             ServiceProvider.GetPlayerService().RemovePlayer("signalrId");
             TestEnvironment.DeleteTestUser();
@@ -511,14 +515,14 @@ namespace Wander.Server.Tests
             ServiceProvider.GetPlayerService().AddPlayer("signalrId", id);
 
             ServerPlayerModel player = ServiceProvider.GetPlayerService().GetPlayer("signalrId");
-            Assert.IsTrue(player.Direction == Model.Players.EPlayerDirection.Idle);
+            Assert.IsTrue(player.Direction == EPlayerDirection.Idle);
 
             Vector2 to = new Vector2(50, 90);
-            ServiceProvider.GetPlayerService().MovePlayerTo(player, to, Model.Players.EPlayerDirection.DownRight);
+            ServiceProvider.GetPlayerService().MovePlayerTo(player, to, EPlayerDirection.DownRight);
 
             player = ServiceProvider.GetPlayerService().GetPlayer("signalrId");
             Assert.IsTrue((player.Position.X == 50 && player.Position.Y == 90));
-            Assert.IsTrue(player.Direction == Model.Players.EPlayerDirection.DownRight);
+            Assert.IsTrue(player.Direction == EPlayerDirection.DownRight);
 
             ServiceProvider.GetPlayerService().RemovePlayer("signalrId");
             TestEnvironment.DeleteTestUser();

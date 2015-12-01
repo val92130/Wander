@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Wander.Server.Model;
+using Wander.Server.ClassLibrary.Model;
 
 namespace Wander.Server.Tests
 {

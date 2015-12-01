@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Wander.Server.Model;
-using Wander.Server.Services;
+using Wander.Server.ClassLibrary;
+using Wander.Server.ClassLibrary.Model.Forms;
+using Wander.Server.ClassLibrary.Model.Job;
+using Wander.Server.ClassLibrary.Model.Players;
+using Wander.Server.ClassLibrary.Services;
 
 namespace Wander.Server.Tests
 {
