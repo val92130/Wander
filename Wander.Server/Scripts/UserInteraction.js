@@ -54,11 +54,12 @@ $(document).ready(function () {
                 if (response) {
                     $('#signUpModal').modal('hide');
                     $(".overlay").fadeOut("slow");
+                    hub.invoke("Connect", { Login: login, Password: password });
                 }
             });
         }
         else {
-            alert("incorrect form");
+            $.notify("Incorrect form", "error");
             $(".overlay").fadeOut("slow");
         }
     });

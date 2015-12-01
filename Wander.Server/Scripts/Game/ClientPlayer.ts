@@ -5,8 +5,10 @@
     drugStartTime: any;
     drugEndTime: any;
     drugFilter: Phaser.Filter;
+    drugTime:number;
 
     constructor(state: GameState, game: Phaser.Game, pseudo: string, position: Phaser.Point) {
+        this.drugTime = 20000;
         this.updateTimeMs = 55;
         this.isDrugged = false;
 
@@ -15,7 +17,8 @@
         this.drugStartTime = new Date().getTime();
         this.drugEndTime = new Date().getTime();
         this.drugFilter = this.game.add.filter('Gray');
-
+        this.game.world.filters = [this.drugFilter];
+        this.drugFilter.uniforms.gray.value = 0;
     }
 
     update() {
@@ -34,11 +37,10 @@
 
         this.drugStartTime = new Date().getTime();
         if (this.isDrugged) {
-            if (this.drugStartTime - this.drugEndTime >= 5000) {
+            if (this.drugStartTime - this.drugEndTime >= this.drugTime) {
                 this.drugEndTime = this.drugStartTime;
                 this.isDrugged = false;
-                this.game.world.filters.splice(this.game.world.filters.indexOf(this.drugFilter), 1);
-                this.drugFilter.destroy();
+                this.drugFilter.uniforms.gray.value = 0;
 
             }
             console.log("drugged");
@@ -115,8 +117,8 @@
     }
 
     putOnDrug() {
-        //this.game.world.filters = [this.drugFilter];
-        //this.isDrugged = true;
+        this.drugFilter.uniforms.gray.value = 1;
+        this.isDrugged = true;
         this.drugEndTime = new Date().getTime();
     }
 }

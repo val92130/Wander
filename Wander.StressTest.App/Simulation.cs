@@ -31,7 +31,7 @@ namespace Wander.StressTest.App
             _connectionCount = connectionCount;
 
             _moveTimer = new Timer();
-            _moveTimer.Interval = 1000;
+            _moveTimer.Interval = 2000;
             Console.WriteLine("Each player's position will be updated every " + _moveTimer.Interval + " ms");
             _moveTimer.Elapsed += MovePlayers;
 
@@ -81,9 +81,10 @@ namespace Wander.StressTest.App
                 watch.Start();
                 await entry.Value.Invoke("UpdatePosition", vec, EPlayerDirection.Down);
                 sumMs += watch.ElapsedMilliseconds;
+                Console.WriteLine("Resuest took : " + watch.ElapsedMilliseconds + " ms");
                 totalCount++;
                 j++;
-                watch.Stop();
+                watch.Reset();
             }
         }
 

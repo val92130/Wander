@@ -10,6 +10,7 @@ var Map = (function () {
     Map.prototype.create = function () {
         this.tilemap = this.game.add.tilemap(this.mapName);
         this.tilemap.addTilesetImage(this.tilesetName, this.tilesetImage);
+        this.tilemap.addTilesetImage("number_spritesheet", "Number_Tiles");
         this.backgroundLayer = this.tilemap.createLayer("backgroundLayer");
         this.lightsLayer = this.tilemap.createLayer("lightsLayer");
         this.lightsLayer.visible = false;

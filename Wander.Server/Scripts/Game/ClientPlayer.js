@@ -6,12 +6,15 @@ var __extends = (this && this.__extends) || function (d, b) {
 var ClientPlayer = (function (_super) {
     __extends(ClientPlayer, _super);
     function ClientPlayer(state, game, pseudo, position) {
+        this.drugTime = 20000;
         this.updateTimeMs = 55;
         this.isDrugged = false;
         _super.call(this, state, game, pseudo, position);
         this.drugStartTime = new Date().getTime();
         this.drugEndTime = new Date().getTime();
         this.drugFilter = this.game.add.filter('Gray');
+        this.game.world.filters = [this.drugFilter];
+        this.drugFilter.uniforms.gray.value = 0;
     }
     ClientPlayer.prototype.update = function () {
         var velX = this.texture.body.velocity.x;
@@ -26,11 +29,10 @@ var ClientPlayer = (function (_super) {
         this.texture.body.velocity.y = 0;
         this.drugStartTime = new Date().getTime();
         if (this.isDrugged) {
-            if (this.drugStartTime - this.drugEndTime >= 5000) {
+            if (this.drugStartTime - this.drugEndTime >= this.drugTime) {
                 this.drugEndTime = this.drugStartTime;
                 this.isDrugged = false;
-                this.game.world.filters.splice(this.game.world.filters.indexOf(this.drugFilter), 1);
-                this.drugFilter.destroy();
+                this.drugFilter.uniforms.gray.value = 0;
             }
             console.log("drugged");
         }
@@ -104,8 +106,8 @@ var ClientPlayer = (function (_super) {
         }
     };
     ClientPlayer.prototype.putOnDrug = function () {
-        //this.game.world.filters = [this.drugFilter];
-        //this.isDrugged = true;
+        this.drugFilter.uniforms.gray.value = 1;
+        this.isDrugged = true;
         this.drugEndTime = new Date().getTime();
     };
     return ClientPlayer;
