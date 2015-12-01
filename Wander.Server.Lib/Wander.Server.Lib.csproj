@@ -69,6 +69,7 @@
     <Compile Include="Model\EMessageType.cs" />
     <Compile Include="Model\Forms\UserModel.cs" />
     <Compile Include="Model\Job\JobModel.cs" />
+    <Compile Include="Model\Job\JobQuestionModel.cs" />
     <Compile Include="Model\Players\ClientPlayerModel.cs" />
     <Compile Include="Model\Players\EPlayerDirection.cs" />
     <Compile Include="Model\Players\ServerPlayerModel.cs" />
@@ -84,11 +85,13 @@
     <Compile Include="Services\Interfaces\IMessageService.cs" />
     <Compile Include="Services\Interfaces\IPlayerService.cs" />
     <Compile Include="Services\Interfaces\IPropertyService.cs" />
+    <Compile Include="Services\Interfaces\IQuestionService.cs" />
     <Compile Include="Services\Interfaces\IUserService.cs" />
     <Compile Include="Services\JobService.cs" />
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\PlayerService.cs" />
     <Compile Include="Services\PropertyService.cs" />
+    <Compile Include="Services\QuestionService.cs" />
     <Compile Include="Services\ServiceProvider.cs" />
     <Compile Include="Services\SqlConnectionService.cs" />
     <Compile Include="Services\UserService.cs" />
