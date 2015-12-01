@@ -279,7 +279,6 @@ namespace Wander.Server.Services
 
             return message;
 
-
         }
 
         public void BuyPropertyFromUser(string connectionId, string connectionId2, ServerPropertyModel property)
