@@ -3,7 +3,7 @@ using Wander.Server.ClassLibrary.Model.Job;
 
 namespace Wander.Server.ClassLibrary.Services
 {
-    interface IQuestionService
+    public interface IQuestionService
     {
         bool CheckAnswer(JobQuestionModel questionModel, bool validAnswer);
         List<JobQuestionModel> GetAllQuestions();

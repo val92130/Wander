@@ -50,7 +50,11 @@ drop table dbo.Users;
 end;
 GO
 
-
+if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Questions')
+begin
+drop table dbo.Questions;
+end;
+GO
 
 
 if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Jobs')
@@ -60,11 +64,7 @@ end;
 GO
 
 
-if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Questions')
-begin
-drop table dbo.Questions;
-end;
-GO
+
 
 
 
@@ -121,10 +121,6 @@ Answer bit  DEFAULT(1),
 constraint PK_QuestionId primary key(QuestionId),
 constraint FK_Questions_JobId foreign key(JobId) references dbo.Jobs(JobId)
 );
-
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'are we in France ?',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'are we in Paris ?',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'are we in Ivry ?',1);
 
 
 create table dbo.ListProperties
@@ -238,6 +234,10 @@ INSERT INTO dbo.Jobs(JobDescription, Salary, Threshold, EarningPoints, Necessary
  INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Firefighter', 450, 26,120,20); 
 
  INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Dealer', 150, 5,1,2); 
+
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'are we in France ?',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'are we in Paris ?',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'are we in Ivry ?',1);
  
 
 INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (0,'Medium blue house n°1', 'A beautiful house in a quiet place', 5, 500);

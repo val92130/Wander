@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using Wander.Server.ClassLibrary.Model.Job;
 
 namespace Wander.Server.ClassLibrary.Services
@@ -15,17 +16,17 @@ namespace Wander.Server.ClassLibrary.Services
             JobQuestionModel randomQuestion = new JobQuestionModel();
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
-                string query = "SELECT top 1 * FROM  dbo.Questions ORDER BY  newid()";
+                string query = "SELECT top 1 * FROM  dbo.Questions ORDER BY newid()";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        JobQuestionModel questionModel = new JobQuestionModel();
-                        questionModel.QuestionId = Convert.ToInt32(reader["QuestionId"]);
-                        questionModel.Question = reader["Question"].ToString();
-                        questionModel.JobId = Convert.ToInt32(reader["JobId"]);
+                        randomQuestion.QuestionId = Convert.ToInt32(reader["QuestionId"]);
+                        randomQuestion.Question = reader["Question"].ToString();
+                        randomQuestion.Answer = bool.Parse(reader["Answer"].ToString());
+                        randomQuestion.JobId = Convert.ToInt32(reader["JobId"]);
                     }
 
                     conn.Close();
@@ -36,11 +37,12 @@ namespace Wander.Server.ClassLibrary.Services
 
         public bool CheckAnswer(JobQuestionModel questionModel, bool validAnswer)
         {
+            if (questionModel == null) throw new ArgumentNullException("QuestionModel");
             bool answer = questionModel.Answer;
             int idQuestion = questionModel.QuestionId;
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
-                string query = "SELECT Answer FROM  dbo.Questions WHERE QuestionId = @idQuestion ";
+                string query = "SELECT Answer FROM dbo.Questions WHERE QuestionId = @idQuestion ";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
@@ -69,7 +71,10 @@ namespace Wander.Server.ClassLibrary.Services
                     while (reader.Read())
                     {
                         JobQuestionModel questionModel = new JobQuestionModel();
+                        questionModel.QuestionId = Convert.ToInt32(reader["QuestionId"]);
                         questionModel.Question = reader["Question"].ToString();
+                        questionModel.Answer = bool.Parse(reader["Answer"].ToString());
+                        questionModel.JobId = Convert.ToInt32(reader["JobId"]);
                         questions.Add(questionModel);
                     }
                     conn.Close();
