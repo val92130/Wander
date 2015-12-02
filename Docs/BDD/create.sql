@@ -235,9 +235,16 @@ INSERT INTO dbo.Jobs(JobDescription, Salary, Threshold, EarningPoints, Necessary
 
  INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Dealer', 150, 5,1,2); 
 
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'are we in France ?',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'are we in Paris ?',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'are we in Ivry ?',1);
+
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'From the age of 17 years can a customer using alcohol?',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Daiquiri cocktail is composed of Cuban rum, apple juice and cane sugar syrup?',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'a barman before service must achieving the cellar lifts?',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'a barman before service must Check installation of the restaurant?',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'a barman before service must Ensure the cleanliness of the glassware?',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'a barman before service must Dresser and arrange the tables?',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Despejito cocktail is composed of Cuban rum, apple juice and cane sugar syrup?',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Daiquiri cocktail is composed of Cuban rum, lime juice and cane sugar syrup?',1);
+
  
 
 INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (0,'Medium blue house n°1', 'A beautiful house in a quiet place', 5, 500);
