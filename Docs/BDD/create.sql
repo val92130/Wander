@@ -235,7 +235,7 @@ INSERT INTO dbo.Jobs(JobDescription, Salary, Threshold, EarningPoints, Necessary
 
  INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Dealer', 150, 5,1,2); 
 
-
+ --barman
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'From the age of 17 years can a customer using alcohol?',0);
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Daiquiri cocktail is composed of Cuban rum, apple juice and cane sugar syrup?',0);
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'a barman before service must achieving the cellar lifts?',1);
@@ -244,6 +244,32 @@ INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'a barman before ser
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'a barman before service must Dresser and arrange the tables?',1);
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Despejito cocktail is composed of Cuban rum, apple juice and cane sugar syrup?',0);
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Daiquiri cocktail is composed of Cuban rum, lime juice and cane sugar syrup?',1);
+ --taxi driver
+ INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'generally, the London taxis are red?',0);
+ INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'generally, the New York taxis are black',0);
+ INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'to be a taxi driver in France, must hold a permit b for over 3 years',1);
+ INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'Harpreet Devi is a taxi driver paid in candy',1);
+ INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'Harpreet Devi is a taxi driver paid in eggs',0);
+ INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'generally, the New York taxis are yellow',1);
+ INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'generally, the London taxis are black',1);
+ INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'The historical episode taxis of the Marne took place During the second World War',0);
+  --DJ
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'David Guetta became famous in the disco <Le Macumba>',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'<Satisfaction> Benny Benassi was the summer hit of the year 2005',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'In the clip of Bob Sinclar Kiss my eyes appears the actor Jean-Claude Van Damme',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'aft Punk have composed the soundtrack of the movie Super 8',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'Jean Roch is the boss of the VIP Room in St-Tropez',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'football is the favorite sport of Martin Solveig',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'Jennifer Cardini is the talented French DJette took over the tube <third sex> in Indochina',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'No stress Laurent Wolf is the only clip that clinched first place in the TOP 50',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'Sebastien Leger is the boss of the VIP Room in St-Tropez',0);
+  --Computer engineer
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'HTTP is: HyperText Transfer Protocol',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'the origin of the word spam is The comedy Monty Python',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'LINUX was created in 1992',0);
+
+
+
 
  
 
