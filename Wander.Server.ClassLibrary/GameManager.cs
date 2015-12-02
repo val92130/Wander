@@ -45,7 +45,7 @@ namespace Wander.Server.ClassLibrary
             this._taxTimer.Interval = 1000 * 60 * 20;
             this._taxTimer.Elapsed += this.TakeTaxEvent;
 
-            this._questionTimer.Interval = 30000;
+            this._questionTimer.Interval = 1000 * 60 * 25;
             this._questionTimer.Elapsed += AskQuestion;
         }
 

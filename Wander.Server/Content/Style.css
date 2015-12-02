@@ -1,4 +1,6 @@
-﻿
+﻿.modal-dialog {
+    width: 800px;
+}
 
 *{
     font-family: 'Quicksand', sans-serif;

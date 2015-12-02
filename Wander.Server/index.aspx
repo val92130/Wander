@@ -33,6 +33,7 @@
                   <li><a href="#login" id="loginBtn"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Login</a></li>
                   <li><a href="#register" id="registerBtn"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Register</a></li>
                   <li><a href="#players" id="playersBtn" style="display:none"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Players</a></li>
+                  <li><a href="#players" id="rulesBtn"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Rules</a></li>
                   <li><a href="#logout" id="logoutBtn" style="display:none"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Logout</a></li>
                </ul>
                <ul class="nav navbar-nav navbar-right">
@@ -229,13 +230,10 @@
                               <th><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Buy</th>
                            </tr>
                         </thead>
-                         
-                         
                         <tbody id="propertyModalBody"></tbody>
                      </table>
-                      <hr />
-
-                      <div class="well">Number of owners : <span id="nbrOwnersProperty"></span></div>
+                     <hr />
+                     <div class="well">Number of owners : <span id="nbrOwnersProperty"></span></div>
                   </div>
                   <div class="modal-footer">
                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -267,34 +265,89 @@
                </div>
             </div>
          </div>
-          <!-- QUESTION MODAL-->
-          <div class="modal fade" id="questionModal" tabindex="-1" role="dialog">
+         <!-- RULES MODAL-->
+         <div class="modal fade" id="rulesModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <h4 class="modal-title">Rules</h4>
+                  </div>
+                  <div class="modal-body">
+                     <!-- Jumbotron -->
+                     <div class="jumbotron" style="text-align: center">
+                        <h1>Welcome!</h1>
+                        <p><button class="btn btn-lg btn-success" onclick="$('#rulesModal').modal('hide');$('#signUpModal').modal();">Sign up now</button></p>
+                     </div>
+                     <div class="row">
+                        <div class="col-lg-4">
+                           <h2>Points / Money </h2>
+                           <p>Players in Wander have points and money, you need points to access higher paid jobs</p>
+                           <p>Money is necessary to buy properties, and other things!</p>
+                           <hr/>
+                        </div>
+                        <div class="col-lg-4">
+                           <h2>Buy / Sell properties</h2>
+                           <p>When you're in front of a house, press E to buy it</p>
+                           <p>If you want to sell one of your properties, click the "sell" button in the info menu</p>
+                           <hr/>
+                        </div>
+                        <div class="col-lg-4">
+                           <h2>Chat with others </h2>
+                           <p>Press U to open your quick chat box, the message will be public and seen by every players</p>
+                           <p>You can also chat by opening the "Chat" menu in the bottom</p>
+                           <hr/>
+                        </div>
+                        <div class="col-lg-4">
+                           <h2>Practice a job </h2>
+                           <p>You need to find the city Hall in order to apply for a job, when you found it, press E in the entrance to get the list of every jobs available</p>
+                           <p>You will be randomly asked questions about your job, if you answer correctly, you'll earn some points</p>
+                           <hr/>
+                        </div>
+                        <div class="col-lg-4">
+                           <h2> Some rules </h2>
+                           <p>Don't try to cheat</p>
+                           <p>Don't insult other people</p>
+                           <p>Don't try to hack the game</p>
+                           <hr/>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <!-- QUESTION MODAL-->
+         <div class="modal fade" id="questionModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                <div class="modal-content">
                   <div class="modal-header">
                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                      <h4 class="modal-title">Question</h4>
                   </div>
-                    <div class="modal-body">
-                        <form id="questionForm">
+                  <div class="modal-body">
+                     <form id="questionForm">
                         <div class="form-group">
-                         <span id="questionContent"></span><hr/><br />
-                            <label class="radio-inline">
-                          <input type="radio" name="radioAnswer" id="inlineRadio2" value="yes"> Yes
-                        </label>
-                        <label class="radio-inline">
-                          <input type="radio" name="radioAnswer" id="inlineRadio3" value="no"> No
-                        </label>                          
+                           <span id="questionContent"></span>
+                           <hr/>
+                           <br />
+                           <label class="radio-inline">
+                           <input type="radio" name="radioAnswer" id="inlineRadio2" value="yes"> Yes
+                           </label>
+                           <label class="radio-inline">
+                           <input type="radio" name="radioAnswer" id="inlineRadio3" value="no"> No
+                           </label>                          
                         </div>
                         <input type="hidden" id="questionid" value="" />
-                       <button type="submit" class="btn btn-danger" id="answer">Confirm</button>                               
-                     </form>                 
+                        <button type="submit" class="btn btn-danger" id="answer">Confirm</button>                               
+                     </form>
+                  </div>
                </div>
             </div>
          </div>
-      </div>
-          
-          <!-- BUY DRUG MODAL-->
+         <!-- BUY DRUG MODAL-->
          <div class="modal fade" id="buyDrugModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                <div class="modal-content">
@@ -336,7 +389,7 @@
             <div class="navbar-collapse collapse" id="navbar-collapsible-bottom">
                <ul class="nav navbar-nav navbar-left">
                   <li><a href="#chat" id="chat_btn"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> Public chat</a></li>
-                  <li><a href="#register" id="my_infos"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> My Infos</a></li>
+                  <li><a href="#infos" id="my_infos"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> My Infos</a></li>
                </ul>
             </div>
          </div>

@@ -232,6 +232,10 @@ $(document).ready(function () {
         $("#my_infos_box").hide();
     });
 
+    $("#rulesBtn").click(function() {
+        $("#rulesModal").modal();
+    });
+
     setInterval(function () {
         if (isConnected) {
             GetInfos();

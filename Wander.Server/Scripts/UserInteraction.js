@@ -180,6 +180,9 @@ $(document).ready(function () {
     $("#heading_box_info").click(function () {
         $("#my_infos_box").hide();
     });
+    $("#rulesBtn").click(function () {
+        $("#rulesModal").modal();
+    });
     setInterval(function () {
         if (isConnected) {
             GetInfos();
