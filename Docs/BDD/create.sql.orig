@@ -50,7 +50,11 @@ drop table dbo.Users;
 end;
 GO
 
-
+if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Questions')
+begin
+drop table dbo.Questions;
+end;
+GO
 
 
 if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Jobs')
@@ -60,11 +64,7 @@ end;
 GO
 
 
-if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'Questions')
-begin
-drop table dbo.Questions;
-end;
-GO
+
 
 
 
@@ -121,10 +121,6 @@ Answer bit  DEFAULT(1),
 constraint PK_QuestionId primary key(QuestionId),
 constraint FK_Questions_JobId foreign key(JobId) references dbo.Jobs(JobId)
 );
-
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'are we in France ?',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'are we in Paris ?',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'are we in Ivry ?',1);
 
 
 create table dbo.ListProperties
@@ -238,9 +234,50 @@ INSERT INTO dbo.Jobs(JobDescription, Salary, Threshold, EarningPoints, Necessary
  INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Firefighter', 450, 26,120,20); 
 
  INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Dealer', 150, 5,1,2); 
- 
 
 <<<<<<< HEAD
+
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Can a consumer use alcohol at the age of 17 ?',0);
+=======
+ --barman
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'From the age of 17 years can a customer using alcohol?',0);
+>>>>>>> 59f29a018b640d355bd59f255c6a2c4f182f1220
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Daiquiri cocktail is composed of Cuban rum, apple juice and cane sugar syrup?',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'a barman before service must achieve the cellar lifts?',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'a barman before service must check the installation of the restaurant?',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Does a barman before service need to ensure the cleanliness of the glassware?',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Does a barman before service need to dress and arrange the tables?',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Despejito cocktail is composed of Cuban rum, apple juice and cane sugar syrup?',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Daiquiri cocktail is composed of Cuban rum, lime juice and cane sugar syrup?',1);
+ --taxi driver
+ INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'generally, the London taxis are red?',0);
+ INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'generally, the New York taxis are black',0);
+ INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'to be a taxi driver in France, must hold a permit b for over 3 years',1);
+ INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'Harpreet Devi is a taxi driver paid in candy',1);
+ INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'Harpreet Devi is a taxi driver paid in eggs',0);
+ INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'generally, the New York taxis are yellow',1);
+ INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'generally, the London taxis are black',1);
+ INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'The historical episode taxis of the Marne took place During the second World War',0);
+  --DJ
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'David Guetta became famous in the disco <Le Macumba>',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'<Satisfaction> Benny Benassi was the summer hit of the year 2005',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'In the clip of Bob Sinclar Kiss my eyes appears the actor Jean-Claude Van Damme',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'aft Punk have composed the soundtrack of the movie Super 8',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'Jean Roch is the boss of the VIP Room in St-Tropez',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'football is the favorite sport of Martin Solveig',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'Jennifer Cardini is the talented French DJette took over the tube <third sex> in Indochina',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'No stress Laurent Wolf is the only clip that clinched first place in the TOP 50',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'Sebastien Leger is the boss of the VIP Room in St-Tropez',0);
+  --Computer engineer
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'HTTP is: HyperText Transfer Protocol',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'the origin of the word spam is The comedy Monty Python',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'LINUX was created in 1992',0);
+
+
+
+
+ 
+
 INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (0,'Medium blue house n°1', 'A beautiful house in a quiet place', 5, 500);
 INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (1,'Small blue house n°1', 'A small house in a quiet place', 5, 350);
 INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (2,'Small green house n°1', 'A small house downtown in a peaceful neighboorhood', 10, 325);
@@ -282,22 +319,5 @@ INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescriptio
 INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (38,'Small red house n°6', 'Beautiful house in a very quiet environment', 10, 570);
 INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (39,'Big red house n°3', 'Big beautiful house downtown', 15, 900);
 INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (40,'Unique quiet house downtown', 'A beautiful and unique house on a hill downtown', 2, 5000);
-=======
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house', 'new house je sais pas koi', 10, 500);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('houseTest', 'new house je sais pas koi', 10, 500);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house3', 'sdfsdf', 10, 200);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house4', 'dfgdfgdfdfg', 10, 1500);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house5', 'dfggfg', 10, 580);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house6', 'dfgdfgdfgg', 10, 5000);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house7', 'ndfgdgs dfg', 10, 5500);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house8', 'sdfsdfsd', 10, 2500);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house9', 'dfsdfi', 10, 500);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house10', 'nedfdssfi', 10, 600);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house11', 'nfdfdsoi', 10, 110);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house12', 'sdfsdfsdfsdf', 10, 700);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house', 'new house je sais pas koi', 1000, 500);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house', 'new house je sais pas koi', 1000, 500);
-INSERT INTO dbo.ListProperties (NameProperty, PropertyDescription, Threshold, Price) values ('house', 'new house je sais pas koi', 1000, 500);
 
---SELECT top 1 * FROM  dbo.ListProperties   ORDER BY  newid();
->>>>>>> 945050c1320461c7a6531331618bcb5e0ef03137
+
