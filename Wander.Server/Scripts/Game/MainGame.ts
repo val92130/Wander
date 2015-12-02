@@ -195,6 +195,14 @@ hub.on("setRain", function(rain)
     currentState.setRain(rain);
 });
 
+hub.on("sendQuestionToClient", function (question) {
+    if (currentState == undefined) return;
+    console.log(question);
+    $('#questionContent').text(question.Question);
+    $("#questionContent").append(" onclick = 'CheckAnswer(" +question.Answer + ")'");
+    openQuestionModal(question);
+});
+
 hub.on("playerConnected", function (player) {
     if (currentState == undefined || currentState.map == undefined) return;
     currentState.map.addPlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
@@ -245,6 +253,13 @@ function openModalProperty(id) {
     });
 
 }
+function openQuestionModal(id) {
+    if (id == undefined) return;
+    $("#questionModal").modal();
+  
+}
+
+
 
 
 function BuyProperty(id) {

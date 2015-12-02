@@ -150,6 +150,14 @@ hub.on("setRain", function (rain) {
         return;
     currentState.setRain(rain);
 });
+hub.on("sendQuestionToClient", function (question) {
+    if (currentState == undefined)
+        return;
+    console.log(question);
+    $('#questionContent').text(question.Question);
+    $("#questionContent").append(" onclick = 'CheckAnswer(" + question.Answer + ")'");
+    openQuestionModal(question);
+});
 hub.on("playerConnected", function (player) {
     if (currentState == undefined || currentState.map == undefined)
         return;
@@ -193,6 +201,11 @@ function openModalProperty(id) {
             });
         }
     });
+}
+function openQuestionModal(id) {
+    if (id == undefined)
+        return;
+    $("#questionModal").modal();
 }
 function BuyProperty(id) {
     hub.invoke("BuyProperty", id);
