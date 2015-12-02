@@ -16,6 +16,8 @@ namespace Wander.Server.ClassLibrary
         Timer _payTimer = new Timer();
         Timer _alertTimer = new Timer();
         Timer _taxTimer = new Timer();
+
+        Timer _questionTimer = new Timer();
         IHubContext context;
         int _intervalMinutes = 15;
         bool _isDay;
@@ -43,6 +45,23 @@ namespace Wander.Server.ClassLibrary
             this._taxTimer.Interval = 1000 * 60 * 20;
             this._taxTimer.Elapsed += this.TakeTaxEvent;
 
+            this._questionTimer.Interval = 30000;
+            this._questionTimer.Elapsed += AskQuestion;
+        }
+
+        private void AskQuestion(object sender, ElapsedEventArgs e)
+        {
+            _time = DateTime.Now;
+            List<ServerPlayerModel> connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+
+            for (int i = 0; i < connectedPlayers.Count; i++)
+            {
+                context.Clients.Client(connectedPlayers[i].SignalRId)
+                    .notify(Helper.CreateNotificationMessage("We have to test your Competence ", EMessageType.info));
+               var question = ServiceProvider.GetQuestionService().GetRandomQuestion(connectedPlayers[i].SignalRId);
+                if (question == null) continue;
+                this.context.Clients.Client(connectedPlayers[i].SignalRId).sendQuestionToClient(new {Question = question.Question, QuestionId =question.QuestionId });
+            }
         }
 
         private void RainEvent(object sender, ElapsedEventArgs e)
@@ -85,6 +104,7 @@ namespace Wander.Server.ClassLibrary
             _updateTimer.Start();
             _randomRainTimer.Start();
             this._taxTimer.Start();
+            this._questionTimer.Start();
         }
 
 

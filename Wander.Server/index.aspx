@@ -265,6 +265,31 @@
                </div>
             </div>
          </div>
+          <!-- QUESTION MODAL-->
+          <div class="modal fade" id="questionModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <h4 class="modal-title">Question</h4>
+                  </div>
+                    <div class="modal-body">
+                         <form id="questionModalBody">
+                        <div class="form-group">
+                           <th><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> <span id="questionContent"></span></th>
+                           
+                        </div>
+                       <button type="submit" class="btn btn-danger" id ="answer">Yes</button>        
+                        <button type="submit" class="btn btn-danger"  id ="answer">No</button>
+                            
+                     </form>
+                   
+                  
+                 
+               </div>
+            </div>
+         </div>
+      </div>
           
           <!-- BUY DRUG MODAL-->
          <div class="modal fade" id="buyDrugModal" tabindex="-1" role="dialog">
