@@ -56,10 +56,10 @@ namespace Wander.Server.ClassLibrary
 
             for (int i = 0; i < connectedPlayers.Count; i++)
             {
-                context.Clients.Client(connectedPlayers[i].SignalRId)
-                    .notify(Helper.CreateNotificationMessage("We have to test your Competence ", EMessageType.info));
                var question = ServiceProvider.GetQuestionService().GetRandomQuestion(connectedPlayers[i].SignalRId);
                 if (question == null) continue;
+                context.Clients.Client(connectedPlayers[i].SignalRId)
+    .notify(Helper.CreateNotificationMessage("We have to test your Competence ", EMessageType.info));
                 this.context.Clients.Client(connectedPlayers[i].SignalRId).sendQuestionToClient(new {Question = question.Question, QuestionId =question.QuestionId });
             }
         }

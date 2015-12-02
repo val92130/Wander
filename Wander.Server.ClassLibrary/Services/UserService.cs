@@ -265,7 +265,7 @@ namespace Wander.Server.ClassLibrary.Services
         public bool SetUserPoints(ServerPlayerModel user, int ammount)
         {
             if (user == null) throw new ArgumentException("parameter user is null");
-            return ExecuteUpdate("Points", ammount.ToString(), user);
+            return ExecuteUpdate("Points", ammount < 0 ? "0" : ammount.ToString(), user);
         }
 
         public bool SetUserPoints(string ConnectionId, int ammount)
@@ -273,7 +273,7 @@ namespace Wander.Server.ClassLibrary.Services
             if (ConnectionId == null) throw new ArgumentException("there is no id");
             ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(ConnectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
-            return ExecuteUpdate("Points", ammount.ToString(), user);
+            return SetUserPoints(user, ammount);
         }
 
         public bool SetUserActivatedStatus(ServerPlayerModel user, bool value)

@@ -276,18 +276,19 @@
                      <h4 class="modal-title">Question</h4>
                   </div>
                     <div class="modal-body">
-                         <form id="questionModalBody">
+                        <form id="questionForm">
                         <div class="form-group">
-                           <th><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> <span id="questionContent"></span></th>
-                           
+                         <span id="questionContent"></span><hr/><br />
+                            <label class="radio-inline">
+                          <input type="radio" name="radioAnswer" id="inlineRadio2" value="yes"> Yes
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="radioAnswer" id="inlineRadio3" value="no"> No
+                        </label>                          
                         </div>
-                       <button type="submit" class="btn btn-danger" id ="answer">Yes</button>        
-                        <button type="submit" class="btn btn-danger"  id ="answer">No</button>
-                            
-                     </form>
-                   
-                  
-                 
+                        <input type="hidden" id="questionid" value="" />
+                       <button type="submit" class="btn btn-danger" id="answer">Confirm</button>                               
+                     </form>                 
                </div>
             </div>
          </div>

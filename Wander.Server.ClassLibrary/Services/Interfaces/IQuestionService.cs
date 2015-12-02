@@ -5,7 +5,7 @@ namespace Wander.Server.ClassLibrary.Services
 {
     public interface IQuestionService
     {
-        bool CheckAnswer(JobQuestionModel questionModel, bool validAnswer);
+        bool CheckAnswer(JobQuestionModel questionModel);
         List<JobQuestionModel> GetAllQuestions();
         JobQuestionModel GetRandomQuestion(string ConnectionId);
     }

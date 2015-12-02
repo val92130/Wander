@@ -532,5 +532,36 @@ namespace Wander.Server.ClassLibrary.Hubs
             if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return -1;
             return ServiceProvider.GetPropertiesService().GetOwnersCount(propertyId);
         }
+
+        public bool CheckAnswer(int questId, bool response)
+        {
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be connected to do this action", EMessageType.error));
+                return false;
+            }
+
+            if (
+                ServiceProvider.GetQuestionService()
+                    .CheckAnswer(new JobQuestionModel() {Answer = response, QuestionId = questId}))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("Good answer ! You win 5 points",
+                    EMessageType.success));
+                ServiceProvider.GetUserService()
+                    .SetUserPoints(Context.ConnectionId,
+                        ServiceProvider.GetUserService().GetUserPoints(Context.ConnectionId) + 5);
+
+                return true;
+            }
+            else
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("Wrong answer ! You lose 5 points",
+    EMessageType.error));
+                ServiceProvider.GetUserService()
+                    .SetUserPoints(Context.ConnectionId,
+                        ServiceProvider.GetUserService().GetUserPoints(Context.ConnectionId) - 5);
+                return false;
+            }
+        }
     }
 }

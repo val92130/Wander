@@ -195,14 +195,6 @@ hub.on("setRain", function(rain)
     currentState.setRain(rain);
 });
 
-hub.on("sendQuestionToClient", function (question) {
-    if (currentState == undefined) return;
-    console.log(question);
-    $('#questionContent').text(question.Question);
-    $("#questionContent").append(" onclick = 'CheckAnswer(" +question.Answer + ")'");
-    openQuestionModal(question);
-});
-
 hub.on("playerConnected", function (player) {
     if (currentState == undefined || currentState.map == undefined) return;
     currentState.map.addPlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
@@ -234,6 +226,13 @@ hub.on("MessageReceived", function (msg) {
     }
 });
 
+hub.on("sendQuestionToClient", function (question) {
+    if (currentState == undefined) return;
+    console.log(question);
+    $('#questionContent').text(question.Question);
+    openQuestionModal(question);
+});
+
 
 function openModalProperty(id) {
     hub.invoke("GetOwnersCount", id).done(function (res) {
@@ -253,14 +252,25 @@ function openModalProperty(id) {
     });
 
 }
-function openQuestionModal(id) {
-    if (id == undefined) return;
-    $("#questionModal").modal();
-  
+function openQuestionModal(question) {
+    if (question == null) return;
+    $("#questionid").val(question.QuestionId);
+    $("#questionModal").modal({
+        backdrop: 'static',
+        keyboard: false
+    });
+
 }
 
-
-
+$("#questionForm").submit(function (e) {
+    var answer = $('input[name=radioAnswer]:checked', '#questionForm').val();
+    var questId = $("#questionid").val();
+    var answ = answer === "yes" ? true : false;
+    hub.invoke("CheckAnswer", questId, answ).done(function(res) {
+        $("#questionModal").modal('hide');
+    });
+    e.preventDefault();
+});
 
 function BuyProperty(id) {
     hub.invoke("BuyProperty", id);

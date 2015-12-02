@@ -13,20 +13,24 @@ namespace Wander.Server.ClassLibrary.Services
             if (ConnectionId == null) throw new ArgumentException("there is no id");
 
             int jobId = ServiceProvider.GetJobService().GetUserJobInfos(ConnectionId).JobId;
-            JobQuestionModel randomQuestion = new JobQuestionModel();
+            JobQuestionModel randomQuestion = null;
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
-                string query = "SELECT top 1 * FROM  dbo.Questions ORDER BY newid()";
+                string query = "SELECT top 1 * FROM  dbo.Questions WHERE dbo.Questions.JobId = @JobId ORDER BY newid()";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
+                    cmd.Parameters.AddWithValue("@JobId",
+                        ServiceProvider.GetJobService().GetUserJobInfos(ConnectionId).JobId);
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
+                        randomQuestion = new JobQuestionModel();
                         randomQuestion.QuestionId = Convert.ToInt32(reader["QuestionId"]);
                         randomQuestion.Question = reader["Question"].ToString();
                         randomQuestion.Answer = bool.Parse(reader["Answer"].ToString());
                         randomQuestion.JobId = Convert.ToInt32(reader["JobId"]);
+                        break;
                     }
 
                     conn.Close();
@@ -35,7 +39,7 @@ namespace Wander.Server.ClassLibrary.Services
             }
         }
 
-        public bool CheckAnswer(JobQuestionModel questionModel, bool validAnswer)
+        public bool CheckAnswer(JobQuestionModel questionModel)
         {
             if (questionModel == null) throw new ArgumentNullException("QuestionModel");
             bool answer = questionModel.Answer;
@@ -46,14 +50,14 @@ namespace Wander.Server.ClassLibrary.Services
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
-                    var reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        questionModel.Answer = (bool)(reader["Answer"]);
-                    }
+                    cmd.Parameters.AddWithValue("@idQuestion", idQuestion);
+                    var data = cmd.ExecuteScalar();
+                    if (data == null) throw new ArgumentNullException("Question not found");
+
+                    bool t = Convert.ToBoolean(data);
 
                     conn.Close();
-                    return questionModel.Answer == answer;
+                    return t == answer;
                 }
             }
         }
