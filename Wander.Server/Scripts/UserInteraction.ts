@@ -89,13 +89,15 @@ $(document).ready(function () {
             $(".overlay").fadeOut("slow");
         }
     });
-
-    $("#playersBtn").click(function() {
+    
+    $("#playersBtn").click(function () {
+        if (!isConnected)return;
         hub.invoke("GetConnectedPlayers").done(function (players) {
             if (players != null && players != undefined) {
                 $("#playersModalBody").text("");
                 for (var i = 0; i < players.length; i++) {
-                    $("#playersModalBody").append('<tr class="success"> <td>' + players[i].UserName + '</td> <td>' + (players[i].Sex == 1 ? "male" : "female") + '</td> <td>' + "X : " + Math.round(players[i].Position.X) + " Y : " + Math.round(players[i].Position.Y) + '</td> </tr>');
+                    var val = '<tr class="success"> <td>' + players[i].UserName + '</td> <td>' + (players[i].Sex == 1 ? "male" : "female") + '</td> <td>' + "X : " + Math.round(players[i].Position.X) + " Y : " + Math.round(players[i].Position.Y) + '</td> <td><button onclick=sendPrivateMessage("' + players[i].UserName+'") class="btn btn-success">Send private message</button></td> </tr>';
+                    $("#playersModalBody").append(val);
                 }
                 $("#playersModal").modal();
             }
@@ -114,6 +116,7 @@ $(document).ready(function () {
         GetInfos();
         $("#box-message-container").show();
         $("#box-info-container").show();
+        $("#playersBtn").show();
         createGame();
     }
 
@@ -128,6 +131,7 @@ $(document).ready(function () {
         $("#my_infos_box").fadeOut("slow");
         $("#labelPseudo").text("");
         $("#bottom_navbar").fadeOut("slow");
+        $("#playersBtn").hide();
         isConnected = false;
 
         deleteGame();

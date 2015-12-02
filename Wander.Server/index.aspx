@@ -32,7 +32,7 @@
                <ul class="nav navbar-nav navbar-left">
                   <li><a href="#login" id="loginBtn"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Login</a></li>
                   <li><a href="#register" id="registerBtn"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Register</a></li>
-                  <li><a href="#players" id="playersBtn"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Players</a></li>
+                  <li><a href="#players" id="playersBtn" style="display:none"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Players</a></li>
                   <li><a href="#logout" id="logoutBtn" style="display:none"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Logout</a></li>
                </ul>
                <ul class="nav navbar-nav navbar-right">
@@ -56,6 +56,7 @@
             <div class="input-group">
                <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></span>
                <input type="text" id="quickChatInput" class="form-control" placeholder="Message" aria-describedby="basic-addon1" maxlength="95">
+               <input type="hidden" id="privateMessagePseudo" name="pseudo" value=""/>
             </div>
          </form>
       </div>
@@ -159,6 +160,7 @@
                               <th>UserName</th>
                               <th>Sex</th>
                               <th>Position</th>
+                              <th>Private Message</th>
                            </tr>
                         </thead>
                         <tbody id="playersModalBody"></tbody>

@@ -173,10 +173,56 @@ namespace Wander.Server.ClassLibrary.Hubs
         }
 
         /// <summary>
+        /// Sends a private message to the specified user
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="destPseudo"></param>
+        public void SendPrivateMessage(string message, string destPseudo)
+        {
+            if (String.IsNullOrWhiteSpace(message) || String.IsNullOrWhiteSpace(destPseudo))
+                return;
+
+            if (message.Length >= 95)
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage(
+                    "Message too long ! Your message length should be < 95 ", EMessageType.error));
+                return;
+            }
+
+            ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            if (candidate == null)
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage(
+                    "You have to be connected before trying to send a message ! ", EMessageType.error));
+                return;
+            }
+
+            ServerPlayerModel dest =
+                ServiceProvider.GetPlayerService().GetAllPlayersServer().FirstOrDefault(x => x.Pseudo == destPseudo);
+            if (dest == null)
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage(
+                    "This user doesnt exist ! ", EMessageType.error));
+                return;
+            }
+            Clients.Client(dest.SignalRId)
+                .notify(Helper.CreateNotificationMessage("You got a private message from : " + candidate.Pseudo,
+                    EMessageType.info));
+            string caller = candidate.Pseudo;
+            Clients.Client(dest.SignalRId).PrivateMessageReceived(Helper.CreateChatMessage(caller, candidate.UserId, message, ServiceProvider.GetUserService().GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString()));
+        }
+
+        /// <summary>
         /// Sends to the caller a list of every connected players
         /// </summary>
         public List<ClientPlayerModel> GetConnectedPlayers()
         {
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage(
+                    "You have to be connected ! ", EMessageType.error));
+                return null;
+            }
             return ServiceProvider.GetPlayerService().GetAllPlayersClient();
         }
 
@@ -424,6 +470,11 @@ namespace Wander.Server.ClassLibrary.Hubs
 
         }
 
+        /// <summary>
+        /// Buy drug from a user
+        /// </summary>
+        /// <param name="dealerPseudo"></param>
+        /// <returns></returns>
         public bool BuyDrug(string dealerPseudo)
         {
             if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId))
@@ -456,6 +507,9 @@ namespace Wander.Server.ClassLibrary.Hubs
         }
 
 
+        /// <summary>
+        /// Delete a user
+        /// </summary>
         public void DeleteUser()
         {
             if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return;
@@ -468,6 +522,11 @@ namespace Wander.Server.ClassLibrary.Hubs
                 EMessageType.info));
         }
 
+        /// <summary>
+        /// Gets the number of owners of a property
+        /// </summary>
+        /// <param name="propertyId"></param>
+        /// <returns></returns>
         public int GetOwnersCount(int propertyId)
         {
             if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return -1;

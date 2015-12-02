@@ -33,6 +33,21 @@ hub.on("MessageReceived", function (msg) {
     var img = msg.Sex == 1 ? "user-boy.png" : "user-girl.png";
     $("#chatBox").append(buildChatMessage(msg.Sex, msg.UserName, msg.Content, msg.Hour));
 });
+hub.on("PrivateMessageReceived", function (msg) {
+    var msgCount = $("#chatBox> li").length;
+    if (msgCount >= 50) {
+        $("#chatBox").text("");
+    }
+    $(".panel-body").animate({ scrollTop: $('.panel-body').prop("scrollHeight") }, 20);
+    if ($("#msgFooter").css('display') == 'none') {
+        if (msg.UserName != userPseudo) {
+            unreadMsg += 1;
+            $("#chat_btn").css("color", "green");
+        }
+    }
+    var img = msg.Sex == 1 ? "user-boy.png" : "user-girl.png";
+    $("#chatBox").append(buildPrivateChatMessage(msg.Sex, msg.UserName, msg.Content, msg.Hour));
+});
 hub.on("LoadMessages", function (msgList) {
     $("#chatBox").text("");
     $.each(msgList, function (i, item) {
@@ -43,18 +58,23 @@ $(document).keypress(function (event) {
     if (isConnected) {
         if ($('input:focus').size() == 0) {
             if (event.which == 117) {
-                if (!quickChatToggle) {
-                    $(".quickChatBox").fadeIn(function () {
-                        $("#quickChatInput").focus();
-                    });
-                    $(".quickChatOverlay").fadeIn(300);
-                }
-                quickChatToggle = true;
+                openQuickChat();
             }
         }
     }
 });
-$("body").click(function () {
+function openQuickChat() {
+    if (!quickChatToggle) {
+        if (!isConnected)
+            return;
+        $(".quickChatBox").fadeIn(function () {
+            $("#quickChatInput").focus();
+        });
+        $(".quickChatOverlay").fadeIn(300);
+    }
+    quickChatToggle = true;
+}
+$(".quickChatOverlay").click(function () {
     if (quickChatToggle) {
         disableQuickChat();
     }
@@ -81,13 +101,34 @@ function disableQuickChat() {
 $("#quickChatForm").submit(function (e) {
     var msg = $("#quickChatInput").val();
     if (msg != "" && msg.length <= 95) {
-        sendMessage(msg);
+        if ($("#privateMessagePseudo").val() != "") {
+            sendMessagePrivate(msg, $("#privateMessagePseudo").val());
+        }
+        else {
+            sendMessage(msg);
+        }
     }
     disableQuickChat();
     e.preventDefault();
 });
+function sendMessagePrivate(msg, pseudo) {
+    console.log("sending message to : " + pseudo);
+    hub.invoke("SendPrivateMessage", msg, pseudo).done(function () {
+        $.notify("Message sent to : " + pseudo, "success");
+    });
+}
 function buildChatMessage(sex, username, content, hour) {
     var img = sex == 1 ? "user-boy.png" : "user-girl.png";
     return '<li class="left clearfix"> <span class="chat-img pull-left" > <img src=" Content/' + img + '" alt= "User Avatar" class="img-circle" /> </span> <div class="chat-body clearfix"> <div class="header"> <strong class="primary-font">' + username + ' </strong> <small class="pull-right text-muted" > <span class="glyphicon glyphicon-time" > </span> ' + hour + ' </small> </div > <p style="overflow-x: auto;"> ' + content + ' </p> </div> </li>';
 }
-//# sourceMappingURL=Messaging.js.map
+function buildPrivateChatMessage(sex, username, content, hour) {
+    var img = sex == 1 ? "user-boy.png" : "user-girl.png";
+    return '<li class="left clearfix"> <span class="chat-img pull-left" > <img src=" Content/' + img + '" alt= "User Avatar" class="img-circle" /> </span> <div class="chat-body clearfix"> <div class="header"> <strong class="primary-font">' + username + ' </strong> <small class="pull-right text-muted" > <span class="glyphicon glyphicon-time" > </span> ' + hour + ' </small> </div > <p style="overflow-x: auto; color:red;"> Private : ' + content + ' </p> </div> </li>';
+}
+function sendPrivateMessage(pseudo) {
+    if (pseudo == userPseudo)
+        return;
+    $("#playersModal").modal('hide');
+    $("#privateMessagePseudo").val(pseudo);
+    openQuickChat();
+}

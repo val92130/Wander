@@ -81,7 +81,6 @@ class GameState extends Phaser.State {
         hub.invoke("GetAllPlayers");
         hub.invoke("Update");
 
-
     }
 
     pressAction() {
