@@ -137,7 +137,7 @@ constraint CK_ListProperties_ListPropertiesThreshold check(Threshold <> N'')
 );
 
 
---SET IDENTITY_INSERT dbo.ListProperties ON
+SET IDENTITY_INSERT dbo.ListProperties ON
 
 
 
@@ -317,7 +317,15 @@ INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'Incisive does not e
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'Clement is the hard tissue covering the tooth root',1);
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'ivory can be called <Dental>',1);
 
-
+--Electrician
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(9,'A D-cell battery is a source of magnetism',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(9,'A pathway for the flow of electricity is called a cirtcuit',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(9,'Magnetic field provides the energy to light a light bulb',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(9,'LED stand for light emitting device',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(9,'The long straight lines in a circuit diagram represents motors',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(9,'Static electricity builds up on your body after rubbing your feet on the carpet',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(9,'When you rub a balloon on a wool sweater or your hair, it gets an excess of negative charge which causes it to stick to the wall',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(9,'The unit used for measuring electrical current is called a Volt',0);
 
 
 
