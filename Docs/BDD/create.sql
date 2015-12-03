@@ -137,7 +137,7 @@ constraint CK_ListProperties_ListPropertiesThreshold check(Threshold <> N'')
 );
 
 
-SET IDENTITY_INSERT dbo.ListProperties ON
+--SET IDENTITY_INSERT dbo.ListProperties ON
 
 
 
@@ -235,6 +235,7 @@ INSERT INTO dbo.Jobs(JobDescription, Salary, Threshold, EarningPoints, Necessary
 
  INSERT INTO dbo.Jobs(JobDescription, NecessaryPoints, EarningPoints, Salary, Threshold) values('Dealer', 150, 5,1,2); 
 
+
  --barman
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Can a consumer use alcohol at the age of 17 ?',0);
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Daiquiri cocktail is composed of Cuban rum, apple juice and cane sugar syrup?',0);
@@ -244,6 +245,7 @@ INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Does a barman befor
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Does a barman before service need to dress and arrange the tables?',1);
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Despejito cocktail is composed of Cuban rum, apple juice and cane sugar syrup?',0);
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Daiquiri cocktail is composed of Cuban rum, lime juice and cane sugar syrup?',1);
+
  --taxi driver
  INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'generally, the London taxis are red?',0);
  INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'generally, the New York taxis are black',0);
@@ -253,6 +255,7 @@ INSERT INTO dbo.Questions(JobId, Question, Answer) values(1,'Daiquiri cocktail i
  INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'generally, the New York taxis are yellow',1);
  INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'generally, the London taxis are black',1);
  INSERT INTO dbo.Questions(JobId, Question, Answer) values(2,'The historical episode taxis of the Marne took place During the second World War',0);
+
   --DJ
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(3,'David Guetta became famous in the disco <Le Macumba>',0);
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(3,'<Satisfaction> Benny Benassi was the summer hit of the year 3005',0);
@@ -263,10 +266,57 @@ INSERT INTO dbo.Questions(JobId, Question, Answer) values(3,'football is the fav
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(3,'Jennifer Cardini is the talented French DJette took over the tube <third sex> in Indochina',0);
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(3,'No stress Laurent Wolf is the only clip that clinched first place in the TOP 50',1);
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(3,'Sebastien Leger is the boss of the VIP Room in St-Tropez',0);
+ 
   --Computer engineer
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(4,'HTTP is: HyperText Transfer Protocol',1);
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(4,'the origin of the word spam is The comedy Monty Python',1);
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(4,'LINUX was created in 1992',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(4,'An IP address is Internet Protocol',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(4,'RSS is Really Simple Syndication',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(4,'A domain is a property on a hard drive',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(4,'Blog is a web blog',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(4,'A byte is a set of binary data corresponding to a virtual weight',0);
+
+--Jeweller
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(5,'there are four precious stones',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(5,'the beautiful stone that decorates Synapse called An amethyst',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(5,'in some earrings there are generally green thin stones called the Peridots',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(5,'a stone with an intaglio called A notch',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(5,'a ring with beautiful yellow reflections is called a citrine',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(5,'a silver ring covered with a fine layer of gold is called vermeil',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(5,'a raised ring is a carved cameo',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(5,'in a 18K gold ring found 50% pure gold',0);
+
+--Accountant
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(6,'Account 601 corresponds to the purchase of raw materials',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(6,'Account 607 corresponds to the purchase of goods',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(6,'626 corresponds to the account tax stamps and postal costs',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(6,'Account 701 is the service Sale',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(6,'765 corresponds to the account obtained Discount',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(6,'707 corresponds to the account Sale of Goods',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(6,'Account 701 corresponds to the sale of finished products',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(6,'Account 615 is the maintenance and repair',1);
+
+--Cook
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(7,'<Bleaching> is the act of Diving few minutes in a boiling liquid worn',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(7,'<Braising> is the fact Bake in an ember',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(7,'cut vegetables into brunoise is the act to cut into small cubes',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(7,'be lined is the act of cooking food with unpeeled garlic',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(7,'If you mix the butter and flour, you will get a browned butter',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(7,'A fountain is a hole in the flour',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(7,'Whisk cream reason is to increase its volume',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(7,'Whisk cream reason is to decrease its volume',0);
+
+--Dentist
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'',0);
+
 
 
 
