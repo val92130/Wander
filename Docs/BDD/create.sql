@@ -308,14 +308,14 @@ INSERT INTO dbo.Questions(JobId, Question, Answer) values(7,'Whisk cream reason 
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(7,'Whisk cream reason is to decrease its volume',0);
 
 --Dentist
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'',0);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'',0);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'',0);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'',0);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'',0);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'',0);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'',0);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'a child has a total of 16 milk teeth',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'the adult has 31 teeth',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'a clamp that is used to extract teeth is called The davit',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'Alginate is used in the mouth to make dental impressions',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'Wisdom teeth are the first molars',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'Incisive does not exist in adult teeth',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'Clement is the hard tissue covering the tooth root',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(8,'ivory can be called <Dental>',1);
 
 
 
