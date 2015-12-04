@@ -327,6 +327,27 @@ INSERT INTO dbo.Questions(JobId, Question, Answer) values(9,'Static electricity 
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(9,'When you rub a balloon on a wool sweater or your hair, it gets an excess of negative charge which causes it to stick to the wall',1);
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(9,'The unit used for measuring electrical current is called a Volt',0);
 
+--Journalist
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(10,'shell: When there is a mistake in an article',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(10,'brief: A topic that is not followed',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(10,'When a journalist interviews a personality, it says it does: An interview',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(10,'username: A name invented by the journalist to sign Articles',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(10,'For a journalist, paper means: An article',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(10,'Is a bimonthly journal that appears: Once every 2 weeks',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(10,'Broth: Manuscripts journalists articles',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(10,'an editorial: A game offered readers',0);
+
+--Doctor
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(11,'The <fungus> is a skin condition caused by: Bacteria',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(11,'how can we catch the <botulism>? By bathing in a lake',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(11,'A <PID> is an inflammation of: Horns Eustachian',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(11,'If you have <amenorrhea> is that you have: A lack of appetite',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(11,'If you suffer from alopecia: you have partial or total Hair loss',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(11,'priapism: a sexually transmitted disease',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(11,'if you have bad breath, it means that you suffer from: halitosis',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(11,'The <Legionnaires> can be caught by the hot water circuit',1);
+
+
 
 
  
