@@ -347,10 +347,31 @@ INSERT INTO dbo.Questions(JobId, Question, Answer) values(11,'priapism: a sexual
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(11,'if you have bad breath, it means that you suffer from: halitosis',1);
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(11,'The <Legionnaires> can be caught by the hot water circuit',1);
 
+--Plumber
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(12,'the focus of a plumber heating: Repair',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(12,'Climate engineering study technician is a profession associated with a plumber',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(12,'Artisans and community are the working conditions of a plumber',1);
+
+--Policeman
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(13,'The prime minister is appointed by MEPs',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(13,'Parliament consists of the National Assembly and the Senate',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(13,'President of the Republic is elected for 4 years and 12 months',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(13,'MEPs sit On the Constitutional Council',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(13,'The Minister of the Interior is supervising the National Police',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(13,'The lower court judge: The Offences',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(13,'he second level of appeal in criminal matters is represented by: the Council of State',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(13,'A crime refers to an offense',1);
+
+--Secretary
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(14,'The Executive Assistant assists the Director',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(14,'France, the date of the party secretaries is: April 17',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(14,'France, the date of the party secretaries is: April 18',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(14,'a secretary Organizes meetings and seminars',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(14,'Secretary works mostly in a large company',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(14,'The sense of discretion is a quality that the Secretary must possess',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(14,'the secretary must prepare coffee to his superior',0);
 
 
-
- 
 
 INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (0,'Medium blue house n°1', 'A beautiful house in a quiet place', 5, 500);
 INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (1,'Small blue house n°1', 'A small house in a quiet place', 5, 350);
