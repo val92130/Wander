@@ -392,6 +392,38 @@ INSERT INTO dbo.Questions(JobId, Question, Answer) values(16,'in British English
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(16,'in British English the are 44 sounds',1);
 
 
+--Office worker
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'',1);
+
+--Medic
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'',1);
+
+--Firefighter
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'',1);
+
+
+
 
 INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (0,'Medium blue house n°1', 'A beautiful house in a quiet place', 5, 500);
 INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (1,'Small blue house n°1', 'A small house in a quiet place', 5, 350);
