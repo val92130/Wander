@@ -371,6 +371,26 @@ INSERT INTO dbo.Questions(JobId, Question, Answer) values(14,'Secretary works mo
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(14,'The sense of discretion is a quality that the Secretary must possess',1);
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(14,'the secretary must prepare coffee to his superior',0);
 
+--Technician
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(15,'You want to make sure that a new scanner is working properly: so you Print a test page',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(15,'Be prepared is important to achieve customer satisfaction',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(15,'User settings would enable you to stop a user from logging into a local machine ',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(15,'if The NIC is turned off: laptop isnt connecting to the access point',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(15,'File state protection protects Windows file systems from being changed or deleted',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(15,'Set the jumpers is the first step in preparing the motherboard',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(15,'Pathping is used to isolate a problem between two computers on a TCP/IP network',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(15,'Bad CPU can be the cause for the flickering in a monitor',0);
+
+--Teacher
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(16,'5263x56 = 294728',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(16,'schwa is The most common sound in English ',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(16,'in British English the are 30 sounds',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(16,'I have never really enjoyed doing quizzes: this sentence is in the past tense',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(16,'I was not born yesterday: Past passive',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(16,'I was not born yesterday: Past',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(16,'in British English the are 43 sounds',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(16,'in British English the are 44 sounds',1);
+
 
 
 INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (0,'Medium blue house n°1', 'A beautiful house in a quiet place', 5, 500);
