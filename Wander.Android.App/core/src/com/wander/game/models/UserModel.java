@@ -1,4 +1,4 @@
-package com.wander.game;
+package com.wander.game.models;
 
 /**
  * Created by valentin on 07/12/2015.
