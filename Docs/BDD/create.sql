@@ -393,14 +393,13 @@ INSERT INTO dbo.Questions(JobId, Question, Answer) values(16,'in British English
 
 
 --Office worker
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'The collar is a film by Alfred Hitchcock',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'the Statue of Liberty holding a torch in his right hand',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'Françoise Hardy sings "Give me your hand and take mine," in the 60',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'hand-cut is the autobiographical book by Blaise Cendrars',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'Lend me your hand is a film released in 2000 Lartigau',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'Lend me your hand is a film released in 2006 Lartigau',1);
+
 
 --Medic
 INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'',1);
