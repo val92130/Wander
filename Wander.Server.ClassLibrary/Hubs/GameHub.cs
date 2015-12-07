@@ -22,7 +22,6 @@ namespace Wander.Server.ClassLibrary.Hubs
         /// <param name="user"></param>
         public bool Connect(UserModel user)
         {
-
             if (ServiceProvider.GetUserRegistrationService().CheckLogin(user))
             {
                 if (ServiceProvider.GetUserRegistrationService().IsBanned(user))

@@ -1,7 +1,10 @@
 package com.wander.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 /**
  * Created by val on 07/12/2015.
@@ -9,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 public class util {
 
     static GlyphLayout layout = new GlyphLayout();
+    static Sprite backgroundSprite;
     public static float GetStringWidth(BitmapFont font, String charSeq)
     {
         layout.setText(font, charSeq);
@@ -19,5 +23,14 @@ public class util {
     {
         layout.setText(font, charSeq);
         return layout.height;
+    }
+
+    public static Sprite GetBackgroundSprite()
+    {
+        if(backgroundSprite == null)
+        {
+            backgroundSprite = new Sprite(new Texture(Gdx.files.internal("images/background.jpg")));
+        }
+        return backgroundSprite;
     }
 }

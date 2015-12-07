@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -33,6 +34,7 @@ public class LoginScreen implements Screen {
     private TextArea passwordTextArea;
     private Label errorLabel;
     private Button loginButton;
+    private Sprite backgroundSprite;
 
     public LoginScreen(MainGame game)
     {
@@ -75,7 +77,8 @@ public class LoginScreen implements Screen {
     }
     @Override
     public void show() {
-
+        backgroundSprite = util.GetBackgroundSprite();
+        backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     @Override
@@ -84,8 +87,9 @@ public class LoginScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Gdx.graphics.getDeltaTime());
         batch.begin();
-        stage.draw();
+        backgroundSprite.draw(batch);
         batch.end();
+        stage.draw();
     }
 
     @Override
