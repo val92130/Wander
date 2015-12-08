@@ -1,7 +1,11 @@
 package com.wander.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.wander.game.models.NotificationMessage;
+import com.wander.game.models.PlayerModel;
 import com.wander.game.screens.GameScreen;
 import com.wander.game.screens.LoginScreen;
 import com.wander.game.screens.MainMenuScreen;
@@ -19,6 +23,8 @@ public class MainGame extends Game {
     private MainMenuScreen mainMenuScreen;
     private boolean connected;
     private String userPseudo;
+    private Sprite playerSprite;
+    private GameScreen gameScreen;
 
     public MainGame()
     {
@@ -31,14 +37,8 @@ public class MainGame extends Game {
         hubService.start();
         this.setScreen(loginScreen);
 
-        hubService.getHub().on("notify", new SubscriptionHandler1<NotificationMessage>() {
-
-            @Override
-            public void run(NotificationMessage o) {
-                System.out.println("NOTIFICATION FROM SERVER" + " : " + o.Content );
-            }
-
-        }, NotificationMessage.class);
+        Texture t = new Texture(Gdx.files.internal("images/player.png"));
+        this.playerSprite = new Sprite(t);
 
     }
 
@@ -63,10 +63,17 @@ public class MainGame extends Game {
 
     public void startGameScreen()
     {
+
         if(this.connected && this.userPseudo != null)
         {
-            this.setScreen(new GameScreen(this));
+            gameScreen = new GameScreen(this);
+            this.setScreen(this.gameScreen);
         }
+    }
+
+    public GameScreen getGameScreen()
+    {
+        return this.gameScreen;
     }
 
     public HubService getHubService()
@@ -76,6 +83,10 @@ public class MainGame extends Game {
 
     public String getUserPseudo(){
         return userPseudo;
+    }
+
+    public Sprite getPlayerSprite(){
+        return this.playerSprite;
     }
 
 

@@ -73,11 +73,11 @@ class GameState extends Phaser.State {
         
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
         this.game.world.bringToTop(currentState.dayNightCycle.rainOverlay);
-    
 
-        hub.invoke("IsRaining").done(function (val) {
+
+        hub.invoke("IsRaining").done(function(val) {
             currentState.setRain(val);
-        })
+        });
         hub.invoke("GetAllPlayers");
         hub.invoke("Update");
 

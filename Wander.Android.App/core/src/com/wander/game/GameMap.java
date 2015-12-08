@@ -1,5 +1,6 @@
 package com.wander.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -9,8 +10,13 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.wander.game.models.Player;
+import com.wander.game.models.PlayerModel;
+import com.wander.game.models.ServerPlayer;
 import com.wander.game.screens.GameScreen;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -23,6 +29,7 @@ public class GameMap {
     private OrthogonalTiledMapRenderer mapRenderer;
     private int ratio = 4;
     private TiledMapTileLayer backgroundLayer,collisionLayer,lightsLayer,objectsLayer,houseLayer;
+    private ArrayList<ServerPlayer> players;
 
     public GameMap(String fileName, GameScreen game) {
 
@@ -37,10 +44,17 @@ public class GameMap {
         this.lightsLayer = (TiledMapTileLayer) map.getLayers().get("lightsLayer");
         this.objectsLayer = (TiledMapTileLayer) map.getLayers().get("objectsLayer");
         this.houseLayer = (TiledMapTileLayer) map.getLayers().get("houseLayer");
+
+
+        this.players = new ArrayList<ServerPlayer>();
+        this.game.getMainGame().getHubService().getHub().invoke("GetAllPlayers");
     }
 
     public void update() {
-
+        for(int i = 0; i < this.players.size(); i++)
+        {
+            this.players.get(i).update(Gdx.graphics.getDeltaTime());
+        }
     }
 
 
@@ -50,9 +64,48 @@ public class GameMap {
         mapRenderer.getBatch().begin();
         mapRenderer.renderTileLayer(this.getBackgroundLayer());
         mapRenderer.renderTileLayer(this.getObjectsLayer());
+        for(int i = 0; i < this.players.size(); i++)
+        {
+            this.players.get(i).render((SpriteBatch) mapRenderer.getBatch());
+        }
 
         mapRenderer.getBatch().end();
 
+
+    }
+
+    public boolean AddPlayer(PlayerModel p)
+    {
+        if(p == null) try {
+            throw new Exception("Player is null !");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        for(int i = 0; i < this.players.size(); i++)
+        {
+            if(this.players.get(i).getPseudo().equals(p.Pseudo)) return false;
+        }
+
+        ServerPlayer pl = new ServerPlayer(this.game.getMainGame(), p.Pseudo, new Vector2(p.Position.X, p.Position.Y), game.getMainGame().getPlayerSprite());
+        this.players.add(pl);
+        return true;
+    }
+
+    public boolean updatePlayer(PlayerModel p)
+    {
+        if(p == null) try {
+            throw new Exception("Player is null !");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        for(int i = 0; i < this.players.size(); i++)
+        {
+            if(this.players.get(i).getPseudo().equals( p.Pseudo)){
+                this.players.get(i).updateInfos(new Vector2(p.Position.X, p.Position.Y), p.Direction);
+                return true;
+            }
+        }
+        return false;
     }
 
     static public boolean intersect(Rectangle rectangle1, Rectangle rectangle2, Rectangle intersection) {
@@ -120,8 +173,6 @@ public class GameMap {
         TiledMapTileLayer.Cell cell = layer.getCell((int) selectedTile.x / ratio, (int) selectedTile.y / ratio);
         return cell;
     }
-
-
 
     public TiledMap getMap() {
         return map;

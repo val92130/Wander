@@ -16,6 +16,10 @@ import com.wander.game.Constants;
 import com.wander.game.GameMap;
 import com.wander.game.KeyBoardInputManager;
 import com.wander.game.MainGame;
+import com.wander.game.models.NotificationMessage;
+import com.wander.game.models.PlayerModel;
+
+import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 
 /**
  * Created by val on 07/12/2015.
@@ -32,6 +36,39 @@ public class GameScreen implements Screen {
     public GameScreen(MainGame game)
     {
         this.game = game;
+
+        this.game.getHubService().getHub().on("notify", new SubscriptionHandler1<NotificationMessage>() {
+
+            @Override
+            public void run(NotificationMessage o) {
+                System.out.println("NOTIFICATION FROM SERVER" + " : " + o.Content);
+            }
+
+        }, NotificationMessage.class);
+
+        this.game.getHubService().getHub().on("playerConnected", new SubscriptionHandler1<PlayerModel>() {
+            @Override
+            public void run(PlayerModel o) {
+                map.AddPlayer(o);
+            }
+        }, PlayerModel.class);
+
+        this.game.getHubService().getHub().on("onConnected", new SubscriptionHandler1<Object>() {
+            @Override
+            public void run(Object o) {
+                System.out.println("On connected" + o);
+            }
+        }, Object.class);
+
+        this.game.getHubService().getHub().on("playerMoved", new SubscriptionHandler1<PlayerModel>() {
+            @Override
+            public void run(PlayerModel o) {
+                map.updatePlayer(o);
+            }
+        }, PlayerModel.class);
+
+
+
     }
 
     @Override
@@ -46,7 +83,7 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(this.inputManager);
 
         System.out.println(Constants.MAP_SIZE * Constants.TILE_SIZE * camera.getCamera().zoom);
-        this.getCameraManager().getCamera().position.set(new Vector3(this.getCameraManager().getCamera().position.x, (Constants.MAP_SIZE * Constants.TILE_SIZE * camera.getCamera().zoom) * 4 - this.camera.getCamera().viewportWidth / 2, 0));
+        this.getCameraManager().getCamera().position.set(new Vector3(this.getCameraManager().getCamera().position.x, (Constants.MAP_SIZE * Constants.TILE_SIZE * camera.getCamera().zoom) * map.getScaleRatio() - this.camera.getCamera().viewportWidth / 2, 0));
         System.out.println(camera.getCamera().position);
         System.out.println(camera.getCamera().zoom);
         this.getCameraManager().getCamera().update();
@@ -56,7 +93,7 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         this.update();
         batch.setProjectionMatrix(camera.getCamera().combined);
-        Gdx.gl.glClearColor(0,0,1,1);
+        Gdx.gl.glClearColor(0, 0, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         map.draw(this.batch);
 
@@ -78,6 +115,8 @@ public class GameScreen implements Screen {
     {
         return map;
     }
+
+    public MainGame getMainGame(){ return game;}
 
     @Override
     public void resize(int width, int height) {

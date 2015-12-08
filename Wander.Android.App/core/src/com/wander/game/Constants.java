@@ -7,7 +7,7 @@ import com.badlogic.gdx.Input;
  */
 public class Constants {
     public static int MAP_SIZE = 500;
-    public static int CAMERA_SPEED = 1500;
+    public static int CAMERA_SPEED = 3000;
     public static double CAMERA_ZOOM_SPEED = 0.2;
     // Keyboard input
     public static int KEY_MOVE_LEFT = Input.Keys.LEFT;
