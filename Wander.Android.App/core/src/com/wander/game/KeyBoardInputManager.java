@@ -3,6 +3,7 @@ package com.wander.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
+import com.wander.game.models.EDirection;
 import com.wander.game.screens.GameScreen;
 
 /**
@@ -19,22 +20,26 @@ public class KeyBoardInputManager implements InputProcessor {
     {
         if(Gdx.input.isKeyPressed(Constants.KEY_MOVE_LEFT))
         {
-            game.getCameraManager().move(new Vector2(-Constants.CAMERA_SPEED * Gdx.graphics.getDeltaTime(), 0));
+            game.getMap().getCurrentPlayer().move(EDirection.Left);
+            //game.getCameraManager().move(new Vector2(-Constants.CAMERA_SPEED * Gdx.graphics.getDeltaTime(), 0));
         }
 
         if(Gdx.input.isKeyPressed(Constants.KEY_MOVE_RIGHT))
         {
-            game.getCameraManager().move(new Vector2(Constants.CAMERA_SPEED * Gdx.graphics.getDeltaTime(), 0));
+            game.getMap().getCurrentPlayer().move(EDirection.Right);
+            //game.getCameraManager().move(new Vector2(Constants.CAMERA_SPEED * Gdx.graphics.getDeltaTime(), 0));
         }
 
         if(Gdx.input.isKeyPressed(Constants.KEY_MOVE_UP))
         {
-            game.getCameraManager().move(new Vector2(0, Constants.CAMERA_SPEED * Gdx.graphics.getDeltaTime()));
+            game.getMap().getCurrentPlayer().move(EDirection.Up);
+            //game.getCameraManager().move(new Vector2(0, Constants.CAMERA_SPEED * Gdx.graphics.getDeltaTime()));
         }
 
         if(Gdx.input.isKeyPressed(Constants.KEY_MOVE_DOWN))
         {
-            game.getCameraManager().move(new Vector2(0, -Constants.CAMERA_SPEED * Gdx.graphics.getDeltaTime()));
+            game.getMap().getCurrentPlayer().move(EDirection.Down);
+            //game.getCameraManager().move(new Vector2(0, -Constants.CAMERA_SPEED * Gdx.graphics.getDeltaTime()));
         }
 
     }

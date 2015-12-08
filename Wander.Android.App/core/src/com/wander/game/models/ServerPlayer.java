@@ -3,6 +3,8 @@ package com.wander.game.models;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.wander.game.Constants;
+import com.wander.game.GameMap;
 import com.wander.game.MainGame;
 
 /**
@@ -11,16 +13,17 @@ import com.wander.game.MainGame;
 public class ServerPlayer extends Player {
 
     Vector2 newPosition;
-    public ServerPlayer(MainGame game, String pseudo, Vector2 position, Sprite sprite) {
-        super(game, pseudo, position, sprite);
-        this.newPosition = position;
+    public ServerPlayer(GameMap map, String pseudo, Vector2 position, Sprite sprite) {
+        super(map, pseudo, position, sprite);
+        this.position = new Vector2(position.x, Constants.TILE_SIZE * Constants.MAP_SIZE - position.y );
+        this.newPosition = this.position;
     }
 
     @Override
     public void update(float delta)
     {
         super.update(delta);
-        this.position = this.position.lerp(new Vector2(this.newPosition.x, this.newPosition.y),1.35f);
+        this.position = this.position.lerp(new Vector2(this.newPosition.x, this.newPosition.y),0.15f);
     }
 
     @Override
@@ -31,6 +34,8 @@ public class ServerPlayer extends Player {
 
     public void updateInfos(Vector2 newPosition, String newDirection)
     {
-        this.newPosition = newPosition;
+        System.out.println(newPosition);
+        Vector2 correctPos = new Vector2(newPosition.x, Constants.TILE_SIZE * Constants.MAP_SIZE - newPosition.y );
+        this.newPosition = correctPos;
     }
 }

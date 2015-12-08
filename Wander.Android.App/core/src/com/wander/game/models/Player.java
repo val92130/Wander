@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.wander.game.Constants;
+import com.wander.game.GameMap;
 import com.wander.game.MainGame;
 
 /**
@@ -19,16 +20,16 @@ public class Player {
     Sprite sprite;
     Vector2 position;
     String pseudo;
-    MainGame game;
+    GameMap map;
     String direction;
 
-    public Player(MainGame game, String pseudo, Vector2 position, Sprite sprite)
+    public Player(GameMap map, String pseudo, Vector2 position, Sprite sprite)
     {
         this.sprite = sprite;
-        this.sprite.setSize(this.sprite.getWidth() * 2,this.sprite.getHeight() * 2 );
+        this.sprite.setSize(15 * map.getScaleRatio(),25 * map.getScaleRatio() );
         this.position = position;
         this.pseudo = pseudo;
-        this.game = game;
+        this.map = map;
         this.direction = "7";
     }
 
@@ -38,7 +39,7 @@ public class Player {
     }
 
     public void update(float delta){
-        sprite.setPosition(this.position.x, this.position.y + (Constants.MAP_SIZE * Constants.TILE_SIZE )* game.getGameScreen().getMap().getScaleRatio() - this.sprite.getHeight());
+        sprite.setPosition(this.position.x * this.map.getScaleRatio(), this.position.y * this.map.getScaleRatio() - this.sprite.getHeight() );
     }
 
     public String getPseudo(){
@@ -56,5 +57,7 @@ public class Player {
     public void setPosition(Vector2 newPos){
         this.position = newPos;
     }
+
+    public Sprite getSprite(){return this.sprite;}
 
 }

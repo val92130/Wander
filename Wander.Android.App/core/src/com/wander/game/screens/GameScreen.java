@@ -49,7 +49,14 @@ public class GameScreen implements Screen {
         this.game.getHubService().getHub().on("playerConnected", new SubscriptionHandler1<PlayerModel>() {
             @Override
             public void run(PlayerModel o) {
-                map.AddPlayer(o);
+                map.addPlayer(o);
+            }
+        }, PlayerModel.class);
+
+        this.game.getHubService().getHub().on("playerDisconnected", new SubscriptionHandler1<PlayerModel>() {
+            @Override
+            public void run(PlayerModel o) {
+                map.removePlayer(o);
             }
         }, PlayerModel.class);
 

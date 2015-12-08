@@ -32,7 +32,11 @@ public class HubService {
 
             @Override
             public void log(String message, LogLevel level) {
-                System.out.println(message);
+
+                if(level == LogLevel.Critical)
+                {
+                    System.out.println(message);
+                }
             }
         };
 

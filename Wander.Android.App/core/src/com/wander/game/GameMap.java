@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.wander.game.models.ClientPlayer;
 import com.wander.game.models.Player;
 import com.wander.game.models.PlayerModel;
 import com.wander.game.models.ServerPlayer;
@@ -30,6 +31,7 @@ public class GameMap {
     private int ratio = 4;
     private TiledMapTileLayer backgroundLayer,collisionLayer,lightsLayer,objectsLayer,houseLayer;
     private ArrayList<ServerPlayer> players;
+    private ClientPlayer currentPlayer;
 
     public GameMap(String fileName, GameScreen game) {
 
@@ -47,14 +49,16 @@ public class GameMap {
 
 
         this.players = new ArrayList<ServerPlayer>();
+        this.currentPlayer = new ClientPlayer(this, this.game.getMainGame().getUserPseudo(), new Vector2(0,0),game.getMainGame().getPlayerSprite());
         this.game.getMainGame().getHubService().getHub().invoke("GetAllPlayers");
     }
 
     public void update() {
-        for(int i = 0; i < this.players.size(); i++)
-        {
+        for (int i = 0; i < this.players.size(); i++) {
             this.players.get(i).update(Gdx.graphics.getDeltaTime());
         }
+        this.currentPlayer.update(Gdx.graphics.getDeltaTime());
+        this.getGameScreen().getCameraManager().follow(new Vector2(currentPlayer.getSprite().getX(), currentPlayer.getSprite().getY()));
     }
 
 
@@ -68,13 +72,13 @@ public class GameMap {
         {
             this.players.get(i).render((SpriteBatch) mapRenderer.getBatch());
         }
-
+        this.currentPlayer.render((SpriteBatch) mapRenderer.getBatch());
         mapRenderer.getBatch().end();
 
 
     }
 
-    public boolean AddPlayer(PlayerModel p)
+    public boolean addPlayer(PlayerModel p)
     {
         if(p == null) try {
             throw new Exception("Player is null !");
@@ -83,12 +87,32 @@ public class GameMap {
         }
         for(int i = 0; i < this.players.size(); i++)
         {
-            if(this.players.get(i).getPseudo().equals(p.Pseudo)) return false;
+            if(this.players.get(i).getPseudo().equals(p.Pseudo)){
+                return false;
+            }
         }
 
-        ServerPlayer pl = new ServerPlayer(this.game.getMainGame(), p.Pseudo, new Vector2(p.Position.X, p.Position.Y), game.getMainGame().getPlayerSprite());
+        ServerPlayer pl = new ServerPlayer(this, p.Pseudo, new Vector2(p.Position.X, p.Position.Y), game.getMainGame().getPlayerSprite());
         this.players.add(pl);
         return true;
+    }
+
+    public boolean removePlayer(PlayerModel p)
+    {
+        if(p == null) try {
+            throw new Exception("Player is null !");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        for(int i = 0; i < this.players.size(); i++)
+        {
+
+            if(this.players.get(i).getPseudo().equals(p.Pseudo)){
+                this.players.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean updatePlayer(PlayerModel p)
@@ -138,7 +162,10 @@ public class GameMap {
         return this.mapRenderer;
     }
 
-
+    public ClientPlayer getCurrentPlayer()
+    {
+        return this.currentPlayer;
+    }
     public int getScaleRatio() {
         return ratio;
     }
@@ -176,5 +203,9 @@ public class GameMap {
 
     public TiledMap getMap() {
         return map;
+    }
+
+    public GameScreen getGameScreen(){
+        return this.game;
     }
 }

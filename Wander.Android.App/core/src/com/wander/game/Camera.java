@@ -86,6 +86,13 @@ public class Camera {
         this.correctBoundaries();
     }
 
+    public void follow(Vector2 target)
+    {
+        this.cam.position.x = target.x;
+        this.cam.position.y = target.y;
+        this.correctBoundaries();
+    }
+
     private boolean correctBoundaries() {
         boolean flag = false;
         Vector2 camPos = new Vector2(cam.position.x - (effectiveViewportWidth / 2), cam.position.y + (effectiveViewportHeight / 2));

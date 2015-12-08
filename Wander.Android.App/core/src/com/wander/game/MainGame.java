@@ -23,12 +23,12 @@ public class MainGame extends Game {
     private MainMenuScreen mainMenuScreen;
     private boolean connected;
     private String userPseudo;
-    private Sprite playerSprite;
     private GameScreen gameScreen;
+    private Texture playerTexture = new Texture(Gdx.files.internal("images/player.png"));
 
     public MainGame()
     {
-        hubService = new HubService("http://localhost:1906", "GameHub");
+        hubService = new HubService("http://wander.nightlydev.fr/", "GameHub");
         loginScreen = new LoginScreen(this);
     }
 
@@ -36,9 +36,6 @@ public class MainGame extends Game {
     public void create() {
         hubService.start();
         this.setScreen(loginScreen);
-
-        Texture t = new Texture(Gdx.files.internal("images/player.png"));
-        this.playerSprite = new Sprite(t);
 
     }
 
@@ -86,7 +83,8 @@ public class MainGame extends Game {
     }
 
     public Sprite getPlayerSprite(){
-        return this.playerSprite;
+
+        return new Sprite(this.playerTexture);
     }
 
 
