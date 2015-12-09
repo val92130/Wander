@@ -402,24 +402,22 @@ INSERT INTO dbo.Questions(JobId, Question, Answer) values(17,'Lend me your hand 
 
 
 --Medic
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'Doliprane s main indications are: pain and fever',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'Ventolin (Salbutamol) belongs to the category of bronchodilators',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'the main indication and Temesta: Insomnia',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'doctor prescribes the Spasfon when you have abdominal pain',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'The Clamoxyl (Amoxicillin) belongs to the category of beta-lactam antibiotics aminopenicillin',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'The Levothyrox (Levothyroxine) belongs to the category "Endocrinology" (thyroid hormone)',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(18,'the Daflon is prescribed by the doctor when you have heavy legs.',1);
 
 --Firefighter
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'',1);
-INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'Sergeant is the rank after Master Corporal',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'the feed elbow is a junction part',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'requesting relief abroad in Europe i have to call 911',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'Rendering-Administrative Account is an official document to inform and educate the hierarchy of an event',1);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,' 1 l/s is the minimum flow rate of a fire hydrant',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'Commander is the rank just bedore Lieutenant',0);
+INSERT INTO dbo.Questions(JobId, Question, Answer) values(19,'there are three states of matter',1);
 
 
 
