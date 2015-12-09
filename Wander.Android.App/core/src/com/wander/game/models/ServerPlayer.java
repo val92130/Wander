@@ -34,7 +34,6 @@ public class ServerPlayer extends Player {
 
     public void updateInfos(Vector2 newPosition, String newDirection)
     {
-        System.out.println(newPosition);
         Vector2 correctPos = new Vector2(newPosition.x, Constants.TILE_SIZE * Constants.MAP_SIZE - newPosition.y );
         this.newPosition = correctPos;
     }

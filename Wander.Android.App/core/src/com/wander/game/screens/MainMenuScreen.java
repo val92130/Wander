@@ -51,15 +51,15 @@ public class MainMenuScreen implements Screen {
 
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
-        startGame.setSize(width/5, height/5);
 
-        table.add(startGame).width(150).padTop(10).padBottom(3);
+        table.add(startGame).width(width / 5).height(height/10).padTop(10).padBottom(3);
         table.row();
 
         TextButton playersButton=new TextButton("Players",skin);
-        table.add(playersButton).width(150).padTop(10).padBottom(3);
+        table.add(playersButton).width(width / 5).height(height/10).padTop(10).padBottom(3);
         table.row();
 
+        table.center();
         stage.addActor(table);
         Gdx.input.setInputProcessor(this.stage);
 
@@ -93,7 +93,8 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        this.stage.getViewport().setScreenSize(width,height);
+        this.table.setSize(width,height);
     }
 
     @Override

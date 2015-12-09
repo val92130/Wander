@@ -1,8 +1,10 @@
 package com.wander.game;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.wander.game.models.NotificationMessage;
 import com.wander.game.models.PlayerModel;
@@ -86,6 +88,11 @@ public class MainGame extends Game {
     public Sprite getPlayerSprite(){
 
         return new Sprite(this.playerTexture);
+    }
+
+    public BitmapFont getFont()
+    {
+        return new BitmapFont();
     }
 
 

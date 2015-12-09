@@ -1,8 +1,9 @@
-package com.wander.game;
+package com.wander.game.InputHandling;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
+import com.wander.game.Constants;
 import com.wander.game.models.EDirection;
 import com.wander.game.screens.GameScreen;
 

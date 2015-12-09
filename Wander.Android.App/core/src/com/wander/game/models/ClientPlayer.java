@@ -16,9 +16,9 @@ import java.util.concurrent.ExecutionException;
  * Created by val on 08/12/2015.
  */
 public class ClientPlayer extends Player {
-    private int speed = 70;
+    public static int speed = 70;
     private Timer updateTimer;
-    private int updateTimeMs = 90;
+    private int updateTimeMs = 55;
     private boolean moved = false;
 
     public ClientPlayer(GameMap map, String pseudo, Vector2 position, Sprite sprite) {
@@ -64,6 +64,14 @@ public class ClientPlayer extends Player {
                 this.position.y -= speed * Gdx.graphics.getDeltaTime();
                 break;
         }
+        this.moved = true;
+    }
+
+    public void moveOffset(Vector2 offset)
+    {
+        this.position.x += offset.x;
+        this.position.y += offset.y;
+
         this.moved = true;
     }
 
