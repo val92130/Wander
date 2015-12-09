@@ -50,8 +50,8 @@ public class LoginScreen implements Screen {
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
 
-        loginButton.setWidth(width / 5);
-        loginButton.setHeight(height / 10);
+        loginButton.setWidth(width / 2);
+        loginButton.setHeight(height / 5);
         loginButton.setPosition(Gdx.graphics.getWidth() / 2 - (loginButton.getWidth() / 2), Gdx.graphics.getHeight() / 2 - (loginButton.getHeight() / 2));
 
         loginButton.addListener(new ClickListener() {
@@ -63,12 +63,12 @@ public class LoginScreen implements Screen {
 
         passwordTextArea = new TextArea("password", skin);
         passwordTextArea.setPasswordMode(true);
-        passwordTextArea.setSize(width / 2, height / 15);
+        passwordTextArea.setSize(width / 2, height / 10);
         passwordTextArea.setPasswordCharacter('*');
         passwordTextArea.setPosition(Gdx.graphics.getWidth() / 2 - passwordTextArea.getWidth() / 2, loginButton.getY() + loginButton.getHeight() + height / 15);
 
         loginTextArea = new TextArea("login", skin);
-        loginTextArea.setSize(width/2, height/15);
+        loginTextArea.setSize(width/2, height/10);
         loginTextArea.setPosition(Gdx.graphics.getWidth() / 2 - loginTextArea.getWidth()/2, passwordTextArea.getY() + loginTextArea.getHeight() + height / 15);
 
         errorLabel = new Label("", skin);

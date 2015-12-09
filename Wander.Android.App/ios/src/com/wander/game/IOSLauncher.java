@@ -13,8 +13,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
     @Override
     protected IOSApplication createApplication() {
         IOSApplicationConfiguration config = new IOSApplicationConfiguration();
-        IHubService hubService = new HubService("http://wander.nightlydev.fr/", "GameHub");
-        return new IOSApplication(new Wander(hubService), config);
+        return new IOSApplication(new Wander(), config);
     }
 
     public static void main(String[] argv) {

@@ -10,6 +10,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.wander.game.models.ClientPlayer;
 import com.wander.game.models.EMessageType;
 import com.wander.game.models.PlayerModel;
@@ -31,8 +33,9 @@ public class GameMap {
     private TiledMapTileLayer backgroundLayer,collisionLayer,lightsLayer,objectsLayer,houseLayer;
     private ArrayList<ServerPlayer> players;
     private ClientPlayer currentPlayer;
-    private NotificationManager notificationManager;
-    private SpriteBatch uiSpritebatch;
+    private World world;
+    private Box2DDebugRenderer debugRenderer;
+    private SpriteBatch batch;
 
     public GameMap(String fileName, GameScreen game) {
 
@@ -48,13 +51,15 @@ public class GameMap {
         this.objectsLayer = (TiledMapTileLayer) map.getLayers().get("objectsLayer");
         this.houseLayer = (TiledMapTileLayer) map.getLayers().get("houseLayer");
 
+        world = new World(new Vector2(0, 0), true);
+        debugRenderer = new Box2DDebugRenderer();
+        batch = new SpriteBatch();
 
         this.players = new ArrayList<ServerPlayer>();
         this.currentPlayer = new ClientPlayer(this, this.game.getMainGame().getUserPseudo(), new Vector2(0,0),game.getMainGame().getPlayerSprite());
         this.game.getMainGame().getHubService().getHub().invoke("GetAllPlayers");
 
-        this.notificationManager = new NotificationManager(this.getGameScreen().getMainGame());
-        this.uiSpritebatch = new SpriteBatch();
+
 
     }
 
@@ -64,7 +69,7 @@ public class GameMap {
         }
         this.currentPlayer.update(Gdx.graphics.getDeltaTime());
         this.getGameScreen().getCameraManager().follow(new Vector2(currentPlayer.getSprite().getX(), currentPlayer.getSprite().getY()));
-        this.notificationManager.update();
+        world.step(Gdx.graphics.getDeltaTime(), 6, 2);
     }
 
 
@@ -74,16 +79,16 @@ public class GameMap {
         mapRenderer.getBatch().begin();
         mapRenderer.renderTileLayer(this.getBackgroundLayer());
         mapRenderer.renderTileLayer(this.getObjectsLayer());
-        for(int i = 0; i < this.players.size(); i++)
-        {
+        for(int i = 0; i < this.players.size(); i++) {
             this.players.get(i).render((SpriteBatch) mapRenderer.getBatch());
         }
         this.currentPlayer.render((SpriteBatch) mapRenderer.getBatch());
         mapRenderer.getBatch().end();
 
-        this.uiSpritebatch.begin();
-        this.notificationManager.render(this.uiSpritebatch);
-        this.uiSpritebatch.end();
+        batch.begin();
+        debugRenderer.render(world, game.getCameraManager().getCamera().combined);
+        batch.end();
+
 
     }
 
@@ -106,10 +111,6 @@ public class GameMap {
         return true;
     }
 
-    public void addNotification(String content, EMessageType type)
-    {
-        this.notificationManager.add(this.game.getMainGame(), content, type);
-    }
 
     public boolean removePlayer(PlayerModel p)
     {
@@ -207,6 +208,8 @@ public class GameMap {
     public TiledMapTileLayer getLightsLayer() {
         return lightsLayer;
     }
+
+    public World getWorld(){return world;}
 
     public TiledMapTileLayer.Cell getClosestCell(int x, int y, TiledMapTileLayer layer) {
         Vector3 worldCoords = game.getCameraManager().getCamera().unproject(new Vector3(x, y, 0));

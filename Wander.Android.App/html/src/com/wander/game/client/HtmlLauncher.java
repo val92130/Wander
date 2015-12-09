@@ -16,7 +16,6 @@ public class HtmlLauncher extends GwtApplication {
 
         @Override
         public ApplicationListener getApplicationListener () {
-                IHubService hubService = new HubService("http://wander.nightlydev.fr/", "GameHub");
-                return new Wander(hubService);
+                return new Wander();
         }
 }

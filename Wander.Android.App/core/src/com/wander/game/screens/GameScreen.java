@@ -26,6 +26,8 @@ import com.wander.game.models.EMessageType;
 import com.wander.game.models.NotificationMessage;
 import com.wander.game.models.PlayerModel;
 
+import javax.xml.ws.Dispatch;
+
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 
 /**
@@ -46,19 +48,9 @@ public class GameScreen implements Screen {
     private Stage stage;
 
 
-    public GameScreen(MainGame game)
+    public GameScreen(final MainGame game)
     {
         this.game = game;
-
-        this.game.getHubService().getHub().on("notify", new SubscriptionHandler1<NotificationMessage>() {
-
-            @Override
-            public void run(NotificationMessage o) {
-                System.out.println("NOTIFICATION FROM SERVER" + " : " + o.Content);
-                map.addNotification(o.Content, EMessageType.info);
-            }
-
-        }, NotificationMessage.class);
 
         this.game.getHubService().getHub().on("playerConnected", new SubscriptionHandler1<PlayerModel>() {
             @Override
@@ -118,7 +110,7 @@ public class GameScreen implements Screen {
         touchpadStyle.background = touchBackground;
         touchpadStyle.knob = touchKnob;
         touchpad = new Touchpad(10, touchpadStyle);
-        touchpad.setBounds(15, 15, 200, 200);
+        touchpad.setBounds(15, 15, Gdx.graphics.getHeight()/3, Gdx.graphics.getHeight()/3);
 
         stage = new Stage(new ScreenViewport(), batch);
         if(Gdx.app.getType() == Application.ApplicationType.Android) stage.addActor(touchpad);

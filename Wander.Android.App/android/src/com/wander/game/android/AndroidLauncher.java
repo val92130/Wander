@@ -14,7 +14,6 @@ public class AndroidLauncher extends AndroidApplication {
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		IHubService hubService = new AndroidHubService("http://wander.nightlydev.fr/", "GameHub");
-		initialize(new Wander(hubService), config);
+		initialize(new Wander(), config);
 	}
 }

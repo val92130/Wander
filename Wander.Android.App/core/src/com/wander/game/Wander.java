@@ -8,15 +8,14 @@ import com.wander.game.services.IHubService;
 
 public class Wander extends ApplicationAdapter {
 	MainGame game;
-	IHubService hubService;
 
-	public Wander(IHubService hubService)
+	public Wander()
 	{
-		this.hubService = hubService;
+
 	}
 	@Override
 	public void create () {
-		game = new MainGame(this.hubService);
+		game = new MainGame();
 		game.create();
 	}
 

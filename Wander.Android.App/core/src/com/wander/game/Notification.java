@@ -28,6 +28,7 @@ public class Notification {
         this.content = content;
         this.messageType = type;
         this.position = position;
+        this.font = new BitmapFont();
     }
 
     public Vector2 getPosition()
@@ -54,5 +55,7 @@ public class Notification {
     {
         return this.content;
     }
+
+    public EMessageType getMessageType(){return this.messageType;}
 
 }

@@ -23,7 +23,7 @@ public class ServerPlayer extends Player {
     public void update(float delta)
     {
         super.update(delta);
-        this.position = this.position.lerp(new Vector2(this.newPosition.x, this.newPosition.y),0.15f);
+        this.position = this.position.lerp(new Vector2(this.newPosition.x, this.newPosition.y),0.1f);
     }
 
     @Override

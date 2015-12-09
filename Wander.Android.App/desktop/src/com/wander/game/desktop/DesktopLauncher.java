@@ -11,7 +11,6 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1024;
 		config.height = 768;
-		IHubService hubService = new HubService("http://wander.nightlydev.fr/", "GameHub");
-		new LwjglApplication(new Wander(hubService), config);
+		new LwjglApplication(new Wander(), config);
 	}
 }

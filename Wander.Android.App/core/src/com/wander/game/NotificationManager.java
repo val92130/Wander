@@ -1,6 +1,7 @@
 package com.wander.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -30,7 +31,7 @@ public class NotificationManager {
 
     public void add(MainGame game, String content, EMessageType type)
     {
-        Vector2 pos = new Vector2(0, Gdx.graphics.getHeight() - (util.GetStringHeight(new BitmapFont(), content) + (20 * 2)));
+        Vector2 pos = new Vector2(0, Gdx.graphics.getHeight() - (util.GetStringHeight(new BitmapFont(), content) + (30 * 2)));
         Notification newNotif = new Notification(game,pos,content,type);
         if(notificationList.size() >= 1)
         {
@@ -51,13 +52,13 @@ public class NotificationManager {
         if(now != null)
         {
             Date t = new Date();
-            long diffInSeconds = (t.getTime() - now.getTime()) / 1000;
+            long diffInSeconds = (t.getTime() - now.getTime()) ;
 
-            if(diffInSeconds >= 5){
+            if(diffInSeconds >= 2000){
                 this.now = new Date();
                 if(stage.getActors().size >= 1 && this.notificationList.size() >= 1 ){
-                    stage.getActors().get(stage.getActors().size -1).remove();
-                    this.notificationList.get(notificationList.size()-1).remove();
+                    stage.getActors().get(0).remove();
+                    this.notificationList.remove(0);
                     System.out.println("Elapsed");
                 }
 
@@ -69,7 +70,26 @@ public class NotificationManager {
     private TextButton createNotification(Notification notification)
     {
         TextButton notifButton = new TextButton(notification.getContent(), new Skin(Gdx.files.internal("uiskin.json")), "default");
+        Color c;
+        switch(notification.getMessageType()){
+            case info:
+                c = new Color(0.10f, 0, 0.85f,0.5f);
+                break;
+            case error:
+                c = new Color(0.95f, 0, 0.05f,0.5f);
+                break;
+            case warn:
+                c = Color.YELLOW;
+                break;
+            case success:
+                c = Color.GREEN;
+                break;
+            default:
+                c = Color.ROYAL;
+                break;
 
+        }
+        notifButton.setColor(c);
         int padding = 20;
         notifButton.setWidth(notification.getWidth() + padding * 2);
         notifButton.setHeight(notification.getHeight() + padding * 2);
