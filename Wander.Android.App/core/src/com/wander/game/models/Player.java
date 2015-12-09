@@ -2,6 +2,7 @@ package com.wander.game.models;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.wander.game.Constants;
 import com.wander.game.GameMap;
 import com.wander.game.MainGame;
+import com.wander.game.util;
 
 /**
  * Created by valentin on 08/12/2015.
@@ -22,6 +24,7 @@ public class Player {
     String pseudo;
     GameMap map;
     String direction;
+    BitmapFont font;
 
     public Player(GameMap map, String pseudo, Vector2 position, Sprite sprite)
     {
@@ -36,6 +39,14 @@ public class Player {
     public void render(SpriteBatch batch){
 
         sprite.draw(batch);
+        if(this.font == null)
+        {
+            this.font = new BitmapFont();
+            this.font.getData().setScale(2,2);
+        }
+        float fontWidth = util.GetStringWidth(font, this.pseudo);
+
+        this.font.draw(batch, this.pseudo, sprite.getX() + this.sprite.getWidth()/2 - fontWidth/2, sprite.getY() + this.sprite.getHeight() + 35);
     }
 
     public void update(float delta){

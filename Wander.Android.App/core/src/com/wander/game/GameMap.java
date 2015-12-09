@@ -10,9 +10,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.wander.game.models.ClientPlayer;
-import com.wander.game.models.Player;
+import com.wander.game.models.EMessageType;
 import com.wander.game.models.PlayerModel;
 import com.wander.game.models.ServerPlayer;
 import com.wander.game.screens.GameScreen;
@@ -32,6 +31,8 @@ public class GameMap {
     private TiledMapTileLayer backgroundLayer,collisionLayer,lightsLayer,objectsLayer,houseLayer;
     private ArrayList<ServerPlayer> players;
     private ClientPlayer currentPlayer;
+    private NotificationManager notificationManager;
+    private SpriteBatch uiSpritebatch;
 
     public GameMap(String fileName, GameScreen game) {
 
@@ -51,6 +52,10 @@ public class GameMap {
         this.players = new ArrayList<ServerPlayer>();
         this.currentPlayer = new ClientPlayer(this, this.game.getMainGame().getUserPseudo(), new Vector2(0,0),game.getMainGame().getPlayerSprite());
         this.game.getMainGame().getHubService().getHub().invoke("GetAllPlayers");
+
+        this.notificationManager = new NotificationManager(this.getGameScreen().getMainGame());
+        this.uiSpritebatch = new SpriteBatch();
+
     }
 
     public void update() {
@@ -59,6 +64,7 @@ public class GameMap {
         }
         this.currentPlayer.update(Gdx.graphics.getDeltaTime());
         this.getGameScreen().getCameraManager().follow(new Vector2(currentPlayer.getSprite().getX(), currentPlayer.getSprite().getY()));
+        this.notificationManager.update();
     }
 
 
@@ -75,6 +81,9 @@ public class GameMap {
         this.currentPlayer.render((SpriteBatch) mapRenderer.getBatch());
         mapRenderer.getBatch().end();
 
+        this.uiSpritebatch.begin();
+        this.notificationManager.render(this.uiSpritebatch);
+        this.uiSpritebatch.end();
 
     }
 
@@ -95,6 +104,11 @@ public class GameMap {
         ServerPlayer pl = new ServerPlayer(this, p.Pseudo, new Vector2(p.Position.X, p.Position.Y), game.getMainGame().getPlayerSprite());
         this.players.add(pl);
         return true;
+    }
+
+    public void addNotification(String content, EMessageType type)
+    {
+        this.notificationManager.add(this.game.getMainGame(), content, type);
     }
 
     public boolean removePlayer(PlayerModel p)

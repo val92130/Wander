@@ -80,6 +80,7 @@ public class LoginScreen implements Screen {
         stage.addActor(loginTextArea);
         stage.addActor(errorLabel);
 
+
     }
     @Override
     public void show() {
@@ -100,7 +101,6 @@ public class LoginScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override
