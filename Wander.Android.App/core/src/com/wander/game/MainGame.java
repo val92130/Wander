@@ -10,6 +10,7 @@ import com.wander.game.screens.GameScreen;
 import com.wander.game.screens.LoginScreen;
 import com.wander.game.screens.MainMenuScreen;
 import com.wander.game.services.HubService;
+import com.wander.game.services.IHubService;
 
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 
@@ -18,7 +19,7 @@ import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
  */
 public class MainGame extends Game {
 
-    private HubService hubService;
+    private IHubService hubService;
     private LoginScreen loginScreen;
     private MainMenuScreen mainMenuScreen;
     private boolean connected;
@@ -26,9 +27,9 @@ public class MainGame extends Game {
     private GameScreen gameScreen;
     private Texture playerTexture = new Texture(Gdx.files.internal("images/player.png"));
 
-    public MainGame()
+    public MainGame(IHubService hubService)
     {
-        hubService = new HubService("http://wander.nightlydev.fr/", "GameHub");
+        this.hubService = hubService;
         loginScreen = new LoginScreen(this);
     }
 
@@ -73,7 +74,7 @@ public class MainGame extends Game {
         return this.gameScreen;
     }
 
-    public HubService getHubService()
+    public IHubService getHubService()
     {
         return hubService;
     }

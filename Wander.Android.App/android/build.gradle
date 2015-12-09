@@ -17,7 +17,13 @@ android {
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_7
     }
+
+    defaultConfig {
+        // Enabling multidex support.
+        multiDexEnabled true
+    }
 }
+
 // called every time gradle gets executed, takes the native dependencies of
 // the natives configuration, and extracts them to the proper libs/ folders
 // so they get packed with the APK.
@@ -114,4 +120,6 @@ idea {
     }
 }
 dependencies {
+    compile files('libs/signalr-client-sdk-android.jar')
+    compile files('libs/signalr-client-sdk.jar')
 }

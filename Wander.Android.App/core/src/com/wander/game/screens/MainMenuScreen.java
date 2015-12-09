@@ -49,6 +49,10 @@ public class MainMenuScreen implements Screen {
             }
         });
 
+        float width = Gdx.graphics.getWidth();
+        float height = Gdx.graphics.getHeight();
+        startGame.setSize(width/5, height/5);
+
         table.add(startGame).width(150).padTop(10).padBottom(3);
         table.row();
 

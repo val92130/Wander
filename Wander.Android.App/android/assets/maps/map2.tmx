@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="500" height="500" tilewidth="16" tileheight="16" nextobjectid="1">
  <tileset firstgid="1" name="tileset3" tilewidth="16" tileheight="16" tilecount="19500">
-  <image source="../Images/tileset3.png" width="2080" height="2400"/>
+  <image source="../images/tileset3.png" width="2080" height="2400"/>
   <tile id="1565">
    <properties>
     <property name="propertyId" value="1"/>
@@ -64,7 +64,7 @@
   </tile>
  </tileset>
  <tileset firstgid="19501" name="number_spritesheet" tilewidth="16" tileheight="16" tilecount="100">
-  <image source="../Images/number_spritesheet.png" width="160" height="160"/>
+  <image source="../images/number_spritesheet.png" width="160" height="160"/>
   <tile id="0">
    <properties>
     <property name="propertyId" value="0"/>

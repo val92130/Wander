@@ -1,33 +1,30 @@
 package com.wander.game.services;
 
-import com.wander.game.models.NotificationMessage;
 import com.wander.game.models.UserModel;
+
+import java.util.concurrent.ExecutionException;
 
 import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.LogLevel;
 import microsoft.aspnet.signalr.client.Logger;
+import microsoft.aspnet.signalr.client.Platform;
 import microsoft.aspnet.signalr.client.SignalRFuture;
+import microsoft.aspnet.signalr.client.http.android.AndroidPlatformComponent;
 import microsoft.aspnet.signalr.client.hubs.HubConnection;
 import microsoft.aspnet.signalr.client.hubs.HubProxy;
-import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler;
-import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
-import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler2;
 import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 
-import java.util.concurrent.ExecutionException;
-
 /**
- * Created by valentin on 07/12/2015.
+ * Created by valentin on 09/12/2015.
  */
-public class HubService implements IHubService {
-
-
+public class AndroidHubService implements IHubService {
     private HubProxy hub;
     private HubConnection connection;
     private boolean successConnect;
 
-    public HubService(String host, String hubName)
+    public AndroidHubService(String host, String hubName)
     {
+        Platform.loadPlatformComponent(new AndroidPlatformComponent());
         Logger logger = new Logger() {
 
             @Override
@@ -57,6 +54,7 @@ public class HubService implements IHubService {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+
     }
 
     public boolean connect(String pseudo, String password){
