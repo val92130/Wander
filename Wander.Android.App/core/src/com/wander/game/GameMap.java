@@ -60,7 +60,6 @@ public class GameMap {
         this.game.getMainGame().getHubService().getHub().invoke("GetAllPlayers");
 
 
-
     }
 
     public void update() {
@@ -143,6 +142,21 @@ public class GameMap {
                 this.players.get(i).updateInfos(new Vector2(p.Position.X, p.Position.Y), p.Direction);
                 return true;
             }
+        }
+        return false;
+    }
+
+    public boolean isCollision(int tileX, int tileY)
+    {
+        try{
+            if(this.collisionLayer.getCell(tileX,tileY).getTile() != null){
+                return true;
+            }
+
+        }
+        catch(NullPointerException e)
+        {
+            return false;
         }
         return false;
     }

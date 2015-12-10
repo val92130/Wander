@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutionException;
  * Created by val on 08/12/2015.
  */
 public class ClientPlayer extends Player {
-    public static int speed = 70;
+    public static int speed = 82;
     private Timer updateTimer;
     private int updateTimeMs = 55;
     private boolean moved = false;
@@ -40,6 +40,7 @@ public class ClientPlayer extends Player {
     public void update(float delta)
     {
         super.update(delta);
+        this.direction = EDirection.Idle;
     }
 
     @Override
@@ -50,29 +51,66 @@ public class ClientPlayer extends Player {
 
     public void move(EDirection direction)
     {
+        Vector2 newPos = new Vector2(this.position.x, this.position.y);
         switch (direction) {
             case Left:
-                this.position.x -= speed * Gdx.graphics.getDeltaTime();
+                newPos.x -= speed * Gdx.graphics.getDeltaTime();
                 break;
             case Right:
-                this.position.x += speed * Gdx.graphics.getDeltaTime();
+                newPos.x += speed * Gdx.graphics.getDeltaTime();
                 break;
             case Up:
-                this.position.y += speed * Gdx.graphics.getDeltaTime();
+                newPos.y += speed * Gdx.graphics.getDeltaTime();
                 break;
             case Down:
-                this.position.y -= speed * Gdx.graphics.getDeltaTime();
+                newPos.y -= speed * Gdx.graphics.getDeltaTime();
                 break;
         }
-        this.moved = true;
+        int tileX = (int)(newPos.x / Constants.TILE_SIZE) + 1;
+        int tileY = (int)(newPos.y / Constants.TILE_SIZE) - 1;
+
+        if(!map.isCollision(tileX, tileY))
+        {
+            this.position = newPos;
+            this.moved = true;
+            this.direction = direction;
+        }
+
     }
 
     public void moveOffset(Vector2 offset)
     {
-        this.position.x += offset.x;
-        this.position.y += offset.y;
+        Vector2 newPos = new Vector2(this.position.x, this.position.y);
 
-        this.moved = true;
+        newPos.x += offset.x;
+        newPos.y += offset.y;
+
+        int tileX = (int)(newPos.x / Constants.TILE_SIZE) + 1;
+        int tileY = (int)(newPos.y / Constants.TILE_SIZE) - 1;
+
+
+        if(!map.isCollision(tileX, tileY))
+        {
+            if(offset.x > 0 && offset.x > offset.y)
+            {
+                this.direction = EDirection.Right;
+            }else if(offset.x < 0 && offset.y > offset.x)
+            {
+                this.direction = EDirection.Left;
+            } else if(offset.y > 0)
+            {
+                this.direction = EDirection.Up;
+            } else if(offset.y < 0)
+            {
+                this.direction = EDirection.Down;
+            }else{
+                this.direction = EDirection.Idle;
+            }
+
+            this.position = newPos;
+            this.moved = true;
+        }
+
     }
 
     private void updatePositionServer()

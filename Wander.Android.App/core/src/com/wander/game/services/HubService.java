@@ -33,8 +33,11 @@ public class HubService implements IHubService {
             @Override
             public void log(String message, LogLevel level) {
 
-
+                if(level == LogLevel.Critical)
+                {
                     System.out.println(message);
+
+                }
             }
         };
 

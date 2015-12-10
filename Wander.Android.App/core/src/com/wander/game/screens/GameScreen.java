@@ -56,14 +56,27 @@ public class GameScreen implements Screen {
             @Override
             public void run(PlayerModel o) {
                 System.out.println("player connected " + o);
-                map.addPlayer(o);
+                final PlayerModel p = o;
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        map.addPlayer(p);
+                    }
+                });
+
             }
         }, PlayerModel.class);
 
         this.game.getHubService().getHub().on("playerDisconnected", new SubscriptionHandler1<PlayerModel>() {
             @Override
             public void run(PlayerModel o) {
-                map.removePlayer(o);
+                final PlayerModel p = o;
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        map.removePlayer(p);
+                    }
+                });
             }
         }, PlayerModel.class);
 
@@ -77,7 +90,13 @@ public class GameScreen implements Screen {
         this.game.getHubService().getHub().on("playerMoved", new SubscriptionHandler1<PlayerModel>() {
             @Override
             public void run(PlayerModel o) {
-                map.updatePlayer(o);
+                final PlayerModel p = o;
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        map.updatePlayer(p);
+                    }
+                });
             }
         }, PlayerModel.class);
 
