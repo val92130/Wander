@@ -17,9 +17,12 @@ import com.wander.game.models.EMessageType;
 import com.wander.game.models.PlayerModel;
 import com.wander.game.models.ServerPlayer;
 import com.wander.game.screens.GameScreen;
+import com.wander.game.weather.AmbientManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by val on 07/12/2015.
@@ -36,6 +39,8 @@ public class GameMap {
     private World world;
     private Box2DDebugRenderer debugRenderer;
     private SpriteBatch batch;
+    private AmbientManager ambientManager;
+    private Timer updateTimer;
 
     public GameMap(String fileName, GameScreen game) {
 
@@ -60,6 +65,22 @@ public class GameMap {
         this.game.getMainGame().getHubService().getHub().invoke("GetAllPlayers");
 
 
+        this.ambientManager = new AmbientManager(this);
+        this.game.getMainGame().getHubService().getHub().invoke("Update");
+
+        this.updateTimer = new Timer();
+        this.updateTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+               updateServer();
+            }
+        }, 10000, 10000);
+
+
+    }
+
+    private void updateServer(){
+        this.game.getMainGame().getHubService().getHub().invoke("Update");
     }
 
     public void update() {
@@ -67,7 +88,8 @@ public class GameMap {
             this.players.get(i).update(Gdx.graphics.getDeltaTime());
         }
         this.currentPlayer.update(Gdx.graphics.getDeltaTime());
-        this.getGameScreen().getCameraManager().follow(new Vector2(currentPlayer.getSprite().getX(), currentPlayer.getSprite().getY()));
+        this.getGameScreen().getCameraManager().follow(new Vector2(currentPlayer.getSprite().getX() + currentPlayer.getSprite().getWidth() / 2, currentPlayer.getSprite().getY() + currentPlayer.getSprite().getHeight()/2));
+        this.ambientManager.update();
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
     }
 
@@ -87,6 +109,8 @@ public class GameMap {
         batch.begin();
         debugRenderer.render(world, game.getCameraManager().getCamera().combined);
         batch.end();
+
+        this.ambientManager.render((SpriteBatch) mapRenderer.getBatch());
 
 
     }
@@ -138,7 +162,7 @@ public class GameMap {
         }
         for(int i = 0; i < this.players.size(); i++)
         {
-            if(this.players.get(i).getPseudo().equals( p.Pseudo)){
+            if(this.players.get(i).getPseudo().equals(p.Pseudo)) {
                 this.players.get(i).updateInfos(new Vector2(p.Position.X, p.Position.Y), p.Direction);
                 return true;
             }
@@ -239,4 +263,5 @@ public class GameMap {
     public GameScreen getGameScreen(){
         return this.game;
     }
+    public AmbientManager getAmbientManager(){return this.ambientManager;}
 }

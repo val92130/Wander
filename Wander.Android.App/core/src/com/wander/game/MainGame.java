@@ -17,6 +17,7 @@ import com.wander.game.services.AndroidHubService;
 import com.wander.game.services.HubService;
 import com.wander.game.services.IHubService;
 
+import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 
 /**
@@ -42,10 +43,9 @@ public class MainGame extends Game {
 
     @Override
     public void create() {
-        if(Gdx.app.getType() == Application.ApplicationType.Android) {
+        if (Gdx.app.getType() == Application.ApplicationType.Android) {
             this.hubService = new AndroidHubService("http://wander.nightlydev.fr", "GameHub");
-        } else
-        {
+        } else {
             this.hubService = new HubService("http://wander.nightlydev.fr", "GameHub");
         }
         loginScreen = new LoginScreen(this);
@@ -66,9 +66,23 @@ public class MainGame extends Game {
         }, NotificationMessage.class);
 
 
+        this.getHubService().getHub().on("forceDisconnect", new SubscriptionHandler() {
+            @Override
+            public void run() {
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        onLogOut();
+                    }
+                });
+
+            }
+        });
     }
 
-    @Override
+
+
+        @Override
     public void render() {
         this.update();
         super.render();
@@ -116,6 +130,10 @@ public class MainGame extends Game {
             gameScreen = new GameScreen(this);
             this.setScreen(this.gameScreen);
         }
+    }
+
+    public void onLogOut(){
+        this.setScreen(new LoginScreen(this));
     }
 
     public GameScreen getGameScreen()

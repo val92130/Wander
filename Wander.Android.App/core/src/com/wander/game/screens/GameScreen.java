@@ -100,6 +100,19 @@ public class GameScreen implements Screen {
             }
         }, PlayerModel.class);
 
+        this.game.getHubService().getHub().on("updateTime", new SubscriptionHandler1<Boolean>() {
+            @Override
+            public void run(Boolean isDay) {
+                final boolean _isDay = isDay;
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        map.getAmbientManager().setNightTime(!_isDay);
+                    }
+                });
+            }
+        }, Boolean.class);
+
     }
 
     @Override

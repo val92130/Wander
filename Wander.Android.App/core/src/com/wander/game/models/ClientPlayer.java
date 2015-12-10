@@ -16,9 +16,9 @@ import java.util.concurrent.ExecutionException;
  * Created by val on 08/12/2015.
  */
 public class ClientPlayer extends Player {
-    public static int speed = 82;
+    public static final int speed = 82;
     private Timer updateTimer;
-    private int updateTimeMs = 55;
+    private final int updateTimeMs = 55;
     private boolean moved = false;
 
     public ClientPlayer(GameMap map, String pseudo, Vector2 position, Sprite sprite) {
@@ -41,12 +41,33 @@ public class ClientPlayer extends Player {
     {
         super.update(delta);
         this.direction = EDirection.Idle;
+        this.correctBounds();
     }
 
     @Override
     public void render(SpriteBatch batch)
     {
         super.render(batch);
+    }
+
+    private void correctBounds(){
+        if(this.position.x < 0)
+        {
+            this.position.x = 0;
+        }
+        if(this.position.x > Constants.MAP_SIZE * Constants.TILE_SIZE)
+        {
+            this.position.x = Constants.MAP_SIZE * Constants.TILE_SIZE ;
+        }
+
+        if(this.position.y < 0 )
+        {
+            this.position.y = 0 ;
+        }
+        if(this.position.y > Constants.MAP_SIZE * Constants.TILE_SIZE  )
+        {
+            this.position.y = Constants.MAP_SIZE * Constants.TILE_SIZE ;
+        }
     }
 
     public void move(EDirection direction)
