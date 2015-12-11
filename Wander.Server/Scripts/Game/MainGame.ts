@@ -46,6 +46,7 @@ class GameState extends Phaser.State {
         this.game.stage.disableVisibilityChange = true;
         this.game.load.image("player", "Content/Game/Images/player.png");
         this.game.load.tilemap("Map", "Content/Game/Maps/map2.json", null, Phaser.Tilemap.TILED_JSON);
+        this.game.load.tilemap("MapHouse", "Content/Game/Maps/mapHouse.json", null, Phaser.Tilemap.TILED_JSON);
         this.game.load.image("Tiles", "Content/Game/Images/tileset3.png");
         this.game.load.image("Number_Tiles", "Content/Game/Images/number_spritesheet.png");
         this.game.load.image("Overlay", "Content/Game/Images/filter.png");
@@ -159,8 +160,11 @@ class GameState extends Phaser.State {
         }
 
     }
-
-
+    EnterHouse() {
+        
+        this.map = new Map(this, this.game, "MapHouse", "Tiles", "tileset3", 1);
+        this.map.create();
+    }
     resizeGame() {
         var height = $(".game").height();
         var width = $(".game").width();
@@ -310,10 +314,18 @@ $(document).keypress(function (event) {
                 }
 
             }
+            if (event.which == 65) {
+                if (currentState.game != undefined) {
+                    currentState.EnterHouse();
+                }
+
+            }
         }
     }
 
 });
+
+
 
 function Lerp(goal, current, time) {
     var diff = goal - current;
