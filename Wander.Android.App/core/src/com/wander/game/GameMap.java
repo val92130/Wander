@@ -14,6 +14,8 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.wander.game.models.ClientPlayer;
 import com.wander.game.models.EMessageType;
+import com.wander.game.models.MessageModel;
+import com.wander.game.models.Player;
 import com.wander.game.models.PlayerModel;
 import com.wander.game.models.ServerPlayer;
 import com.wander.game.screens.GameScreen;
@@ -88,7 +90,7 @@ public class GameMap {
             this.players.get(i).update(Gdx.graphics.getDeltaTime());
         }
         this.currentPlayer.update(Gdx.graphics.getDeltaTime());
-        this.getGameScreen().getCameraManager().follow(new Vector2(currentPlayer.getSprite().getX() + currentPlayer.getSprite().getWidth() / 2, currentPlayer.getSprite().getY() + currentPlayer.getSprite().getHeight()/2));
+        this.getGameScreen().getCameraManager().follow(new Vector2(currentPlayer.getSprite().getX() + currentPlayer.getSprite().getWidth() / 2, currentPlayer.getSprite().getY() + currentPlayer.getSprite().getHeight() / 2));
         this.ambientManager.update();
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
     }
@@ -111,8 +113,6 @@ public class GameMap {
         batch.end();
 
         this.ambientManager.render((SpriteBatch) mapRenderer.getBatch());
-
-
     }
 
     public boolean addPlayer(PlayerModel p)
@@ -170,6 +170,50 @@ public class GameMap {
         return false;
     }
 
+    public void messageReceived(MessageModel message)
+    {
+        if(message == null) throw new NullPointerException("Message is null");
+        ServerPlayer candidate = this.getPlayer(message.UserName);
+        if(candidate != null){
+            candidate.setTextMessage(message.Content);
+        } else if(message.UserName.equals(currentPlayer.getPseudo()))
+        {
+            currentPlayer.setTextMessage(message.Content);
+        }
+
+    }
+
+    public void actionPressed(){
+        int tileX = (int)(currentPlayer.getPosition().x / Constants.TILE_SIZE) + 1;
+        int tileY = (int)(currentPlayer.getPosition().y / Constants.TILE_SIZE) - 1;
+        int houseId = -1;
+        try{
+            String o = this.getHouseLayer().getCell(tileX, tileY).getTile().getProperties().get("propertyId").toString();
+            houseId = Integer.parseInt(o);
+        } catch(Exception e)
+        {
+            System.out.println("null");
+        }
+        if(houseId != -1)
+        {
+            System.out.println("found house : " + houseId);
+        }
+    }
+
+    public ServerPlayer getPlayer(String pseudo)
+    {
+        for(int i = 0; i < this.players.size(); i++)
+        {
+
+            if(this.players.get(i).getPseudo().equals(pseudo)){
+                return this.players.get(i);
+            }
+        }
+        return null;
+    }
+
+
+
     public boolean isCollision(int tileX, int tileY)
     {
         try{
@@ -195,7 +239,6 @@ public class GameMap {
         }
         return false;
     }
-
 
 
     public HashMap<TiledMapTileLayer.Cell, Vector2> getCollisionCells() {

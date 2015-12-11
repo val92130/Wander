@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -45,7 +46,10 @@ public class LoginScreen implements Screen {
         this.game = game;
 
         skin = new Skin(Gdx.files.internal("uiskin.json"));
-        loginButton = new TextButton("Login", skin, "default");
+        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("ui/ui-blue.atlas"));
+        Skin btnSkin = new Skin(atlas);
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(btnSkin.getDrawable("button_01"),btnSkin.getDrawable("button_02"),btnSkin.getDrawable("button_01"), new BitmapFont());
+        loginButton = new TextButton("Login", style);
 
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();

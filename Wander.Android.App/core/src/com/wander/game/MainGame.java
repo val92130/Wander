@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.wander.game.models.EMessageType;
+import com.wander.game.models.MessageModel;
 import com.wander.game.models.NotificationMessage;
 import com.wander.game.models.PlayerModel;
 import com.wander.game.screens.GameScreen;
@@ -78,6 +79,20 @@ public class MainGame extends Game {
 
             }
         });
+
+        this.getHubService().getHub().on("MessageReceived", new SubscriptionHandler1<MessageModel>() {
+            @Override
+            public void run(MessageModel messageModel) {
+                final MessageModel _message = messageModel;
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        messageReceived(_message);
+                        System.out.println(_message);
+                    }
+                });
+            }
+        }, MessageModel.class);
     }
 
 
@@ -106,7 +121,11 @@ public class MainGame extends Game {
             }
         });
 
+    }
 
+    public void messageReceived(MessageModel message)
+    {
+        if(message != null) this.getGameScreen().getMap().messageReceived(message);
     }
 
     public void update()

@@ -1,6 +1,7 @@
 package com.wander.game.InputHandling;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.wander.game.Constants;
@@ -46,9 +47,9 @@ public class KeyBoardInputManager implements InputProcessor {
     }
 
     public boolean keyDown(int keycode) {
-        if(keycode == Constants.KEY_TOGGLE_NIGHT)
+        if(keycode == Input.Keys.E)
         {
-            //game.getAmbientEventManager().setNightTime(!game.getAmbientEventManager().getNightTime());
+            this.game.getMap().actionPressed();
         }
         return false;
     }

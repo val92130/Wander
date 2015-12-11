@@ -16,7 +16,7 @@ public class Camera {
     private float effectiveViewportHeight;
     private GameScreen game;
     private Vector2 destVector;
-    private int maxZoom = 4;
+    private int maxZoom = 6;
 
     public Camera(GameScreen game) {
         this.game = game;
