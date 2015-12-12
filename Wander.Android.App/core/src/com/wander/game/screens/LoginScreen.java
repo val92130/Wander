@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.wander.game.Constants;
 import com.wander.game.MainGame;
+import com.wander.game.dialogs.ChatDialog;
 import com.wander.game.util;
 
 
@@ -84,7 +85,6 @@ public class LoginScreen implements Screen {
         stage.addActor(table);
 
 
-
     }
     @Override
     public void show() {
@@ -137,6 +137,7 @@ public class LoginScreen implements Screen {
         boolean success = game.getHubService().connect(pseudo, pass);
 
         if(success) {
+            stage.unfocusAll();
             game.SetConnected(pseudo);
         }
     }

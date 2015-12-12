@@ -2,6 +2,7 @@ package com.wander.game.screens;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -11,9 +12,13 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.wander.game.Camera;
 import com.wander.game.Constants;
@@ -21,13 +26,16 @@ import com.wander.game.GameMap;
 import com.wander.game.InputHandling.KeyBoardInputManager;
 import com.wander.game.InputHandling.TouchInputManager;
 import com.wander.game.MainGame;
-import com.wander.game.models.ClientPlayer;
-import com.wander.game.models.EMessageType;
-import com.wander.game.models.NotificationMessage;
+import com.wander.game.dialogs.ChatDialog;
+import com.wander.game.dialogs.HouseBuyDialog;
+import com.wander.game.models.ServerPropertyModel;
+import com.wander.game.player.ClientPlayer;
 import com.wander.game.models.PlayerModel;
+import com.wander.game.player.ServerPlayer;
 
-import javax.xml.ws.Dispatch;
+import java.util.ArrayList;
 
+import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 
 /**
@@ -46,11 +54,17 @@ public class GameScreen implements Screen {
     private Drawable touchBackground;
     private Drawable touchKnob;
     private Stage stage;
+    private Skin skin;
+    private Dialog currentDialogWindow;
 
 
     public GameScreen(final MainGame game)
     {
         this.game = game;
+
+        this.batch = new SpriteBatch();
+        this.map = new GameMap("maps/map2.tmx", this);
+        camera = new Camera(this);
 
         this.game.getHubService().getHub().on("playerConnected", new SubscriptionHandler1<PlayerModel>() {
             @Override
@@ -113,13 +127,14 @@ public class GameScreen implements Screen {
             }
         }, Boolean.class);
 
+        this.skin = new Skin(Gdx.files.internal("uiskin.json"));
+
+
     }
 
     @Override
     public void show() {
-        this.batch = new SpriteBatch();
-        this.map = new GameMap("maps/map2.tmx", this);
-        camera = new Camera(this);
+
 
         InputMultiplexer im = new InputMultiplexer();
         GestureDetector gd = new GestureDetector(new TouchInputManager(this));
@@ -142,12 +157,13 @@ public class GameScreen implements Screen {
         touchpadStyle.background = touchBackground;
         touchpadStyle.knob = touchKnob;
         touchpad = new Touchpad(10, touchpadStyle);
-        touchpad.setBounds(15, 15, Gdx.graphics.getHeight()/3, Gdx.graphics.getHeight()/3);
+        touchpad.setBounds(15, 15, Gdx.graphics.getHeight() / 3, Gdx.graphics.getHeight() / 3);
 
         stage = new Stage(new ScreenViewport(), batch);
         if(Gdx.app.getType() == Application.ApplicationType.Android) stage.addActor(touchpad);
         im.addProcessor(stage);
         Gdx.input.setInputProcessor(im);
+
 
     }
 
@@ -183,6 +199,97 @@ public class GameScreen implements Screen {
     }
 
     public MainGame getMainGame(){ return game;}
+
+    public void openPublicChatBox(){
+
+        if(this.currentDialogWindow == null )
+        {
+            this.currentDialogWindow = new ChatDialog(this.getMainGame(), this.stage, this.skin, "Send a public message");
+        } else if(!this.currentDialogWindow.isVisible())
+        {
+            this.currentDialogWindow = new ChatDialog(this.getMainGame(), this.stage, this.skin, "Send a public message");
+        }
+
+    }
+
+    public void openPrivateChatBox(String dest)
+    {
+        if(this.currentDialogWindow == null )
+        {
+            this.currentDialogWindow = new ChatDialog(this.getMainGame(), this.stage, this.skin, "Send a message to " + dest, dest);
+        } else if(!this.currentDialogWindow.isVisible())
+        {
+            this.currentDialogWindow = new ChatDialog(this.getMainGame(), this.stage, this.skin, "Send a message to " + dest, dest);
+        }
+
+
+    }
+
+    public void openBuyPropertyModal(int propertyId)
+    {
+        this.getMainGame().getHubService().getHub().invoke(ServerPropertyModel.class, "GetPropertyInfo", propertyId).done(new Action<ServerPropertyModel>() {
+            @Override
+            public void run(ServerPropertyModel serverPropertyModel) throws Exception {
+                final ServerPropertyModel _res = serverPropertyModel;
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println(_res);
+                        openModalProperty(_res);
+                    }
+                });
+            }
+        });
+    }
+
+    private void openModalProperty(ServerPropertyModel model)
+    {
+        if(model != null)
+        {
+            if(this.currentDialogWindow == null )
+            {
+                this.currentDialogWindow = new HouseBuyDialog(this.getMainGame(), this.stage, this.skin, "Buy property : " + model.PropertyName + "?", model);
+            } else if(!this.currentDialogWindow.isVisible())
+            {
+                this.currentDialogWindow = new HouseBuyDialog(this.getMainGame(), this.stage, this.skin, "Buy property : " + model.PropertyName + "?", model);
+            }
+
+        }
+    }
+
+    public void onScreenTouched(int x, int y)
+    {
+        Vector3 cam = this.camera.getCamera().unproject(new Vector3(x,y,0));
+        for(int i = 0; i < this.getMap().getAllPlayers().size(); i++)
+        {
+            ServerPlayer candidate = this.getMap().getAllPlayers().get(i);
+            if(candidate.getSprite().getBoundingRectangle().contains(cam.x, cam.y))
+            {
+                System.out.println("touched player " + candidate.getPseudo());
+                openPrivateChatBox(candidate.getPseudo());
+                break;
+            }
+        }
+
+        // check for property touched
+        int tileX = (int)(cam.x / Constants.TILE_SIZE / map.getScaleRatio());
+        int tileY = (int)(cam.y / Constants.TILE_SIZE / map.getScaleRatio());
+        System.out.println(tileX + " : " + tileY);
+        int houseId = -1;
+        try{
+            String o = this.map.getHouseLayer().getCell(tileX, tileY).getTile().getProperties().get("propertyId").toString();
+            houseId = Integer.parseInt(o);
+        } catch(Exception e)
+        {
+            //
+        }
+        if(houseId != -1)
+        {
+            openBuyPropertyModal(houseId);
+        }
+
+    }
+
 
     @Override
     public void resize(int width, int height) {

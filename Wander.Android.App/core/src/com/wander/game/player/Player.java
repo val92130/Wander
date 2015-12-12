@@ -1,4 +1,4 @@
-package com.wander.game.models;
+package com.wander.game.player;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,9 +15,11 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.wander.game.Constants;
 import com.wander.game.GameMap;
 import com.wander.game.MainGame;
+import com.wander.game.models.EDirection;
 import com.wander.game.util;
 
 import java.util.Date;
@@ -47,26 +49,26 @@ public class Player {
         this.textMessageContent = "";
         this.messageTime = new Date();
         this.messageTimeEnd = new Date();
+        Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+        this.font = skin.getFont("default-font");
+        this.font.getData().setScale(1.5f,1.5f);
     }
 
     public void render(SpriteBatch batch){
 
         sprite.draw(batch);
-        if(this.font == null)
-        {
-            this.font = new BitmapFont();
-            this.font.getData().setScale(2,2);
-        }
         float fontWidth = util.GetStringWidth(font, this.pseudo);
+        float fontHeight = util.GetStringHeight(font, this.pseudo);
 
-        this.font.draw(batch, this.pseudo, sprite.getX() + this.sprite.getWidth() / 2 - fontWidth / 2, sprite.getY() + this.sprite.getHeight() + 35);
+        this.font.setColor(1f,0,0.1f,1);
+        this.font.draw(batch, this.pseudo, sprite.getX() + this.sprite.getWidth() / 2 - fontWidth / 2, sprite.getY() + this.sprite.getHeight() + 35 + fontHeight);
 
         if(this.textMessageContent != "")
         {
             float messageWidth = util.GetStringWidth(font, this.textMessageContent);
-            this.font.setColor(0.75f,1,1,1);
-            this.font.draw(batch, this.textMessageContent, sprite.getX() + this.sprite.getWidth() / 2 - messageWidth / 2, sprite.getY() + this.sprite.getHeight() + 85);
-            this.font.setColor(1,1,1,1);
+            this.font.setColor(1, 1, 1, 1);
+            this.font.draw(batch, this.textMessageContent, sprite.getX() + this.sprite.getWidth() / 2 - messageWidth / 2, sprite.getY() + this.sprite.getHeight() + 105 + fontHeight);
+
         }
 
     }

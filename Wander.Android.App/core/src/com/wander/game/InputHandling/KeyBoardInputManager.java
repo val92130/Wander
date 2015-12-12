@@ -47,10 +47,13 @@ public class KeyBoardInputManager implements InputProcessor {
     }
 
     public boolean keyDown(int keycode) {
-        if(keycode == Input.Keys.E)
+        if(keycode == Constants.KEY_ACTION)
         {
             this.game.getMap().actionPressed();
+        } else if(keycode == Constants.KEY_CHAT){
+            this.game.openPublicChatBox();
         }
+
         return false;
     }
 
@@ -63,6 +66,7 @@ public class KeyBoardInputManager implements InputProcessor {
     }
 
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        this.game.onScreenTouched(screenX, screenY);
         return false;
     }
 
@@ -89,4 +93,6 @@ public class KeyBoardInputManager implements InputProcessor {
         }
         return false;
     }
+
+
 }

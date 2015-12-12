@@ -25,3 +25,4 @@ var WeatherManager = (function () {
     };
     return WeatherManager;
 })();
+//# sourceMappingURL=WeatherManager.js.map

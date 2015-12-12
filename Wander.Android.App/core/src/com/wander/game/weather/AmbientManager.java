@@ -12,15 +12,17 @@ import com.wander.game.screens.GameScreen;
  */
 public class AmbientManager {
 
-    private ShaderProgram ambientShader, earthQuakeShader;
-    private float ambientIntensity = .7f;
-    private Vector3 ambientColor = new Vector3(0.3f, 0.3f, 0.7f);
+    private ShaderProgram ambientShader;
+    private float ambientIntensity = 1f;
+    private Vector3 ambientColor = new Vector3(0.3f, 0.3f, 0.6f);
     private Vector3 oldAmbientColor = new Vector3(1, 1, 1);
     private boolean isNightTime = false;
+    private boolean isRaining = false;
     private long startTime, currentTime;
     long elapsedSeconds = 0;
     public int timeSpeed = 1;
     private GameMap map;
+    private SoundManager soundManager;
 
     public AmbientManager(GameMap map) {
         startTime = System.nanoTime();
@@ -28,11 +30,11 @@ public class AmbientManager {
 
         this.map = map;
         ambientShader = new ShaderProgram(Gdx.files.internal("shaders/passthrough.vsh.glsl"), Gdx.files.internal("shaders/ambient.fsh.glsl"));
-        earthQuakeShader = new ShaderProgram(Gdx.files.internal("shaders/red.vsh.glsl"), Gdx.files.internal("shaders/red.fsh.glsl"));
         if (!ambientShader.isCompiled()) {
             System.out.println(ambientShader.getLog());
         }
         this.map.getMapRenderer().getBatch().setShader(ambientShader);
+        soundManager = new SoundManager(this.map.getGameScreen().getMainGame());
 
     }
 
@@ -51,9 +53,7 @@ public class AmbientManager {
         }
         ambientShader.end();
 
-
         /* END NIGHT SIMULATION */
-
 
     }
 
@@ -65,7 +65,7 @@ public class AmbientManager {
         }
 
         currentTime = System.nanoTime();
-
+        this.soundManager.update();
         /* END TIME SIMULATION */
     }
 
@@ -80,4 +80,13 @@ public class AmbientManager {
     public long getCurrentTime() {
         return elapsedSeconds;
     }
+
+    public void setRaining(boolean val)
+    {
+        this.isRaining = val;
+    }
+
+    public boolean isDay(){return !isNightTime;}
+    public boolean isNight(){return isNightTime;}
+    public boolean isRaining(){return isRaining;}
 }

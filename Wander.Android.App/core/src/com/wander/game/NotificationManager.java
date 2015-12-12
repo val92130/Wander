@@ -24,6 +24,7 @@ public class NotificationManager {
     private Skin skin;
     private BitmapFont font;
     private Actor currentNotification;
+    private boolean finished = false;
 
     public NotificationManager(MainGame game)
     {
@@ -45,6 +46,7 @@ public class NotificationManager {
 
         stage.addActor(notif);
         now = new Date();
+        this.finished = false;
     }
 
 
@@ -54,18 +56,28 @@ public class NotificationManager {
         if(now != null)
         {
             Date t = new Date();
-            long diffInSeconds = (t.getTime() - now.getTime()) ;
+            long diffInMilli = (t.getTime() - now.getTime()) ;
+            if(diffInMilli >= Constants.NOTIFICATION_DURATION_MILLI){
+                finished = true;
+            }
 
-            if(diffInSeconds >= 2000){
-                this.now = new Date();
+            if(finished)
+            {
                 if(currentNotification != null)
                 {
                     if(stage.getActors().size >= 1 ){
-                        stage.getActors().get(0).remove();
-                        this.currentNotification = null;
+                        Color c = new Color(stage.getActors().get(0).getColor().r,stage.getActors().get(0).getColor().g,stage.getActors().get(0).getColor().b,stage.getActors().get(0).getColor().a - 0.05f);
+                        stage.getActors().get(0).setColor(c);
+                        if(c.a <= 0)
+                        {
+                            stage.getActors().get(0).remove();
+                            this.currentNotification = null;
+                            this.finished = false;
+                            this.now = new Date();
+                        }
+
                     }
                 }
-
             }
         }
 

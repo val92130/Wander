@@ -1,8 +1,13 @@
 package com.wander.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -12,12 +17,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.wander.game.models.ClientPlayer;
-import com.wander.game.models.EMessageType;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.wander.game.player.ClientPlayer;
 import com.wander.game.models.MessageModel;
-import com.wander.game.models.Player;
 import com.wander.game.models.PlayerModel;
-import com.wander.game.models.ServerPlayer;
+import com.wander.game.player.ServerPlayer;
 import com.wander.game.screens.GameScreen;
 import com.wander.game.weather.AmbientManager;
 
@@ -43,6 +48,10 @@ public class GameMap {
     private SpriteBatch batch;
     private AmbientManager ambientManager;
     private Timer updateTimer;
+    private ArrayList<Vector2> propertyPositions;
+    private ArrayList<Vector2> mairiePositions;
+    private Texture moneyDecal;
+    private Texture mairieDecal;
 
     public GameMap(String fileName, GameScreen game) {
 
@@ -78,6 +87,37 @@ public class GameMap {
             }
         }, 10000, 10000);
 
+        this.propertyPositions = new ArrayList<Vector2>();
+        this.mairiePositions = new ArrayList<Vector2>();
+
+        for(int i = 0; i < this.getHouseLayer().getWidth(); i++)
+        {
+            for(int j = 0; j < this.getHouseLayer().getHeight(); j++)
+            {
+                try{
+                    TiledMapTileLayer.Cell c = this.getHouseLayer().getCell(i, j);
+                    if(c != null)
+                    {
+                        System.out.println("found house tile at : " + i + " : " + j);
+                        if(c.getTile().getProperties().containsKey("propertyId"))
+                        {
+                            propertyPositions.add(new Vector2(i * Constants.TILE_SIZE * getScaleRatio(), j * Constants.TILE_SIZE * getScaleRatio()));
+                        } else if(c.getTile().getProperties().containsKey("Mairie"))
+                        {
+                            this.mairiePositions.add(new Vector2(i * Constants.TILE_SIZE * getScaleRatio(), j * Constants.TILE_SIZE * getScaleRatio()));
+                        }
+
+                    }
+                } catch(Exception e)
+                {
+
+                }
+            }
+        }
+
+        this.moneyDecal = new Texture(Gdx.files.internal("images/money-decal.png"));
+        this.mairieDecal = new Texture(Gdx.files.internal("images/job-decal.png"));
+
 
     }
 
@@ -109,12 +149,22 @@ public class GameMap {
         for(int i = 0; i < this.players.size(); i++) {
             this.players.get(i).render((SpriteBatch) mapRenderer.getBatch());
         }
+
+        for (Vector2 v : this.propertyPositions) {
+            mapRenderer.getBatch().draw(this.moneyDecal,v.x, v.y, Constants.TILE_SIZE * this.getScaleRatio(), Constants.TILE_SIZE * this.getScaleRatio() );
+        }
+        for (Vector2 v : this.mairiePositions) {
+            mapRenderer.getBatch().draw(this.mairieDecal,v.x, v.y, Constants.TILE_SIZE * this.getScaleRatio(), Constants.TILE_SIZE * this.getScaleRatio() );
+        }
         this.currentPlayer.render((SpriteBatch) mapRenderer.getBatch());
         mapRenderer.getBatch().end();
+
 
         batch.begin();
         debugRenderer.render(world, game.getCameraManager().getCamera().combined);
         batch.end();
+
+
 
         this.ambientManager.render((SpriteBatch) mapRenderer.getBatch());
     }
@@ -214,6 +264,11 @@ public class GameMap {
             }
         }
         return null;
+    }
+
+    public ArrayList<ServerPlayer> getAllPlayers()
+    {
+        return this.players;
     }
 
 

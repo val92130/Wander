@@ -33,4 +33,16 @@ public class util {
         }
         return backgroundSprite;
     }
+
+    public static float Lerp(float goal, float current, float time) {
+        float diff = goal - current;
+
+        if (diff > time) {
+            return current + time;
+        }
+        if (diff < -time) {
+            return current - time;
+        }
+        return goal;
+    }
 }

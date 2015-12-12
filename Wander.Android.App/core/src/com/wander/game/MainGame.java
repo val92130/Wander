@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.wander.game.models.EMessageType;
 import com.wander.game.models.MessageModel;
 import com.wander.game.models.NotificationMessage;
+import com.wander.game.models.ServerPropertyModel;
 import com.wander.game.screens.GameScreen;
 import com.wander.game.screens.LoadingScreen;
 import com.wander.game.screens.LoginScreen;
@@ -17,6 +18,7 @@ import com.wander.game.screens.MainMenuScreen;
 import com.wander.game.services.HubService;
 import com.wander.game.services.IHubService;
 
+import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 
@@ -93,6 +95,8 @@ public class MainGame extends Game {
         }, MessageModel.class);
 
 
+
+
     }
 
 
@@ -141,6 +145,31 @@ public class MainGame extends Game {
         this.setScreen(mainMenuScreen);
     }
 
+    public void sendPublicMessage(String content)
+    {
+        if(content == null)return;
+        if(content.length() == 0) return;
+        this.getHubService().getHub().invoke("SendPublicMessage", content);
+    }
+
+    public void sendPrivateMessage(String content, String to)
+    {
+        if(to == null && content == null)return;
+        if(to.length() == 0 && content.length() == 0) return;
+        this.getHubService().getHub().invoke("SendPrivateMessage", content, to).done(new Action<Void>() {
+            @Override
+            public void run(Void aVoid) throws Exception {
+                addNotification("Message sent ! ", EMessageType.success);
+            }
+        });
+    }
+
+    public void buyProperty(ServerPropertyModel model)
+    {
+        if(!isConnected())return;
+        this.getHubService().getHub().invoke("BuyProperty", model.PropertyId);
+    }
+
     public void startGameScreen()
     {
 
@@ -150,6 +179,7 @@ public class MainGame extends Game {
             this.setScreen(this.gameScreen);
         }
     }
+
 
     public void onConnectionEstablished()
     {

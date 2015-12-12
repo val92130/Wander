@@ -1,11 +1,10 @@
-package com.wander.game.models;
+package com.wander.game.player;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.wander.game.Constants;
 import com.wander.game.GameMap;
-import com.wander.game.MainGame;
 
 /**
  * Created by valentin on 08/12/2015.
