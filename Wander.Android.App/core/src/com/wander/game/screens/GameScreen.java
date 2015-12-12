@@ -206,6 +206,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        this.map = null;
+        this.camera = null;
+        this.batch.dispose();
     }
 }

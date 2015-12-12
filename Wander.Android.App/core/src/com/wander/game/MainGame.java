@@ -10,11 +10,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.wander.game.models.EMessageType;
 import com.wander.game.models.MessageModel;
 import com.wander.game.models.NotificationMessage;
-import com.wander.game.models.PlayerModel;
 import com.wander.game.screens.GameScreen;
+import com.wander.game.screens.LoadingScreen;
 import com.wander.game.screens.LoginScreen;
 import com.wander.game.screens.MainMenuScreen;
-import com.wander.game.services.AndroidHubService;
 import com.wander.game.services.HubService;
 import com.wander.game.services.IHubService;
 
@@ -35,6 +34,7 @@ public class MainGame extends Game {
     private Texture playerTexture = new Texture(Gdx.files.internal("images/player.png"));
     private NotificationManager notificationManager;
     private SpriteBatch uiSpritebatch;
+    private LoadingScreen loadingScreen;
 
     public MainGame()
     {
@@ -44,16 +44,14 @@ public class MainGame extends Game {
 
     @Override
     public void create() {
-        if (Gdx.app.getType() == Application.ApplicationType.Android) {
-            this.hubService = new AndroidHubService("http://wander.nightlydev.fr", "GameHub");
-        } else {
-            this.hubService = new HubService("http://wander.nightlydev.fr", "GameHub");
-        }
-        loginScreen = new LoginScreen(this);
 
+        this.hubService = new HubService(this,"http://wander.nightlydev.fr", "GameHub");
+        loginScreen = new LoginScreen(this);
+        this.loadingScreen = new LoadingScreen(this);
+        this.setScreen(this.loadingScreen);
 
         hubService.start();
-        this.setScreen(loginScreen);
+
         uiSpritebatch = new SpriteBatch();
 
         this.getHubService().getHub().on("notify", new SubscriptionHandler1<NotificationMessage>() {
@@ -93,6 +91,8 @@ public class MainGame extends Game {
                 });
             }
         }, MessageModel.class);
+
+
     }
 
 
@@ -103,7 +103,7 @@ public class MainGame extends Game {
         super.render();
 
         uiSpritebatch.begin();
-        this.notificationManager.render(this.uiSpritebatch);
+            this.notificationManager.render(this.uiSpritebatch);
         uiSpritebatch.end();
     }
 
@@ -117,7 +117,7 @@ public class MainGame extends Game {
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
-                notificationManager.add(_this, _content, _type);
+                notificationManager.add(_content, _type);
             }
         });
 
@@ -150,6 +150,42 @@ public class MainGame extends Game {
             this.setScreen(this.gameScreen);
         }
     }
+
+    public void onConnectionEstablished()
+    {
+        this.setScreen(this.loginScreen);
+    }
+
+    public void retryConnection()
+    {
+        hubService.start();
+    }
+
+    public void onConnectionError(){
+        final MainGame _this = this;
+        Gdx.app.postRunnable(new Runnable() {
+
+            @Override
+            public void run() {
+                if(_this.connected)
+                {
+                    if(_this.gameScreen != null){
+                        _this.gameScreen.dispose();
+                        _this.gameScreen = null;
+                    }
+
+                    _this.notificationManager.add("Connection error, please reconnect", EMessageType.error);
+                    _this.setScreen(_this.loadingScreen);
+                    _this.connected = false;
+                } else
+                {
+                    _this.loadingScreen.onConnectionError();
+                }
+            }
+        });
+
+    }
+    public boolean isConnected(){return this.connected;};
 
     public void onLogOut(){
         this.setScreen(new LoginScreen(this));

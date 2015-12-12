@@ -19,28 +19,30 @@ import java.util.Date;
  */
 public class NotificationManager {
 
-    private ArrayList<Actor> notificationList;
     private Stage stage;
     private Date now;
+    private Skin skin;
+    private BitmapFont font;
+    private Actor currentNotification;
 
     public NotificationManager(MainGame game)
     {
-        notificationList = new ArrayList<Actor>();
         this.stage = new Stage();
+        this.skin = new Skin(Gdx.files.internal("uiskin.json"));
+        this.font = this.skin.getFont("default-font");
     }
 
-    public void add(MainGame game, String content, EMessageType type)
+    public void add(String content, EMessageType type)
     {
-        Vector2 pos = new Vector2(0, Gdx.graphics.getHeight() - (util.GetStringHeight(new BitmapFont(), content) + (30 * 2)));
-        Notification newNotif = new Notification(game,pos,content,type);
-        if(notificationList.size() >= 1)
-        {
-            Vector2 lastNotifPos = new Vector2(notificationList.get(notificationList.size() -1).getX(),notificationList.get(notificationList.size() -1).getY());
-            newNotif.setPosition(new Vector2(newNotif.getPosition().x, lastNotifPos.y - 20 - notificationList.get(notificationList.size() -1).getHeight()));
+        Vector2 pos = new Vector2(0, Gdx.graphics.getHeight() - (util.GetStringHeight(this.font, content) + (30 * 2)));
+
+        TextButton notif = createNotification(pos,content,type);
+        currentNotification = notif;
+
+        if(stage.getActors().size >= 1 ){
+            stage.getActors().get(0).remove();
         }
 
-        TextButton notif = createNotification(newNotif);
-        notificationList.add(notif);
         stage.addActor(notif);
         now = new Date();
     }
@@ -56,10 +58,12 @@ public class NotificationManager {
 
             if(diffInSeconds >= 2000){
                 this.now = new Date();
-                if(stage.getActors().size >= 1 && this.notificationList.size() >= 1 ){
-                    stage.getActors().get(0).remove();
-                    this.notificationList.remove(0);
-                    System.out.println("Elapsed");
+                if(currentNotification != null)
+                {
+                    if(stage.getActors().size >= 1 ){
+                        stage.getActors().get(0).remove();
+                        this.currentNotification = null;
+                    }
                 }
 
             }
@@ -67,11 +71,11 @@ public class NotificationManager {
 
     }
 
-    private TextButton createNotification(Notification notification)
+    private TextButton createNotification(Vector2 position, String content, EMessageType type)
     {
-        TextButton notifButton = new TextButton(notification.getContent(), new Skin(Gdx.files.internal("uiskin.json")), "default");
+        TextButton notifButton = new TextButton(content, new Skin(Gdx.files.internal("uiskin.json")), "default");
         Color c;
-        switch(notification.getMessageType()){
+        switch(type){
             case info:
                 c = new Color(0.10f, 0, 0.85f,0.5f);
                 break;
@@ -91,9 +95,12 @@ public class NotificationManager {
         }
         notifButton.setColor(c);
         int padding = 20;
-        notifButton.setWidth(notification.getWidth() + padding * 2);
-        notifButton.setHeight(notification.getHeight() + padding * 2);
-        notifButton.setPosition(notification.getPosition().x + padding/2, notification.getPosition().y + padding / 2);
+        float btnWidth = util.GetStringWidth(this.font, content);
+        float btnHeight = util.GetStringHeight(this.font, content);
+
+        notifButton.setWidth(btnWidth + padding * 2);
+        notifButton.setHeight(btnHeight + padding * 2);
+        notifButton.setPosition(Gdx.graphics.getWidth() / 2 - notifButton.getWidth()/2, position.y + padding / 2);
 
         return notifButton;
     }

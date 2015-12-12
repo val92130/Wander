@@ -1,5 +1,6 @@
 package com.wander.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
 /**
@@ -18,4 +19,18 @@ public class Constants {
 
     // Tile Map
     public static int TILE_SIZE = 16;
+
+    //UI
+    private static float width = Gdx.graphics.getWidth();
+    private static float height = Gdx.graphics.getHeight();
+    private static float padding = height * 0.10f;
+    private static float btnWidth = width * 0.8f;
+    private static float btnHeight = height / 10;
+
+    public static float BTN_MENU_WIDTH = btnWidth;
+    public static float BTN_MENU_HEIGHT = btnHeight;
+    public static float BTN_MENU_PADDING = padding;
+
+
+
 }

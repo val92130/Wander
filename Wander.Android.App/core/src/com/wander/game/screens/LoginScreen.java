@@ -14,11 +14,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.wander.game.Constants;
 import com.wander.game.MainGame;
 import com.wander.game.util;
 
@@ -34,29 +36,38 @@ public class LoginScreen implements Screen {
     private SpriteBatch batch;
     private TextArea loginTextArea;
     private TextArea passwordTextArea;
-    private Label errorLabel;
     private Button loginButton;
     private Sprite backgroundSprite;
+    private Table table;
 
     public LoginScreen(MainGame game)
     {
         this.batch = new SpriteBatch();
-        this.stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(this.stage);
+        this.stage = new Stage();
         this.game = game;
 
         skin = new Skin(Gdx.files.internal("uiskin.json"));
-        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("ui/ui-blue.atlas"));
-        Skin btnSkin = new Skin(atlas);
-        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(btnSkin.getDrawable("button_01"),btnSkin.getDrawable("button_02"),btnSkin.getDrawable("button_01"), new BitmapFont());
-        loginButton = new TextButton("Login", style);
+        table = new Table(skin);
+        table.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
 
-        loginButton.setWidth(width / 2);
-        loginButton.setHeight(height / 5);
-        loginButton.setPosition(Gdx.graphics.getWidth() / 2 - (loginButton.getWidth() / 2), Gdx.graphics.getHeight() / 2 - (loginButton.getHeight() / 2));
+
+        loginTextArea = new TextArea("login", skin);
+
+        table.add(loginTextArea).size(width * 0.8f, height * 0.2f).padTop(10).padBottom(10);
+        table.row();
+
+        passwordTextArea = new TextArea("password", skin);
+        passwordTextArea.setPasswordMode(true);
+        passwordTextArea.setPasswordCharacter('*');
+
+        table.add(passwordTextArea).size(width * 0.8f, height * 0.2f).padTop(10).padBottom(10);
+        table.row();
+
+
+        loginButton = new TextButton("Login", skin);
 
         loginButton.addListener(new ClickListener() {
             @Override
@@ -65,24 +76,13 @@ public class LoginScreen implements Screen {
             }
         });
 
-        passwordTextArea = new TextArea("password", skin);
-        passwordTextArea.setPasswordMode(true);
-        passwordTextArea.setSize(width / 2, height / 10);
-        passwordTextArea.setPasswordCharacter('*');
-        passwordTextArea.setPosition(Gdx.graphics.getWidth() / 2 - passwordTextArea.getWidth() / 2, loginButton.getY() + loginButton.getHeight() + height / 15);
+        table.add(loginButton).width(Constants.BTN_MENU_WIDTH).height(Constants.BTN_MENU_HEIGHT).padTop(Constants.BTN_MENU_PADDING).padBottom(Constants.BTN_MENU_PADDING);
+        table.row();
 
-        loginTextArea = new TextArea("login", skin);
-        loginTextArea.setSize(width/2, height/10);
-        loginTextArea.setPosition(Gdx.graphics.getWidth() / 2 - loginTextArea.getWidth()/2, passwordTextArea.getY() + loginTextArea.getHeight() + height / 15);
+        table.center();
 
-        errorLabel = new Label("", skin);
-        errorLabel.setPosition(Gdx.graphics.getWidth() / 2 - errorLabel.getWidth()/2, loginButton.getY() - 10 - errorLabel.getHeight());
-        errorLabel.setColor(Color.RED);
+        stage.addActor(table);
 
-        stage.addActor(loginButton);
-        stage.addActor(passwordTextArea);
-        stage.addActor(loginTextArea);
-        stage.addActor(errorLabel);
 
 
     }
@@ -90,6 +90,8 @@ public class LoginScreen implements Screen {
     public void show() {
         backgroundSprite = util.GetBackgroundSprite();
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        Gdx.input.setInputProcessor(this.stage);
     }
 
     @Override
@@ -134,13 +136,7 @@ public class LoginScreen implements Screen {
         String pass = passwordTextArea.getText();
         boolean success = game.getHubService().connect(pseudo, pass);
 
-        if(!success) {
-
-            String msg = "Wrong username/password";
-            errorLabel.setText(msg);
-            errorLabel.setColor(Color.RED);
-            errorLabel.setPosition(Gdx.graphics.getWidth() / 2 - errorLabel.getWidth() / 2 - util.GetStringWidth(skin.getFont("default-font"), msg) / 2, loginButton.getY() - 10 - errorLabel.getHeight());
-        } else{
+        if(success) {
             game.SetConnected(pseudo);
         }
     }

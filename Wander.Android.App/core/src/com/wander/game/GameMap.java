@@ -82,7 +82,11 @@ public class GameMap {
     }
 
     private void updateServer(){
-        this.game.getMainGame().getHubService().getHub().invoke("Update");
+        if(this.game.getMainGame().isConnected())
+        {
+            this.game.getMainGame().getHubService().getHub().invoke("Update");
+        }
+
     }
 
     public void update() {

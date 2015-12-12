@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.wander.game.Constants;
 import com.wander.game.MainGame;
 import com.wander.game.util;
 
@@ -49,14 +50,12 @@ public class MainMenuScreen implements Screen {
             }
         });
 
-        float width = Gdx.graphics.getWidth();
-        float height = Gdx.graphics.getHeight();
 
-        table.add(startGame).width(width / 5).height(height/10).padTop(10).padBottom(3);
+        table.add(startGame).width(Constants.BTN_MENU_WIDTH).height(Constants.BTN_MENU_HEIGHT).padTop(Constants.BTN_MENU_PADDING).padBottom(Constants.BTN_MENU_PADDING / 4);
         table.row();
 
         TextButton playersButton=new TextButton("Players",skin);
-        table.add(playersButton).width(width / 5).height(height/10).padTop(10).padBottom(3);
+        table.add(playersButton).width(Constants.BTN_MENU_WIDTH).height(Constants.BTN_MENU_HEIGHT).padTop(Constants.BTN_MENU_PADDING).padBottom(Constants.BTN_MENU_PADDING);
         table.row();
 
         table.center();
