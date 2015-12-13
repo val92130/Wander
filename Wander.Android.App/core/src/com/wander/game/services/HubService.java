@@ -3,10 +3,12 @@ package com.wander.game.services;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.wander.game.MainGame;
+import com.wander.game.models.EMessageType;
 import com.wander.game.models.NotificationMessage;
 import com.wander.game.models.UserModel;
 
 import microsoft.aspnet.signalr.client.Action;
+import microsoft.aspnet.signalr.client.ConnectionState;
 import microsoft.aspnet.signalr.client.ErrorCallback;
 import microsoft.aspnet.signalr.client.LogLevel;
 import microsoft.aspnet.signalr.client.Logger;
@@ -65,6 +67,7 @@ public class HubService implements IHubService {
         });
 
 
+
     }
 
     private void connectionError()
@@ -92,28 +95,34 @@ public class HubService implements IHubService {
     }
 
     public boolean connect(String pseudo, String password){
+
         successConnect = false;
-        if(pseudo == null || password == null) try {
-            throw new Exception("Pseudo or password is null");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        UserModel u = new UserModel();
-        u.Login = pseudo;
-        u.Email = "mail";
-        u.Password = password;
-        u.Sex = 0;
-        try {
-            hub.invoke(Boolean.class,"Connect", u).done(new Action<Boolean>() {
-                @Override
-                public void run(Boolean val) throws Exception {
-                    successConnect = val;
-                }
-            }).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+        if(this.connection.getState() != ConnectionState.Connected){
+            this.start();
+            this.game.addNotification("Connection error, check your network", EMessageType.error);
+        } else{
+            if (pseudo == null || password == null) try {
+                throw new Exception("Pseudo or password is null");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            UserModel u = new UserModel();
+            u.Login = pseudo;
+            u.Email = "mail";
+            u.Password = password;
+            u.Sex = 0;
+            try {
+                hub.invoke(Boolean.class, "Connect", u).done(new Action<Boolean>() {
+                    @Override
+                    public void run(Boolean val) throws Exception {
+                        successConnect = val;
+                    }
+                }).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
         }
         return successConnect;
     }

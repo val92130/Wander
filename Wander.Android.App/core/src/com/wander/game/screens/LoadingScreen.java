@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.wander.game.AssetManager;
 import com.wander.game.Constants;
 import com.wander.game.MainGame;
 import com.wander.game.util;
@@ -38,11 +39,9 @@ public class LoadingScreen implements Screen {
     public void show() {
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
-        float padding = height * 0.10f;
-        float btnWidth = width * 0.8f;
 
         this.batch = new SpriteBatch();
-        this.skin = new Skin(Gdx.files.internal("uiskin.json"));
+        this.skin = AssetManager.getSkin();
         this.font = this.skin.getFont("default-font");
         this.stage = new Stage();
 
@@ -78,7 +77,7 @@ public class LoadingScreen implements Screen {
         float x = (Gdx.graphics.getWidth() / 2) - (fontWidth/2);
         float y = (Gdx.graphics.getHeight() / 2) + (fontHeight/2) + Constants.BTN_MENU_PADDING;
 
-
+        batch.begin();
         if(this.error)
         {
             this.stage.act(delta);
@@ -88,7 +87,7 @@ public class LoadingScreen implements Screen {
 
             float xEr = (Gdx.graphics.getWidth() / 2) - (fontWidthEr/2);
             float yEr = (Gdx.graphics.getHeight() / 2) + (fontHeightEr/2) + Constants.BTN_MENU_PADDING;
-            batch.begin();
+
             this.font.setColor(Color.RED);
             this.font.draw(batch, "Connection error", xEr, yEr);
             this.font.setColor(Color.WHITE);

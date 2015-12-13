@@ -61,12 +61,13 @@ public class MainMenuScreen implements Screen {
         table.center();
         stage.addActor(table);
         Gdx.input.setInputProcessor(this.stage);
+        batch = new SpriteBatch();
 
 
     }
     @Override
     public void show() {
-        batch = new SpriteBatch();
+
 
         backgroundSprite = util.GetBackgroundSprite();
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

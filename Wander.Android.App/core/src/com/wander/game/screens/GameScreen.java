@@ -20,12 +20,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.wander.game.AssetManager;
 import com.wander.game.Camera;
 import com.wander.game.Constants;
 import com.wander.game.GameMap;
 import com.wander.game.InputHandling.KeyBoardInputManager;
 import com.wander.game.InputHandling.TouchInputManager;
 import com.wander.game.MainGame;
+import com.wander.game.ModalManager;
 import com.wander.game.dialogs.ChatDialog;
 import com.wander.game.dialogs.HouseBuyDialog;
 import com.wander.game.models.ServerPropertyModel;
@@ -55,7 +57,7 @@ public class GameScreen implements Screen {
     private Drawable touchKnob;
     private Stage stage;
     private Skin skin;
-    private Dialog currentDialogWindow;
+    private ModalManager modalManager;
 
 
     public GameScreen(final MainGame game)
@@ -66,6 +68,43 @@ public class GameScreen implements Screen {
         this.map = new GameMap("maps/map2.tmx", this);
         camera = new Camera(this);
 
+        this.registerHubEvents();
+
+        this.skin = AssetManager.getSkin();
+
+        InputMultiplexer im = new InputMultiplexer();
+        GestureDetector gd = new GestureDetector(new TouchInputManager(this));
+        im.addProcessor(gd);
+        im.addProcessor(new KeyBoardInputManager(this));
+        inputManager = new KeyBoardInputManager(this);
+
+        System.out.println(Constants.MAP_SIZE * Constants.TILE_SIZE * camera.getCamera().zoom);
+        this.getCameraManager().getCamera().position.set(new Vector3(this.getCameraManager().getCamera().position.x, (Constants.MAP_SIZE * Constants.TILE_SIZE * camera.getCamera().zoom) * map.getScaleRatio() - this.camera.getCamera().viewportWidth / 2, 0));
+        System.out.println(camera.getCamera().position);
+        System.out.println(camera.getCamera().zoom);
+        this.getCameraManager().getCamera().update();
+
+        touchpadSkin = new Skin();
+        touchpadSkin.add("touchBackground", new Texture("images/touchBackground.png"));
+        touchpadSkin.add("touchKnob", new Texture("images/touchKnob.png"));
+        touchpadStyle = new Touchpad.TouchpadStyle();
+        touchBackground = touchpadSkin.getDrawable("touchBackground");
+        touchKnob = touchpadSkin.getDrawable("touchKnob");
+        touchpadStyle.background = touchBackground;
+        touchpadStyle.knob = touchKnob;
+        touchpad = new Touchpad(10, touchpadStyle);
+        touchpad.setBounds(15, 15, Gdx.graphics.getHeight() / 3, Gdx.graphics.getHeight() / 3);
+
+        stage = new Stage(new ScreenViewport(), batch);
+        if(Gdx.app.getType() == Application.ApplicationType.Android) stage.addActor(touchpad);
+        im.addProcessor(stage);
+        Gdx.input.setInputProcessor(im);
+
+        this.modalManager = new ModalManager(this.getMainGame(), this.stage);
+
+    }
+
+    private void registerHubEvents(){
         this.game.getHubService().getHub().on("playerConnected", new SubscriptionHandler1<PlayerModel>() {
             @Override
             public void run(PlayerModel o) {
@@ -126,43 +165,10 @@ public class GameScreen implements Screen {
                 });
             }
         }, Boolean.class);
-
-        this.skin = new Skin(Gdx.files.internal("uiskin.json"));
-
-
     }
 
     @Override
     public void show() {
-
-
-        InputMultiplexer im = new InputMultiplexer();
-        GestureDetector gd = new GestureDetector(new TouchInputManager(this));
-        im.addProcessor(gd);
-        im.addProcessor(new KeyBoardInputManager(this));
-        inputManager = new KeyBoardInputManager(this);
-
-        System.out.println(Constants.MAP_SIZE * Constants.TILE_SIZE * camera.getCamera().zoom);
-        this.getCameraManager().getCamera().position.set(new Vector3(this.getCameraManager().getCamera().position.x, (Constants.MAP_SIZE * Constants.TILE_SIZE * camera.getCamera().zoom) * map.getScaleRatio() - this.camera.getCamera().viewportWidth / 2, 0));
-        System.out.println(camera.getCamera().position);
-        System.out.println(camera.getCamera().zoom);
-        this.getCameraManager().getCamera().update();
-
-        touchpadSkin = new Skin();
-        touchpadSkin.add("touchBackground", new Texture("images/touchBackground.png"));
-        touchpadSkin.add("touchKnob", new Texture("images/touchKnob.png"));
-        touchpadStyle = new Touchpad.TouchpadStyle();
-        touchBackground = touchpadSkin.getDrawable("touchBackground");
-        touchKnob = touchpadSkin.getDrawable("touchKnob");
-        touchpadStyle.background = touchBackground;
-        touchpadStyle.knob = touchKnob;
-        touchpad = new Touchpad(10, touchpadStyle);
-        touchpad.setBounds(15, 15, Gdx.graphics.getHeight() / 3, Gdx.graphics.getHeight() / 3);
-
-        stage = new Stage(new ScreenViewport(), batch);
-        if(Gdx.app.getType() == Application.ApplicationType.Android) stage.addActor(touchpad);
-        im.addProcessor(stage);
-        Gdx.input.setInputProcessor(im);
 
 
     }
@@ -193,6 +199,10 @@ public class GameScreen implements Screen {
         return camera;
     }
 
+    public ModalManager getModalManager(){
+        return this.modalManager;
+    }
+
     public GameMap getMap()
     {
         return map;
@@ -200,62 +210,6 @@ public class GameScreen implements Screen {
 
     public MainGame getMainGame(){ return game;}
 
-    public void openPublicChatBox(){
-
-        if(this.currentDialogWindow == null )
-        {
-            this.currentDialogWindow = new ChatDialog(this.getMainGame(), this.stage, this.skin, "Send a public message");
-        } else if(!this.currentDialogWindow.isVisible())
-        {
-            this.currentDialogWindow = new ChatDialog(this.getMainGame(), this.stage, this.skin, "Send a public message");
-        }
-
-    }
-
-    public void openPrivateChatBox(String dest)
-    {
-        if(this.currentDialogWindow == null )
-        {
-            this.currentDialogWindow = new ChatDialog(this.getMainGame(), this.stage, this.skin, "Send a message to " + dest, dest);
-        } else if(!this.currentDialogWindow.isVisible())
-        {
-            this.currentDialogWindow = new ChatDialog(this.getMainGame(), this.stage, this.skin, "Send a message to " + dest, dest);
-        }
-
-
-    }
-
-    public void openBuyPropertyModal(int propertyId)
-    {
-        this.getMainGame().getHubService().getHub().invoke(ServerPropertyModel.class, "GetPropertyInfo", propertyId).done(new Action<ServerPropertyModel>() {
-            @Override
-            public void run(ServerPropertyModel serverPropertyModel) throws Exception {
-                final ServerPropertyModel _res = serverPropertyModel;
-                Gdx.app.postRunnable(new Runnable() {
-                    @Override
-                    public void run() {
-                        System.out.println(_res);
-                        openModalProperty(_res);
-                    }
-                });
-            }
-        });
-    }
-
-    private void openModalProperty(ServerPropertyModel model)
-    {
-        if(model != null)
-        {
-            if(this.currentDialogWindow == null )
-            {
-                this.currentDialogWindow = new HouseBuyDialog(this.getMainGame(), this.stage, this.skin, "Buy property : " + model.PropertyName + "?", model);
-            } else if(!this.currentDialogWindow.isVisible())
-            {
-                this.currentDialogWindow = new HouseBuyDialog(this.getMainGame(), this.stage, this.skin, "Buy property : " + model.PropertyName + "?", model);
-            }
-
-        }
-    }
 
     public void onScreenTouched(int x, int y)
     {
@@ -266,7 +220,7 @@ public class GameScreen implements Screen {
             if(candidate.getSprite().getBoundingRectangle().contains(cam.x, cam.y))
             {
                 System.out.println("touched player " + candidate.getPseudo());
-                openPrivateChatBox(candidate.getPseudo());
+                modalManager.openPrivateChatBox(candidate.getPseudo());
                 break;
             }
         }
@@ -285,7 +239,7 @@ public class GameScreen implements Screen {
         }
         if(houseId != -1)
         {
-            openBuyPropertyModal(houseId);
+            modalManager.openBuyPropertyModal(houseId);
         }
 
     }

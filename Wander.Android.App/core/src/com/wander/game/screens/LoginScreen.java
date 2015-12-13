@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.wander.game.AssetManager;
 import com.wander.game.Constants;
 import com.wander.game.MainGame;
 import com.wander.game.dialogs.ChatDialog;
@@ -43,11 +44,23 @@ public class LoginScreen implements Screen {
 
     public LoginScreen(MainGame game)
     {
-        this.batch = new SpriteBatch();
-        this.stage = new Stage();
+
         this.game = game;
 
-        skin = new Skin(Gdx.files.internal("uiskin.json"));
+
+
+
+
+
+    }
+
+    @Override
+    public void show() {
+        this.batch = new SpriteBatch();
+        this.stage = new Stage();
+
+        skin = AssetManager.getSkin();
+
         table = new Table(skin);
         table.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
@@ -84,10 +97,6 @@ public class LoginScreen implements Screen {
 
         stage.addActor(table);
 
-
-    }
-    @Override
-    public void show() {
         backgroundSprite = util.GetBackgroundSprite();
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 

@@ -51,7 +51,7 @@ public class KeyBoardInputManager implements InputProcessor {
         {
             this.game.getMap().actionPressed();
         } else if(keycode == Constants.KEY_CHAT){
-            this.game.openPublicChatBox();
+            this.game.getModalManager().openPublicChatBox();
         }
 
         return false;
