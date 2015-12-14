@@ -164,8 +164,6 @@ public class GameMap {
         debugRenderer.render(world, game.getCameraManager().getCamera().combined);
         batch.end();
 
-
-
         this.ambientManager.render((SpriteBatch) mapRenderer.getBatch());
     }
 
