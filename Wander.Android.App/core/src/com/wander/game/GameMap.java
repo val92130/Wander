@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.wander.game.models.WanderVector;
 import com.wander.game.player.ClientPlayer;
 import com.wander.game.models.MessageModel;
 import com.wander.game.models.PlayerModel;
@@ -30,13 +31,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
+
+import microsoft.aspnet.signalr.client.Action;
 
 /**
  * Created by val on 07/12/2015.
  */
 public class GameMap {
     private GameScreen game;
-    private String fileName;
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
     private int ratio = 4;
@@ -45,7 +48,6 @@ public class GameMap {
     private ClientPlayer currentPlayer;
     private World world;
     private Box2DDebugRenderer debugRenderer;
-    private SpriteBatch batch;
     private AmbientManager ambientManager;
     private Timer updateTimer;
     private ArrayList<Vector2> propertyPositions;
@@ -56,7 +58,6 @@ public class GameMap {
     public GameMap(String fileName, GameScreen game) {
 
         this.game = game;
-        this.fileName = fileName;
         map = new TmxMapLoader().load(fileName);
         mapRenderer = new OrthogonalTiledMapRenderer(getMap(), ratio);
         ShaderProgram.pedantic = false;
@@ -69,11 +70,33 @@ public class GameMap {
 
         world = new World(new Vector2(0, 0), true);
         debugRenderer = new Box2DDebugRenderer();
-        batch = new SpriteBatch();
 
         this.players = new ArrayList<ServerPlayer>();
+
+        final WanderVector _pos = new WanderVector();
+        try {
+            this.game.getMainGame().getHubService().getHub().invoke(WanderVector.class, "GetCurrentPosition").done(new Action<WanderVector>() {
+                @Override
+                public void run(WanderVector vec) throws Exception {
+                    final WanderVector _vec = vec;
+                    Gdx.app.postRunnable(new Runnable() {
+                        @Override
+                        public void run() {
+                            _pos.X = _vec.X;
+                            _pos.Y = Constants.MAP_SIZE * Constants.TILE_SIZE  - _vec.Y;
+                            currentPlayer.setPosition(new Vector2(_pos.X, _pos.Y));
+                        }
+                    });
+                }
+            }).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+
         this.currentPlayer = new ClientPlayer(this, this.game.getMainGame().getUserPseudo(), new Vector2(0,0),game.getMainGame().getPlayerSprite());
-        this.game.getMainGame().getHubService().getHub().invoke("GetAllPlayers");
 
 
         this.ambientManager = new AmbientManager(this);
@@ -117,7 +140,7 @@ public class GameMap {
 
         this.moneyDecal = new Texture(Gdx.files.internal("images/money-decal.png"));
         this.mairieDecal = new Texture(Gdx.files.internal("images/job-decal.png"));
-
+        this.game.getMainGame().getHubService().getHub().invoke("GetAllPlayers");
 
     }
 
@@ -165,6 +188,10 @@ public class GameMap {
         batch.end();
 
         this.ambientManager.render((SpriteBatch) mapRenderer.getBatch());
+    }
+
+    public void dispose(){
+        this.ambientManager.dispose();
     }
 
     public boolean addPlayer(PlayerModel p)

@@ -35,7 +35,6 @@ public class LoginScreen implements Screen {
     private MainGame game;
     private Stage stage;
     private Skin skin;
-    private SpriteBatch batch;
     private TextArea loginTextArea;
     private TextArea passwordTextArea;
     private Button loginButton;
@@ -47,16 +46,10 @@ public class LoginScreen implements Screen {
 
         this.game = game;
 
-
-
-
-
-
     }
 
     @Override
     public void show() {
-        this.batch = new SpriteBatch();
         this.stage = new Stage();
 
         skin = AssetManager.getSkin();
@@ -108,9 +101,9 @@ public class LoginScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0.25f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Gdx.graphics.getDeltaTime());
-        batch.begin();
-        backgroundSprite.draw(batch);
-        batch.end();
+        this.game.batch.begin();
+        backgroundSprite.draw(this.game.batch);
+        this.game.batch.end();
         stage.draw();
     }
 

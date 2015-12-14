@@ -26,10 +26,9 @@ public class MainMenuScreen implements Screen {
     private Stage stage;
     private Table table;
     private Skin skin;
-    private SpriteBatch batch;
     private Sprite backgroundSprite;
 
-    public MainMenuScreen(MainGame game)
+    public MainMenuScreen(final MainGame game)
     {
         this.game = game;
         this.stage = new Stage();
@@ -55,14 +54,22 @@ public class MainMenuScreen implements Screen {
         table.row();
 
         TextButton playersButton=new TextButton("Players",skin);
-        table.add(playersButton).width(Constants.BTN_MENU_WIDTH).height(Constants.BTN_MENU_HEIGHT).padTop(Constants.BTN_MENU_PADDING).padBottom(Constants.BTN_MENU_PADDING);
+        table.add(playersButton).width(Constants.BTN_MENU_WIDTH).height(Constants.BTN_MENU_HEIGHT).padTop(Constants.BTN_MENU_PADDING).padBottom(Constants.BTN_MENU_PADDING / 4);
+        table.row();
+
+        TextButton logoutButton=new TextButton("Logout",skin);
+        logoutButton.addListener(new ClickListener()
+        {
+            public void clicked(InputEvent event, float x, float y) {
+                game.logout();
+            }
+        });
+        table.add(logoutButton).width(Constants.BTN_MENU_WIDTH).height(Constants.BTN_MENU_HEIGHT).padTop(Constants.BTN_MENU_PADDING).padBottom(Constants.BTN_MENU_PADDING / 4);
         table.row();
 
         table.center();
         stage.addActor(table);
         Gdx.input.setInputProcessor(this.stage);
-        batch = new SpriteBatch();
-
 
     }
     @Override
@@ -79,9 +86,9 @@ public class MainMenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act(Gdx.graphics.getDeltaTime());
-        batch.begin();
-        backgroundSprite.draw(batch);
-        batch.end();
+        this.game.batch.begin();
+        backgroundSprite.draw(this.game.batch);
+        this.game.batch.end();
         stage.draw();
     }
 

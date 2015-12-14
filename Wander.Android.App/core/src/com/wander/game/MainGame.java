@@ -15,6 +15,7 @@ import com.wander.game.screens.GameScreen;
 import com.wander.game.screens.LoadingScreen;
 import com.wander.game.screens.LoginScreen;
 import com.wander.game.screens.MainMenuScreen;
+import com.wander.game.screens.ScreenManager;
 import com.wander.game.services.HubService;
 import com.wander.game.services.IHubService;
 
@@ -28,33 +29,27 @@ import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 public class MainGame extends Game {
 
     private IHubService hubService;
-    private LoginScreen loginScreen;
     private MainMenuScreen mainMenuScreen;
     private boolean connected;
     private String userPseudo;
-    private GameScreen gameScreen;
     private Texture playerTexture = new Texture(Gdx.files.internal("images/player.png"));
     private NotificationManager notificationManager;
-    private SpriteBatch uiSpritebatch;
-    private LoadingScreen loadingScreen;
+    public SpriteBatch batch;
+    private ScreenManager screenManager;
 
     public MainGame()
     {
         this.notificationManager = new NotificationManager(this);
-
+        this.screenManager = new ScreenManager(this);
     }
 
     @Override
     public void create() {
 
-        this.hubService = new HubService(this,"http://wander.nightlydev.fr", "GameHub");
-        loginScreen = new LoginScreen(this);
-        this.loadingScreen = new LoadingScreen(this);
-        this.setScreen(this.loadingScreen);
+        connectHub();
 
-        hubService.start();
+        this.batch = new SpriteBatch();
 
-        uiSpritebatch = new SpriteBatch();
 
         this.getHubService().getHub().on("notify", new SubscriptionHandler1<NotificationMessage>() {
 
@@ -94,9 +89,13 @@ public class MainGame extends Game {
             }
         }, MessageModel.class);
 
+    }
 
+    public void connectHub(){
+        this.hubService = new HubService(this,"http://wander.nightlydev.fr", "GameHub");
+        this.screenManager.switchToLoadingScreen();
 
-
+        hubService.start();
     }
 
 
@@ -106,9 +105,9 @@ public class MainGame extends Game {
         this.update();
         super.render();
 
-        uiSpritebatch.begin();
-            this.notificationManager.render(this.uiSpritebatch);
-        uiSpritebatch.end();
+        batch.begin();
+            this.notificationManager.render(this.batch);
+        batch.end();
     }
 
 
@@ -129,7 +128,7 @@ public class MainGame extends Game {
 
     public void messageReceived(MessageModel message)
     {
-        if(message != null) this.getGameScreen().getMap().messageReceived(message);
+        if(message != null) this.screenManager.getGameScreen().getMap().messageReceived(message);
     }
 
     public void update()
@@ -141,8 +140,7 @@ public class MainGame extends Game {
     {
         this.connected = true;
         this.userPseudo = pseudo;
-        mainMenuScreen = new MainMenuScreen(this);
-        this.setScreen(mainMenuScreen);
+        this.screenManager.switchToMenuScreen();
     }
 
     public void sendPublicMessage(String content)
@@ -175,15 +173,24 @@ public class MainGame extends Game {
 
         if(this.connected && this.userPseudo != null)
         {
-            gameScreen = new GameScreen(this);
-            this.setScreen(this.gameScreen);
+            screenManager.switchToGameScreen();
         }
+    }
+
+    public void goToMainMenu(){
+        if(this.isConnected())this.getScreenManager().switchToMenuScreen();
+    }
+
+    public void logout(){
+        if(this.isConnected()) this.getHubService().getHub().invoke("Disconnect");
+        this.connectHub();
+        this.screenManager.switchToLoginScreen();
     }
 
 
     public void onConnectionEstablished()
     {
-        this.setScreen(this.loginScreen);
+        screenManager.switchToLoginScreen();
     }
 
     public void retryConnection()
@@ -197,6 +204,10 @@ public class MainGame extends Game {
 
             @Override
             public void run() {
+                screenManager.reset();
+                screenManager.switchToLoadingScreen();
+                _this.connected = false;
+                /*
                 if(_this.connected)
                 {
                     if(_this.gameScreen != null){
@@ -211,6 +222,7 @@ public class MainGame extends Game {
                 {
                     _this.loadingScreen.onConnectionError();
                 }
+                */
             }
         });
 
@@ -218,13 +230,9 @@ public class MainGame extends Game {
     public boolean isConnected(){return this.connected;};
 
     public void onLogOut(){
-        this.setScreen(new LoginScreen(this));
+        this.logout();
     }
 
-    public GameScreen getGameScreen()
-    {
-        return this.gameScreen;
-    }
 
     public IHubService getHubService()
     {
@@ -239,6 +247,8 @@ public class MainGame extends Game {
 
         return new Sprite(this.playerTexture);
     }
+
+    public ScreenManager getScreenManager(){return this.screenManager;}
 
     public BitmapFont getFont()
     {

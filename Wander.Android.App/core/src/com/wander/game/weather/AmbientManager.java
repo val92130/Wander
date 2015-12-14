@@ -69,6 +69,11 @@ public class AmbientManager {
         /* END TIME SIMULATION */
     }
 
+    public void dispose(){
+        this.soundManager.dispose();
+        this.ambientShader.dispose();
+    }
+
     public void setNightTime(boolean value) {
         isNightTime = value;
     }

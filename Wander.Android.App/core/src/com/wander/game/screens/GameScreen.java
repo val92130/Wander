@@ -11,12 +11,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -48,7 +50,6 @@ public class GameScreen implements Screen {
     private MainGame game;
     private Camera camera;
     private GameMap map;
-    private SpriteBatch batch;
     private KeyBoardInputManager inputManager;
     private Touchpad touchpad;
     private Touchpad.TouchpadStyle touchpadStyle;
@@ -58,24 +59,24 @@ public class GameScreen implements Screen {
     private Stage stage;
     private Skin skin;
     private ModalManager modalManager;
+    private InputMultiplexer inputMultiplexer;
 
 
     public GameScreen(final MainGame game)
     {
         this.game = game;
-
-        this.batch = new SpriteBatch();
+        this.registerHubEvents();
         this.map = new GameMap("maps/map2.tmx", this);
         camera = new Camera(this);
 
-        this.registerHubEvents();
+
 
         this.skin = AssetManager.getSkin();
 
-        InputMultiplexer im = new InputMultiplexer();
+        inputMultiplexer = new InputMultiplexer();
         GestureDetector gd = new GestureDetector(new TouchInputManager(this));
-        im.addProcessor(gd);
-        im.addProcessor(new KeyBoardInputManager(this));
+        inputMultiplexer.addProcessor(gd);
+        inputMultiplexer.addProcessor(new KeyBoardInputManager(this));
         inputManager = new KeyBoardInputManager(this);
 
         System.out.println(Constants.MAP_SIZE * Constants.TILE_SIZE * camera.getCamera().zoom);
@@ -95,10 +96,19 @@ public class GameScreen implements Screen {
         touchpad = new Touchpad(10, touchpadStyle);
         touchpad.setBounds(15, 15, Gdx.graphics.getHeight() / 3, Gdx.graphics.getHeight() / 3);
 
-        stage = new Stage(new ScreenViewport(), batch);
+        stage = new Stage(new ScreenViewport(), this.game.batch);
         if(Gdx.app.getType() == Application.ApplicationType.Android) stage.addActor(touchpad);
-        im.addProcessor(stage);
-        Gdx.input.setInputProcessor(im);
+        inputMultiplexer.addProcessor(stage);
+
+
+        TextButton menuButton=new TextButton("...",skin);
+        menuButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                game.goToMainMenu();
+            }
+        });
+        menuButton.setPosition(Gdx.graphics.getWidth() - menuButton.getWidth() - 50, menuButton.getHeight() + 50);
+        this.stage.addActor(menuButton);
 
         this.modalManager = new ModalManager(this.getMainGame(), this.stage);
 
@@ -169,17 +179,17 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(inputMultiplexer);
 
     }
 
     @Override
     public void render(float delta) {
         this.update();
-        batch.setProjectionMatrix(camera.getCamera().combined);
+        this.game.batch.setProjectionMatrix(camera.getCamera().combined);
         Gdx.gl.glClearColor(0, 0, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        map.draw(this.batch);
+        map.draw(this.game.batch);
         stage.draw();
     }
 
@@ -267,8 +277,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        this.map.dispose();
         this.map = null;
         this.camera = null;
-        this.batch.dispose();
     }
 }

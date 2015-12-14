@@ -17,12 +17,13 @@ import com.wander.game.Constants;
 import com.wander.game.MainGame;
 import com.wander.game.util;
 
+import microsoft.aspnet.signalr.client.ConnectionState;
+
 /**
  * Created by val on 12/12/2015.
  */
 public class LoadingScreen implements Screen {
 
-    private SpriteBatch batch;
     private MainGame game;
     private Skin skin;
     private BitmapFont font;
@@ -40,7 +41,6 @@ public class LoadingScreen implements Screen {
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
 
-        this.batch = new SpriteBatch();
         this.skin = AssetManager.getSkin();
         this.font = this.skin.getFont("default-font");
         this.stage = new Stage();
@@ -69,7 +69,6 @@ public class LoadingScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
         String str = "Loading...";
         float fontWidth = util.GetStringWidth(this.font, str);
         float fontHeight = util.GetStringHeight(this.font, str);
@@ -77,8 +76,8 @@ public class LoadingScreen implements Screen {
         float x = (Gdx.graphics.getWidth() / 2) - (fontWidth/2);
         float y = (Gdx.graphics.getHeight() / 2) + (fontHeight/2) + Constants.BTN_MENU_PADDING;
 
-        batch.begin();
-        if(this.error)
+        this.game.batch.begin();
+        if(this.error || this.game.getHubService().getConnection().getState() != ConnectionState.Connected)
         {
             this.stage.act(delta);
             this.stage.draw();
@@ -89,18 +88,15 @@ public class LoadingScreen implements Screen {
             float yEr = (Gdx.graphics.getHeight() / 2) + (fontHeightEr/2) + Constants.BTN_MENU_PADDING;
 
             this.font.setColor(Color.RED);
-            this.font.draw(batch, "Connection error", xEr, yEr);
+            this.font.draw(this.game.batch, "Connection error", xEr, yEr);
             this.font.setColor(Color.WHITE);
         } else
         {
-            this.font.draw(batch, str, x, y);
+            this.font.draw(this.game.batch, str, x, y);
         }
-        batch.end();
+        this.game.batch.end();
     }
 
-    public void onConnectionError(){
-        this.error = true;
-    }
 
     @Override
     public void resize(int width, int height) {

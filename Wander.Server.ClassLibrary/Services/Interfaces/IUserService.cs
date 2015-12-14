@@ -1,4 +1,5 @@
-﻿using Wander.Server.ClassLibrary.Model.Players;
+﻿using Wander.Server.ClassLibrary.Model;
+using Wander.Server.ClassLibrary.Model.Players;
 
 namespace Wander.Server.ClassLibrary.Services
 {
@@ -24,6 +25,9 @@ namespace Wander.Server.ClassLibrary.Services
         int GetUserPoints(ServerPlayerModel user);
         int GetUserSex(string ConnectionId);
         int GetUserSex(ServerPlayerModel user);
+        Vector2 GetLastPosition(ServerPlayerModel user);
+        Vector2 GetLastPosition(string ConnectionId);
+        Vector2 GetLastPosition(int userId);
         bool IsBanned(string connectionId);
         bool IsBanned(ServerPlayerModel user);
         void PayTax(ServerPlayerModel user);
@@ -35,5 +39,7 @@ namespace Wander.Server.ClassLibrary.Services
         bool SetUserBankAccount(ServerPlayerModel user, int ammount);
         bool SetUserPoints(string ConnectionId, int ammount);
         bool SetUserPoints(ServerPlayerModel user, int ammount);
+        bool SetLastPosition(ServerPlayerModel user, Vector2 position);
+        bool SetLastPosition(string ConnectionId, Vector2 position);
     }
 }

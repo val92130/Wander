@@ -32,7 +32,7 @@ public class SoundManager {
 
     public void update(){
 
-        if (this.game.getGameScreen().getMap().getAmbientManager().isDay()) {
+        if (this.game.getScreenManager().getGameScreen().getMap().getAmbientManager().isDay()) {
             if (!this.dayAmbientSound.isPlaying()) this.dayAmbientSound.play();
             this.nightAmbientSound.setVolume(util.Lerp(0, this.nightAmbientSound.getVolume(), 0.01f));
             this.dayAmbientSound.setVolume(util.Lerp(1, this.dayAmbientSound.getVolume(), 0.01f));
@@ -45,7 +45,7 @@ public class SoundManager {
             if (this.dayAmbientSound.getVolume() <= 0 && this.dayAmbientSound.isPlaying()) this.dayAmbientSound.stop();
         }
 
-        if (this.game.getGameScreen().getMap().getAmbientManager().isRaining()) {
+        if (this.game.getScreenManager().getGameScreen().getMap().getAmbientManager().isRaining()) {
             if (!this.rainAmbientSound.isPlaying()) this.rainAmbientSound.play();
             this.rainAmbientSound.setVolume(util.Lerp(1f, this.rainAmbientSound.getVolume(), 0.01f));
         } else {
@@ -54,5 +54,11 @@ public class SoundManager {
                 this.rainAmbientSound.stop();
             }
         }
+    }
+
+    public void dispose(){
+        this.dayAmbientSound.dispose();
+        this.nightAmbientSound.dispose();
+        this.rainAmbientSound.dispose();
     }
 }
