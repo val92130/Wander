@@ -5,6 +5,9 @@ IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'WanderDB'
 CREATE DATABASE WanderDB
 GO
 
+use WanderDB;
+GO
+
 if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'PropertiesToSell')
 begin
 drop table dbo.PropertiesToSell;
@@ -468,3 +471,4 @@ INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescriptio
 INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (40,'Unique quiet house downtown', 'A beautiful and unique house on a hill downtown', 2, 5000);
 
 
+SET IDENTITY_INSERT dbo.ListProperties OFF
