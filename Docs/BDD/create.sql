@@ -1,4 +1,7 @@
-﻿IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'WanderDB')
+﻿use master
+GO
+
+IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'WanderDB')
 CREATE DATABASE WanderDB
 GO
 
