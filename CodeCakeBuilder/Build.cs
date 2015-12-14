@@ -87,7 +87,7 @@ namespace CodeCake
                     () =>
                     {
                         string db = Cake.InteractiveEnvironmentVariable("DB_CONNECTION_STRING");
-                        if (Cake.AppVeyor().IsRunningOnAppVeyor)
+                        if (Cake.AppVeyor().IsRunningOnAppVeyor && String.IsNullOrEmpty(db))
                         {
                             db = @"Server=(local)\SQL2014;Database=master;User ID=sa;Password=Password12!";
                         }
@@ -115,6 +115,7 @@ namespace CodeCake
                                 {
                                     using (var command = new SqlCommand(commandString, conn))
                                     {
+                                        Cake.Information("Executing command : {0}", commandString);
                                         command.ExecuteNonQuery();
                                     }
                                 }
