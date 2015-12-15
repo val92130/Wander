@@ -154,6 +154,31 @@ namespace Wander.Server.Tests
             Assert.IsTrue(Helper.IsValidEmail(correctEmail));
         }
 
+        [TestMethod]
+        public void NewUserSetPositionToZeroInDb()
+        {
+            TestEnvironment.DeleteTestUser();
+            UserModel user = TestEnvironment.GetTestUserModel();
+
+            IUserRegistrationService registrationService = TestEnvironment.GetUserRegistrationService();
+            registrationService.Register(user);
+            int userId = registrationService.Connect(user);
+            ServiceProvider.GetPlayerService().AddPlayer("signalrUser", userId);
+            var lastPos = ServiceProvider.GetUserService().GetLastPosition("signalrUser");
+            Assert.AreEqual(lastPos.X, 0);
+            Assert.AreEqual(lastPos.Y, 0);
+
+
+            ServiceProvider.GetUserService().SetLastPosition("signalrUser", new ClassLibrary.Model.Vector2(50, 600));
+            lastPos = ServiceProvider.GetUserService().GetLastPosition(userId);
+            Assert.AreEqual(lastPos.X, 50);
+            Assert.AreEqual(lastPos.Y, 600);
+
+            ServiceProvider.GetPlayerService().RemovePlayer("signalrUser");
+            TestEnvironment.DeleteTestUser();
+
+        }
+
 
     }
 }

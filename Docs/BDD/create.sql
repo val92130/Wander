@@ -1,5 +1,11 @@
-﻿IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'WanderDB')
+﻿use master
+GO
+
+IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'WanderDB')
 CREATE DATABASE WanderDB
+GO
+
+use WanderDB;
 GO
 
 if exists (select * from information_schema.tables where table_schema = 'dbo' and table_name = 'PropertiesToSell')
@@ -97,7 +103,9 @@ Connected bit,
 Activated bit,
 Banned bit DEFAULT(0),
 JobId int DEFAULT(0),
-Admin bit DEFAULT(0)
+Admin bit DEFAULT(0),
+LastPosX int DEFAULT(0),
+LastPosY int DEFAULT(0)
 
 
 constraint PK_UserId primary key(UserId),
@@ -465,3 +473,4 @@ INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescriptio
 INSERT INTO dbo.ListProperties (ListPropertyId, NameProperty, PropertyDescription, Threshold, Price) values (40,'Unique quiet house downtown', 'A beautiful and unique house on a hill downtown', 2, 5000);
 
 
+SET IDENTITY_INSERT dbo.ListProperties OFF

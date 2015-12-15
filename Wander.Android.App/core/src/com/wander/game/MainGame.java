@@ -7,16 +7,29 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Json;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
+import com.wander.game.dialogs.ChangeJobDialog;
 import com.wander.game.models.EMessageType;
+import com.wander.game.models.JobModel;
+import com.wander.game.models.MessageModel;
 import com.wander.game.models.NotificationMessage;
-import com.wander.game.models.PlayerModel;
+import com.wander.game.models.ServerPropertyModel;
 import com.wander.game.screens.GameScreen;
+import com.wander.game.screens.LoadingScreen;
 import com.wander.game.screens.LoginScreen;
 import com.wander.game.screens.MainMenuScreen;
-import com.wander.game.services.AndroidHubService;
+import com.wander.game.screens.ScreenManager;
 import com.wander.game.services.HubService;
 import com.wander.game.services.IHubService;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 
@@ -26,34 +39,30 @@ import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 public class MainGame extends Game {
 
     private IHubService hubService;
-    private LoginScreen loginScreen;
     private MainMenuScreen mainMenuScreen;
     private boolean connected;
     private String userPseudo;
-    private GameScreen gameScreen;
     private Texture playerTexture = new Texture(Gdx.files.internal("images/player.png"));
     private NotificationManager notificationManager;
-    private SpriteBatch uiSpritebatch;
+    public SpriteBatch batch;
+    private ScreenManager screenManager;
+    private Gson gson;
 
     public MainGame()
     {
         this.notificationManager = new NotificationManager(this);
+        this.screenManager = new ScreenManager(this);
+        this.gson = new Gson();
 
     }
 
     @Override
     public void create() {
-        if (Gdx.app.getType() == Application.ApplicationType.Android) {
-            this.hubService = new AndroidHubService("http://wander.nightlydev.fr", "GameHub");
-        } else {
-            this.hubService = new HubService("http://wander.nightlydev.fr", "GameHub");
-        }
-        loginScreen = new LoginScreen(this);
 
+        connectHub();
 
-        hubService.start();
-        this.setScreen(loginScreen);
-        uiSpritebatch = new SpriteBatch();
+        this.batch = new SpriteBatch();
+
 
         this.getHubService().getHub().on("notify", new SubscriptionHandler1<NotificationMessage>() {
 
@@ -78,6 +87,29 @@ public class MainGame extends Game {
 
             }
         });
+
+        this.getHubService().getHub().on("MessageReceived", new SubscriptionHandler1<MessageModel>() {
+            @Override
+            public void run(MessageModel messageModel) {
+                final MessageModel _message = messageModel;
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        messageReceived(_message);
+                        System.out.println(_message);
+                    }
+                });
+            }
+        }, MessageModel.class);
+
+
+    }
+
+    public void connectHub(){
+        this.hubService = new HubService(this,"http://wander.nightlydev.fr", "GameHub");
+        this.screenManager.switchToLoadingScreen();
+
+        hubService.start();
     }
 
 
@@ -87,9 +119,9 @@ public class MainGame extends Game {
         this.update();
         super.render();
 
-        uiSpritebatch.begin();
-        this.notificationManager.render(this.uiSpritebatch);
-        uiSpritebatch.end();
+        batch.begin();
+            this.notificationManager.render(this.batch);
+        batch.end();
     }
 
 
@@ -102,11 +134,15 @@ public class MainGame extends Game {
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
-                notificationManager.add(_this, _content, _type);
+                notificationManager.add(_content, _type);
             }
         });
 
+    }
 
+    public void messageReceived(MessageModel message)
+    {
+        if(message != null) this.screenManager.getGameScreen().getMap().messageReceived(message);
     }
 
     public void update()
@@ -118,8 +154,59 @@ public class MainGame extends Game {
     {
         this.connected = true;
         this.userPseudo = pseudo;
-        mainMenuScreen = new MainMenuScreen(this);
-        this.setScreen(mainMenuScreen);
+        this.screenManager.switchToMenuScreen();
+    }
+
+    public void openChangeJobDialog(final Stage stage)
+    {
+        if(!this.isConnected() || this.getScreenManager().getGameScreen() == null)return;
+        final MainGame _this = this;
+        this.getHubService().getHub().invoke(JsonElement.class, "GetAllJobs").done(new Action<JsonElement>() {
+
+            @Override
+            public void run(final JsonElement data) throws Exception {
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println(data);
+                        ArrayList<JobModel> jobs = gson.fromJson(data, new TypeToken<ArrayList<JobModel>>() {
+                        }.getType());
+                        _this.getScreenManager().getGameScreen().getModalManager().openChangeJobDialog(jobs);
+                    }
+                });
+            }
+        });
+    }
+
+    public void sendPublicMessage(String content)
+    {
+        if(content == null)return;
+        if(content.length() == 0) return;
+        this.getHubService().getHub().invoke("SendPublicMessage", content);
+    }
+
+    public void sendPrivateMessage(String content, String to)
+    {
+        if(to == null && content == null)return;
+        if(to.length() == 0 && content.length() == 0) return;
+        this.getHubService().getHub().invoke("SendPrivateMessage", content, to).done(new Action<Void>() {
+            @Override
+            public void run(Void aVoid) throws Exception {
+                addNotification("Message sent ! ", EMessageType.success);
+            }
+        });
+    }
+
+    public void buyProperty(ServerPropertyModel model)
+    {
+        if(!isConnected())return;
+        this.getHubService().getHub().invoke("BuyProperty", model.PropertyId);
+    }
+
+    public void changeJob(JobModel job)
+    {
+        if(!isConnected())return;
+        this.getHubService().getHub().invoke("ApplyJob", job.JobId);
     }
 
     public void startGameScreen()
@@ -127,20 +214,67 @@ public class MainGame extends Game {
 
         if(this.connected && this.userPseudo != null)
         {
-            gameScreen = new GameScreen(this);
-            this.setScreen(this.gameScreen);
+            screenManager.switchToGameScreen();
         }
     }
 
-    public void onLogOut(){
-        this.setScreen(new LoginScreen(this));
+    public void goToMainMenu(){
+        if(this.isConnected())this.getScreenManager().switchToMenuScreen();
     }
 
-    public GameScreen getGameScreen()
+    public void logout(){
+        if(this.isConnected()) this.getHubService().getHub().invoke("Disconnect");
+        this.connectHub();
+        this.screenManager.switchToLoginScreen();
+    }
+
+
+    public void onConnectionEstablished()
     {
-        return this.gameScreen;
+        screenManager.switchToLoginScreen();
     }
 
+    public void retryConnection()
+    {
+        hubService.start();
+    }
+
+    public void onConnectionError(){
+        final MainGame _this = this;
+        Gdx.app.postRunnable(new Runnable() {
+
+            @Override
+            public void run() {
+                screenManager.reset();
+                screenManager.switchToLoadingScreen();
+                _this.connected = false;
+                /*
+                if(_this.connected)
+                {
+                    if(_this.gameScreen != null){
+                        _this.gameScreen.dispose();
+                        _this.gameScreen = null;
+                    }
+
+                    _this.notificationManager.add("Connection error, please reconnect", EMessageType.error);
+                    _this.setScreen(_this.loadingScreen);
+                    _this.connected = false;
+                } else
+                {
+                    _this.loadingScreen.onConnectionError();
+                }
+                */
+            }
+        });
+
+    }
+    public boolean isConnected(){return this.connected;};
+
+    public void onLogOut(){
+        this.logout();
+    }
+
+    public Gson getGson(){return this.gson;}
     public IHubService getHubService()
     {
         return hubService;
@@ -154,6 +288,8 @@ public class MainGame extends Game {
 
         return new Sprite(this.playerTexture);
     }
+
+    public ScreenManager getScreenManager(){return this.screenManager;}
 
     public BitmapFont getFont()
     {

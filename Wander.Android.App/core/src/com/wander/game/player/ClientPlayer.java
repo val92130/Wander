@@ -1,4 +1,4 @@
-package com.wander.game.models;
+package com.wander.game.player;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -6,7 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.wander.game.Constants;
 import com.wander.game.GameMap;
-import com.wander.game.MainGame;
+import com.wander.game.models.EDirection;
+import com.wander.game.models.WanderVector;
 
 import java.util.Timer;
 import java.util.TimerTask;

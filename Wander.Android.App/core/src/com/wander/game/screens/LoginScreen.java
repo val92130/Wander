@@ -8,18 +8,32 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.wander.game.AssetManager;
+import com.wander.game.Constants;
 import com.wander.game.MainGame;
+import com.wander.game.ModalManager;
+import com.wander.game.dialogs.ChangeJobDialog;
+import com.wander.game.dialogs.ChatDialog;
+import com.wander.game.dialogs.HouseBuyDialog;
+import com.wander.game.models.JobModel;
 import com.wander.game.util;
+
+import java.util.ArrayList;
 
 
 /**
@@ -30,29 +44,45 @@ public class LoginScreen implements Screen {
     private MainGame game;
     private Stage stage;
     private Skin skin;
-    private SpriteBatch batch;
     private TextArea loginTextArea;
     private TextArea passwordTextArea;
-    private Label errorLabel;
     private Button loginButton;
     private Sprite backgroundSprite;
+    private Table table;
 
     public LoginScreen(MainGame game)
     {
-        this.batch = new SpriteBatch();
-        this.stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(this.stage);
+
         this.game = game;
 
-        skin = new Skin(Gdx.files.internal("uiskin.json"));
-        loginButton = new TextButton("Login", skin, "default");
+    }
+
+    @Override
+    public void show() {
+        this.stage = new Stage();
+
+        skin = AssetManager.getSkin();
+
+        table = new Table(skin);
+        table.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
 
-        loginButton.setWidth(width / 2);
-        loginButton.setHeight(height / 5);
-        loginButton.setPosition(Gdx.graphics.getWidth() / 2 - (loginButton.getWidth() / 2), Gdx.graphics.getHeight() / 2 - (loginButton.getHeight() / 2));
+        loginTextArea = new TextArea("login", AssetManager.getTextFieldStyle());
+
+        table.add(loginTextArea).size(width * 0.8f, height * 0.2f).padTop(10).padBottom(10);
+        table.row();
+
+        passwordTextArea = new TextArea("password", AssetManager.getTextFieldStyle());
+        passwordTextArea.setPasswordMode(true);
+        passwordTextArea.setPasswordCharacter('*');
+
+        table.add(passwordTextArea).size(width * 0.8f, height * 0.2f).padTop(10).padBottom(10);
+        table.row();
+
+
+        loginButton = new TextButton("Login", AssetManager.getTextButtonStyle());
 
         loginButton.addListener(new ClickListener() {
             @Override
@@ -61,31 +91,21 @@ public class LoginScreen implements Screen {
             }
         });
 
-        passwordTextArea = new TextArea("password", skin);
-        passwordTextArea.setPasswordMode(true);
-        passwordTextArea.setSize(width / 2, height / 10);
-        passwordTextArea.setPasswordCharacter('*');
-        passwordTextArea.setPosition(Gdx.graphics.getWidth() / 2 - passwordTextArea.getWidth() / 2, loginButton.getY() + loginButton.getHeight() + height / 15);
-
-        loginTextArea = new TextArea("login", skin);
-        loginTextArea.setSize(width/2, height/10);
-        loginTextArea.setPosition(Gdx.graphics.getWidth() / 2 - loginTextArea.getWidth()/2, passwordTextArea.getY() + loginTextArea.getHeight() + height / 15);
-
-        errorLabel = new Label("", skin);
-        errorLabel.setPosition(Gdx.graphics.getWidth() / 2 - errorLabel.getWidth()/2, loginButton.getY() - 10 - errorLabel.getHeight());
-        errorLabel.setColor(Color.RED);
-
-        stage.addActor(loginButton);
-        stage.addActor(passwordTextArea);
-        stage.addActor(loginTextArea);
-        stage.addActor(errorLabel);
+        table.add(loginButton).width(Constants.BTN_MENU_WIDTH).height(Constants.BTN_MENU_HEIGHT).padTop(Constants.BTN_MENU_PADDING).padBottom(Constants.BTN_MENU_PADDING);
+        table.row();
 
 
-    }
-    @Override
-    public void show() {
+        table.center();
+
+
+
+        stage.addActor(table);
+
         backgroundSprite = util.GetBackgroundSprite();
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        Gdx.input.setInputProcessor(this.stage);
+
     }
 
     @Override
@@ -93,9 +113,9 @@ public class LoginScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0.25f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Gdx.graphics.getDeltaTime());
-        batch.begin();
-        backgroundSprite.draw(batch);
-        batch.end();
+        this.game.batch.begin();
+        backgroundSprite.draw(this.game.batch);
+        this.game.batch.end();
         stage.draw();
     }
 
@@ -130,13 +150,8 @@ public class LoginScreen implements Screen {
         String pass = passwordTextArea.getText();
         boolean success = game.getHubService().connect(pseudo, pass);
 
-        if(!success) {
-
-            String msg = "Wrong username/password";
-            errorLabel.setText(msg);
-            errorLabel.setColor(Color.RED);
-            errorLabel.setPosition(Gdx.graphics.getWidth() / 2 - errorLabel.getWidth() / 2 - util.GetStringWidth(skin.getFont("default-font"), msg) / 2, loginButton.getY() - 10 - errorLabel.getHeight());
-        } else{
+        if(success) {
+            stage.unfocusAll();
             game.SetConnected(pseudo);
         }
     }

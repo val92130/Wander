@@ -13,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.wander.game.AssetManager;
+import com.wander.game.Constants;
 import com.wander.game.MainGame;
 import com.wander.game.util;
 
@@ -25,10 +27,9 @@ public class MainMenuScreen implements Screen {
     private Stage stage;
     private Table table;
     private Skin skin;
-    private SpriteBatch batch;
     private Sprite backgroundSprite;
 
-    public MainMenuScreen(MainGame game)
+    public MainMenuScreen(final MainGame game)
     {
         this.game = game;
         this.stage = new Stage();
@@ -40,7 +41,7 @@ public class MainMenuScreen implements Screen {
         table.add(pseudoLabel).top();
         table.row();
 
-        TextButton startGame=new TextButton("Start Game",skin);
+        TextButton startGame=new TextButton("Start Game", AssetManager.getTextButtonStyle());
 
         startGame.addListener(new ClickListener() {
             @Override
@@ -49,25 +50,32 @@ public class MainMenuScreen implements Screen {
             }
         });
 
-        float width = Gdx.graphics.getWidth();
-        float height = Gdx.graphics.getHeight();
 
-        table.add(startGame).width(width / 5).height(height/10).padTop(10).padBottom(3);
+        table.add(startGame).width(Constants.BTN_MENU_WIDTH).height(Constants.BTN_MENU_HEIGHT).padTop(Constants.BTN_MENU_PADDING).padBottom(Constants.BTN_MENU_PADDING / 4);
         table.row();
 
-        TextButton playersButton=new TextButton("Players",skin);
-        table.add(playersButton).width(width / 5).height(height/10).padTop(10).padBottom(3);
+        TextButton playersButton=new TextButton("Players",AssetManager.getTextButtonStyle());
+        table.add(playersButton).width(Constants.BTN_MENU_WIDTH).height(Constants.BTN_MENU_HEIGHT).padTop(Constants.BTN_MENU_PADDING).padBottom(Constants.BTN_MENU_PADDING / 4);
+        table.row();
+
+        TextButton logoutButton=new TextButton("Logout",AssetManager.getTextButtonStyle());
+        logoutButton.addListener(new ClickListener()
+        {
+            public void clicked(InputEvent event, float x, float y) {
+                game.logout();
+            }
+        });
+        table.add(logoutButton).width(Constants.BTN_MENU_WIDTH).height(Constants.BTN_MENU_HEIGHT).padTop(Constants.BTN_MENU_PADDING).padBottom(Constants.BTN_MENU_PADDING / 4);
         table.row();
 
         table.center();
         stage.addActor(table);
         Gdx.input.setInputProcessor(this.stage);
 
-
     }
     @Override
     public void show() {
-        batch = new SpriteBatch();
+
 
         backgroundSprite = util.GetBackgroundSprite();
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -79,9 +87,9 @@ public class MainMenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.act(Gdx.graphics.getDeltaTime());
-        batch.begin();
-        backgroundSprite.draw(batch);
-        batch.end();
+        this.game.batch.begin();
+        backgroundSprite.draw(this.game.batch);
+        this.game.batch.end();
         stage.draw();
     }
 

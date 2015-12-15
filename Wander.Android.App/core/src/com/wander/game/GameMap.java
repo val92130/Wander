@@ -1,8 +1,13 @@
 package com.wander.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -12,10 +17,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.wander.game.models.ClientPlayer;
-import com.wander.game.models.EMessageType;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.wander.game.models.WanderVector;
+import com.wander.game.player.ClientPlayer;
+import com.wander.game.models.MessageModel;
 import com.wander.game.models.PlayerModel;
-import com.wander.game.models.ServerPlayer;
+import com.wander.game.player.ServerPlayer;
 import com.wander.game.screens.GameScreen;
 import com.wander.game.weather.AmbientManager;
 
@@ -23,13 +31,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
+
+import microsoft.aspnet.signalr.client.Action;
 
 /**
  * Created by val on 07/12/2015.
  */
 public class GameMap {
     private GameScreen game;
-    private String fileName;
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
     private int ratio = 4;
@@ -38,14 +48,16 @@ public class GameMap {
     private ClientPlayer currentPlayer;
     private World world;
     private Box2DDebugRenderer debugRenderer;
-    private SpriteBatch batch;
     private AmbientManager ambientManager;
     private Timer updateTimer;
+    private ArrayList<Vector2> propertyPositions;
+    private ArrayList<Vector2> mairiePositions;
+    private Texture moneyDecal;
+    private Texture mairieDecal;
 
     public GameMap(String fileName, GameScreen game) {
 
         this.game = game;
-        this.fileName = fileName;
         map = new TmxMapLoader().load(fileName);
         mapRenderer = new OrthogonalTiledMapRenderer(getMap(), ratio);
         ShaderProgram.pedantic = false;
@@ -58,11 +70,33 @@ public class GameMap {
 
         world = new World(new Vector2(0, 0), true);
         debugRenderer = new Box2DDebugRenderer();
-        batch = new SpriteBatch();
 
         this.players = new ArrayList<ServerPlayer>();
+
+        final WanderVector _pos = new WanderVector();
+        try {
+            this.game.getMainGame().getHubService().getHub().invoke(WanderVector.class, "GetCurrentPosition").done(new Action<WanderVector>() {
+                @Override
+                public void run(WanderVector vec) throws Exception {
+                    final WanderVector _vec = vec;
+                    Gdx.app.postRunnable(new Runnable() {
+                        @Override
+                        public void run() {
+                            _pos.X = _vec.X;
+                            _pos.Y = Constants.MAP_SIZE * Constants.TILE_SIZE  - _vec.Y;
+                            currentPlayer.setPosition(new Vector2(_pos.X, _pos.Y));
+                        }
+                    });
+                }
+            }).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+
         this.currentPlayer = new ClientPlayer(this, this.game.getMainGame().getUserPseudo(), new Vector2(0,0),game.getMainGame().getPlayerSprite());
-        this.game.getMainGame().getHubService().getHub().invoke("GetAllPlayers");
 
 
         this.ambientManager = new AmbientManager(this);
@@ -76,11 +110,46 @@ public class GameMap {
             }
         }, 10000, 10000);
 
+        this.propertyPositions = new ArrayList<Vector2>();
+        this.mairiePositions = new ArrayList<Vector2>();
+
+        for(int i = 0; i < this.getHouseLayer().getWidth(); i++)
+        {
+            for(int j = 0; j < this.getHouseLayer().getHeight(); j++)
+            {
+                try{
+                    TiledMapTileLayer.Cell c = this.getHouseLayer().getCell(i, j);
+                    if(c != null)
+                    {
+                        System.out.println("found house tile at : " + i + " : " + j);
+                        if(c.getTile().getProperties().containsKey("propertyId"))
+                        {
+                            propertyPositions.add(new Vector2(i * Constants.TILE_SIZE * getScaleRatio(), j * Constants.TILE_SIZE * getScaleRatio()));
+                        } else if(c.getTile().getProperties().containsKey("Mairie"))
+                        {
+                            this.mairiePositions.add(new Vector2(i * Constants.TILE_SIZE * getScaleRatio(), j * Constants.TILE_SIZE * getScaleRatio()));
+                        }
+
+                    }
+                } catch(Exception e)
+                {
+
+                }
+            }
+        }
+
+        this.moneyDecal = new Texture(Gdx.files.internal("images/money-decal.png"));
+        this.mairieDecal = new Texture(Gdx.files.internal("images/job-decal.png"));
+        this.game.getMainGame().getHubService().getHub().invoke("GetAllPlayers");
 
     }
 
     private void updateServer(){
-        this.game.getMainGame().getHubService().getHub().invoke("Update");
+        if(this.game.getMainGame().isConnected())
+        {
+            this.game.getMainGame().getHubService().getHub().invoke("Update");
+        }
+
     }
 
     public void update() {
@@ -88,7 +157,7 @@ public class GameMap {
             this.players.get(i).update(Gdx.graphics.getDeltaTime());
         }
         this.currentPlayer.update(Gdx.graphics.getDeltaTime());
-        this.getGameScreen().getCameraManager().follow(new Vector2(currentPlayer.getSprite().getX() + currentPlayer.getSprite().getWidth() / 2, currentPlayer.getSprite().getY() + currentPlayer.getSprite().getHeight()/2));
+        this.getGameScreen().getCameraManager().follow(new Vector2(currentPlayer.getSprite().getX() + currentPlayer.getSprite().getWidth() / 2, currentPlayer.getSprite().getY() + currentPlayer.getSprite().getHeight() / 2));
         this.ambientManager.update();
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
     }
@@ -103,16 +172,26 @@ public class GameMap {
         for(int i = 0; i < this.players.size(); i++) {
             this.players.get(i).render((SpriteBatch) mapRenderer.getBatch());
         }
+
+        for (Vector2 v : this.propertyPositions) {
+            mapRenderer.getBatch().draw(this.moneyDecal,v.x, v.y, Constants.TILE_SIZE * this.getScaleRatio(), Constants.TILE_SIZE * this.getScaleRatio() );
+        }
+        for (Vector2 v : this.mairiePositions) {
+            mapRenderer.getBatch().draw(this.mairieDecal,v.x, v.y, Constants.TILE_SIZE * this.getScaleRatio(), Constants.TILE_SIZE * this.getScaleRatio() );
+        }
         this.currentPlayer.render((SpriteBatch) mapRenderer.getBatch());
         mapRenderer.getBatch().end();
+
 
         batch.begin();
         debugRenderer.render(world, game.getCameraManager().getCamera().combined);
         batch.end();
 
         this.ambientManager.render((SpriteBatch) mapRenderer.getBatch());
+    }
 
-
+    public void dispose(){
+        this.ambientManager.dispose();
     }
 
     public boolean addPlayer(PlayerModel p)
@@ -170,6 +249,59 @@ public class GameMap {
         return false;
     }
 
+    public void messageReceived(MessageModel message)
+    {
+        if(message == null) throw new NullPointerException("Message is null");
+        ServerPlayer candidate = this.getPlayer(message.UserName);
+        if(candidate != null){
+            candidate.setTextMessage(message.Content);
+        } else if(message.UserName.equals(currentPlayer.getPseudo()))
+        {
+            currentPlayer.setTextMessage(message.Content);
+        }
+
+    }
+
+    public void actionPressed(){
+        int tileX = (int)(currentPlayer.getPosition().x / Constants.TILE_SIZE) + 1;
+        int tileY = (int)(currentPlayer.getPosition().y / Constants.TILE_SIZE) - 1;
+
+
+        int houseId = -1;
+        try{
+            String o = this.getHouseLayer().getCell(tileX, tileY).getTile().getProperties().get("propertyId").toString();
+            houseId = Integer.parseInt(o);
+        } catch(Exception e)
+        {
+            System.out.println("null");
+        }
+        if(houseId != -1)
+        {
+            System.out.println("found house : " + houseId);
+        }
+    }
+
+
+
+    public ServerPlayer getPlayer(String pseudo)
+    {
+        for(int i = 0; i < this.players.size(); i++)
+        {
+
+            if(this.players.get(i).getPseudo().equals(pseudo)){
+                return this.players.get(i);
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<ServerPlayer> getAllPlayers()
+    {
+        return this.players;
+    }
+
+
+
     public boolean isCollision(int tileX, int tileY)
     {
         try{
@@ -195,7 +327,6 @@ public class GameMap {
         }
         return false;
     }
-
 
 
     public HashMap<TiledMapTileLayer.Cell, Vector2> getCollisionCells() {

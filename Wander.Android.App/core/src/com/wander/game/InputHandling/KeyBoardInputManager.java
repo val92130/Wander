@@ -1,6 +1,7 @@
 package com.wander.game.InputHandling;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.wander.game.Constants;
@@ -46,10 +47,13 @@ public class KeyBoardInputManager implements InputProcessor {
     }
 
     public boolean keyDown(int keycode) {
-        if(keycode == Constants.KEY_TOGGLE_NIGHT)
+        if(keycode == Constants.KEY_ACTION)
         {
-            //game.getAmbientEventManager().setNightTime(!game.getAmbientEventManager().getNightTime());
+            this.game.getMap().actionPressed();
+        } else if(keycode == Constants.KEY_CHAT){
+            this.game.getModalManager().openPublicChatBox();
         }
+
         return false;
     }
 
@@ -62,6 +66,7 @@ public class KeyBoardInputManager implements InputProcessor {
     }
 
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        this.game.onScreenTouched(screenX, screenY);
         return false;
     }
 
@@ -88,4 +93,6 @@ public class KeyBoardInputManager implements InputProcessor {
         }
         return false;
     }
+
+
 }

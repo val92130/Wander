@@ -55,12 +55,13 @@ namespace Wander.Server.ClassLibrary.Hubs
 
                 Clients.Caller.onConnected(user.Login);
                 ServiceProvider.GetPlayerService().AddPlayer(idSignalR, playerId);
+                var lastPos = ServiceProvider.GetUserService().GetLastPosition(idSignalR);
 
                 //Notify all connected users that someone just connected
                 foreach (ServerPlayerModel players in ServiceProvider.GetPlayerService().GetAllPlayersServer())
                 {
                     if (players.SignalRId == Context.ConnectionId) continue;
-                    Clients.Client(players.SignalRId).playerConnected(new { Pseudo = user.Login, Position = new Vector2(), Direction = EPlayerDirection.Idle });
+                    Clients.Client(players.SignalRId).playerConnected(new { Pseudo = user.Login, Position = lastPos, Direction = EPlayerDirection.Idle });
                 }
                 Debug.Print(idSignalR);
                 Clients.Caller.notify(Helper.CreateNotificationMessage("Welcome ! You are now online", EMessageType.success));
@@ -103,6 +104,9 @@ namespace Wander.Server.ClassLibrary.Hubs
                 return;
             }
             Debug.Print("Client disconnected : " + Context.ConnectionId);
+            ServiceProvider.GetUserService()
+                .SetLastPosition(Context.ConnectionId,
+                    ServiceProvider.GetPlayerService().GetPlayerInfos(Context.ConnectionId).Position);
             foreach (ServerPlayerModel players in ServiceProvider.GetPlayerService().GetAllPlayersServer())
             {
                 if (players.SignalRId == Context.ConnectionId) continue;
@@ -519,6 +523,12 @@ namespace Wander.Server.ClassLibrary.Hubs
             Clients.Caller.forceDisconnect();
             Clients.Caller.notify(Helper.CreateNotificationMessage("Your account was successfuly deleted",
                 EMessageType.info));
+        }
+
+        public Vector2 GetCurrentPosition()
+        {
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return new Vector2();
+            return ServiceProvider.GetUserService().GetLastPosition(Context.ConnectionId);
         }
 
         /// <summary>

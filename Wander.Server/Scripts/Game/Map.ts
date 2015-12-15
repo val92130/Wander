@@ -49,9 +49,14 @@
         this.objectsLayer.autoCull = true;
         this.houseLayer.autoCull = true;
 
+
         this.players = new Array<ServerPlayer>();
         this.currentPlayer = new ClientPlayer(this.state, this.game, userPseudo, new Phaser.Point(10, 10));
 
+        var pos = hub.invoke("GetCurrentPosition").done(function (pos) {
+            currentState.map.currentPlayer.texture.x = pos.X;
+            currentState.map.currentPlayer.texture.y = pos.Y;
+        });
 
         for (var i = 0; i < this.lightsLayer.layer.width; i++) {
             for (var j = 0; j < this.lightsLayer.layer.height; j++) {

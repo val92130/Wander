@@ -31,6 +31,10 @@ var Map = (function () {
         this.houseLayer.autoCull = true;
         this.players = new Array();
         this.currentPlayer = new ClientPlayer(this.state, this.game, userPseudo, new Phaser.Point(10, 10));
+        var pos = hub.invoke("GetCurrentPosition").done(function (pos) {
+            currentState.map.currentPlayer.texture.x = pos.X;
+            currentState.map.currentPlayer.texture.y = pos.Y;
+        });
         for (var i = 0; i < this.lightsLayer.layer.width; i++) {
             for (var j = 0; j < this.lightsLayer.layer.height; j++) {
                 if (this.lightsLayer.map.getTile(i, j, "lightsLayer") != null) {
@@ -97,3 +101,4 @@ var Map = (function () {
     };
     return Map;
 })();
+//# sourceMappingURL=Map.js.map

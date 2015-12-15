@@ -5,8 +5,6 @@ import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.wander.game.Wander;
-import com.wander.game.services.AndroidHubService;
-import com.wander.game.services.IHubService;
 
 
 public class AndroidLauncher extends AndroidApplication {
