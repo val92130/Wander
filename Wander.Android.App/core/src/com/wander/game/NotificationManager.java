@@ -30,7 +30,7 @@ public class NotificationManager {
     {
         this.stage = new Stage();
         this.skin = new Skin(Gdx.files.internal("uiskin.json"));
-        this.font = this.skin.getFont("default-font");
+        this.font = AssetManager.getFontSmall();
     }
 
     public void add(String content, EMessageType type)
@@ -85,7 +85,9 @@ public class NotificationManager {
 
     private TextButton createNotification(Vector2 position, String content, EMessageType type)
     {
-        TextButton notifButton = new TextButton(content, new Skin(Gdx.files.internal("uiskin.json")), "default");
+        TextButton.TextButtonStyle style = AssetManager.getTextButtonStyle();
+        style.font = this.font;
+        TextButton notifButton = new TextButton(content, style);
         Color c;
         switch(type){
             case info:

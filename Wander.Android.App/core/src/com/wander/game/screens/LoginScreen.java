@@ -13,18 +13,27 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.wander.game.AssetManager;
 import com.wander.game.Constants;
 import com.wander.game.MainGame;
+import com.wander.game.ModalManager;
+import com.wander.game.dialogs.ChangeJobDialog;
 import com.wander.game.dialogs.ChatDialog;
+import com.wander.game.dialogs.HouseBuyDialog;
+import com.wander.game.models.JobModel;
 import com.wander.game.util;
+
+import java.util.ArrayList;
 
 
 /**
@@ -60,13 +69,12 @@ public class LoginScreen implements Screen {
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
 
-
-        loginTextArea = new TextArea("login", skin);
+        loginTextArea = new TextArea("login", AssetManager.getTextFieldStyle());
 
         table.add(loginTextArea).size(width * 0.8f, height * 0.2f).padTop(10).padBottom(10);
         table.row();
 
-        passwordTextArea = new TextArea("password", skin);
+        passwordTextArea = new TextArea("password", AssetManager.getTextFieldStyle());
         passwordTextArea.setPasswordMode(true);
         passwordTextArea.setPasswordCharacter('*');
 
@@ -74,7 +82,7 @@ public class LoginScreen implements Screen {
         table.row();
 
 
-        loginButton = new TextButton("Login", skin);
+        loginButton = new TextButton("Login", AssetManager.getTextButtonStyle());
 
         loginButton.addListener(new ClickListener() {
             @Override
@@ -86,7 +94,10 @@ public class LoginScreen implements Screen {
         table.add(loginButton).width(Constants.BTN_MENU_WIDTH).height(Constants.BTN_MENU_HEIGHT).padTop(Constants.BTN_MENU_PADDING).padBottom(Constants.BTN_MENU_PADDING);
         table.row();
 
+
         table.center();
+
+
 
         stage.addActor(table);
 
@@ -94,6 +105,7 @@ public class LoginScreen implements Screen {
         backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         Gdx.input.setInputProcessor(this.stage);
+
     }
 
     @Override

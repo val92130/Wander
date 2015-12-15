@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -48,8 +49,7 @@ public class LoadingScreen implements Screen {
         this.table = new Table(skin);
         this.table.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         TextButton t = new TextButton("Retry", this.skin);
-        t.addListener(new ClickListener()
-        {
+        t.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.retryConnection();
@@ -57,7 +57,6 @@ public class LoadingScreen implements Screen {
         });
         this.table.add(t).width(Constants.BTN_MENU_WIDTH / 4).height(Constants.BTN_MENU_HEIGHT);
         this.table.center();
-
         this.stage.addActor(this.table);
         Gdx.input.setInputProcessor(this.stage);
 

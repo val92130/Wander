@@ -101,17 +101,19 @@ public class GameScreen implements Screen {
         inputMultiplexer.addProcessor(stage);
 
 
-        TextButton menuButton=new TextButton("...",skin);
+        TextButton menuButton=new TextButton("...",AssetManager.getTextButtonStyle());
         menuButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 game.goToMainMenu();
             }
         });
-        menuButton.setPosition(Gdx.graphics.getWidth() - menuButton.getWidth() - 50, menuButton.getHeight() + 50);
+        menuButton.setSize(Gdx.graphics.getHeight() / 10, Gdx.graphics.getHeight()/10);
+        menuButton.setPosition(Gdx.graphics.getWidth() - menuButton.getWidth() - 50,50);
         this.stage.addActor(menuButton);
 
         this.modalManager = new ModalManager(this.getMainGame(), this.stage);
 
+        this.game.openChangeJobDialog(this.stage);
     }
 
     private void registerHubEvents(){
@@ -175,6 +177,7 @@ public class GameScreen implements Screen {
                 });
             }
         }, Boolean.class);
+
     }
 
     @Override
@@ -220,6 +223,8 @@ public class GameScreen implements Screen {
 
     public MainGame getMainGame(){ return game;}
 
+    public Stage getStage(){return this.stage;}
+
 
     public void onScreenTouched(int x, int y)
     {
@@ -238,6 +243,18 @@ public class GameScreen implements Screen {
         // check for property touched
         int tileX = (int)(cam.x / Constants.TILE_SIZE / map.getScaleRatio());
         int tileY = (int)(cam.y / Constants.TILE_SIZE / map.getScaleRatio());
+
+        try{
+            String s = this.getMap().getHouseLayer().getCell(tileX, tileY).getTile().getProperties().get("Mairie").toString();
+            if(s != null)
+            {
+                this.getMainGame().openChangeJobDialog(this.getStage());
+            }
+        }catch (Exception e)
+        {
+            //
+        }
+
         System.out.println(tileX + " : " + tileY);
         int houseId = -1;
         try{

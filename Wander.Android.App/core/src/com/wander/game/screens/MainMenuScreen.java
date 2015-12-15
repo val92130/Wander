@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.wander.game.AssetManager;
 import com.wander.game.Constants;
 import com.wander.game.MainGame;
 import com.wander.game.util;
@@ -40,7 +41,7 @@ public class MainMenuScreen implements Screen {
         table.add(pseudoLabel).top();
         table.row();
 
-        TextButton startGame=new TextButton("Start Game",skin);
+        TextButton startGame=new TextButton("Start Game", AssetManager.getTextButtonStyle());
 
         startGame.addListener(new ClickListener() {
             @Override
@@ -53,11 +54,11 @@ public class MainMenuScreen implements Screen {
         table.add(startGame).width(Constants.BTN_MENU_WIDTH).height(Constants.BTN_MENU_HEIGHT).padTop(Constants.BTN_MENU_PADDING).padBottom(Constants.BTN_MENU_PADDING / 4);
         table.row();
 
-        TextButton playersButton=new TextButton("Players",skin);
+        TextButton playersButton=new TextButton("Players",AssetManager.getTextButtonStyle());
         table.add(playersButton).width(Constants.BTN_MENU_WIDTH).height(Constants.BTN_MENU_HEIGHT).padTop(Constants.BTN_MENU_PADDING).padBottom(Constants.BTN_MENU_PADDING / 4);
         table.row();
 
-        TextButton logoutButton=new TextButton("Logout",skin);
+        TextButton logoutButton=new TextButton("Logout",AssetManager.getTextButtonStyle());
         logoutButton.addListener(new ClickListener()
         {
             public void clicked(InputEvent event, float x, float y) {
