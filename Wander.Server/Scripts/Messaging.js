@@ -132,4 +132,3 @@ function sendPrivateMessage(pseudo) {
     $("#privateMessagePseudo").val(pseudo);
     openQuickChat();
 }
-//# sourceMappingURL=Messaging.js.map

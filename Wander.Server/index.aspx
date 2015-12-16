@@ -234,9 +234,16 @@
                      </table>
                      <hr />
                      <div class="well">Number of owners : <span id="nbrOwnersProperty"></span></div>
+                      <hr/>
+                      <form id="enterHouseForm">
+                          <input type="hidden" name="houseId" value="" id="hiddenEnterHouseId" />
+                          <button type="submit" class="btn btn-success" id="enterHouseButton">Enter house</button>
+                          </form>
+                     
                   </div>
-                  <div class="modal-footer">
-                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <div class="modal-footer">           
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                     
                   </div>
                </div>
             </div>

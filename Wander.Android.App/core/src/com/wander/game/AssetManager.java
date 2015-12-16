@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 public class AssetManager {
 
     private static Skin skin;
-    private static TextureAtlas uiAtlas = new TextureAtlas(Gdx.files.internal("ui/ui-orange.atlas"));
+    private static TextureAtlas uiAtlas = new TextureAtlas(Gdx.files.internal("ui/ui-blue.atlas"));
     private static Skin uiSkin = new Skin(uiAtlas);
 
     public static Skin getSkin()

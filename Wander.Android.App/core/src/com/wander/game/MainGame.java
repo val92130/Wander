@@ -106,14 +106,13 @@ public class MainGame extends Game {
     }
 
     public void connectHub(){
-        this.hubService = new HubService(this,"http://wander.nightlydev.fr", "GameHub");
+        this.hubService = new HubService(this,"http://wander.nightlydev.fr/", "GameHub");
         this.screenManager.switchToLoadingScreen();
 
         hubService.start();
     }
 
-
-
+    
         @Override
     public void render() {
         this.update();

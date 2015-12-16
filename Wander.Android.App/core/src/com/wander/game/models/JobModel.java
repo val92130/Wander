@@ -4,7 +4,7 @@ package com.wander.game.models;
  * Created by valentin on 15/12/2015.
  */
 public class JobModel {
-    @com.google.gson.annotations.SerializedName("Jobid")
+    @com.google.gson.annotations.SerializedName("JobId")
     public int JobId;
     @com.google.gson.annotations.SerializedName("JobDescription")
     public String JobDescription;
