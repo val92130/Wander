@@ -143,6 +143,14 @@ namespace Wander.Server.ClassLibrary.Services
 
         }
 
+        public bool EnterHouse(string connectionId, int houseId)
+        {
+            var player = Players.FirstOrDefault(x => x.SignalRId == connectionId);
+            if (player == null) return false;
+            player.HouseId = houseId;
+            return true;
+        }
+
         /// <summary>
         /// Gets a copy of all the connected players
         /// </summary>
