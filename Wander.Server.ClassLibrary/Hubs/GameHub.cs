@@ -572,5 +572,17 @@ namespace Wander.Server.ClassLibrary.Hubs
                 return false;
             }
         }
+
+        public bool EnterHouse(int propertyId)
+        {
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be connected to do this action", EMessageType.error));
+                return false;
+            }
+            ServerPropertyModel checkProperty = ServiceProvider.GetPropertiesService().GetProperty(propertyId);
+            if (checkProperty == null) return false;
+           return ServiceProvider.GetPlayerService().EnterHouse(this.Context.ConnectionId, propertyId);
+        }
     }
 }

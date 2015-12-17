@@ -10,5 +10,11 @@
         public string Pseudo { get; set; }
         public Vector2 Position { get; set; }
         public EPlayerDirection Direction { get; set; }
+        public int HouseId { get; set; }
+
+        public ServerPlayerModel()
+        {
+            this.HouseId = -1;
+        }
     }
 }
