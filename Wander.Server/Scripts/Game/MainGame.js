@@ -17,8 +17,12 @@ function deleteGame() {
     $("#main-container").fadeIn();
 }
 function changeMap(houseId) {
-    game.destroy();
-    game = new Game(houseId);
+    hub.invoke("EnterHouse", houseId).done(function (success) {
+        if (success) {
+            game.destroy();
+            game = new Game(houseId);
+        }
+    });
 }
 var Game = (function (_super) {
     __extends(Game, _super);

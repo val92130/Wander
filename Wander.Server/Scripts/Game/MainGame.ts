@@ -17,9 +17,13 @@ function deleteGame() {
     $("#main-container").fadeIn();
 }
 
-function changeMap(houseId:number) {
-    game.destroy();
-    game = new Game(houseId);
+function changeMap(houseId: number) {
+    hub.invoke("EnterHouse", houseId).done(function(success) {
+        if (success) {
+            game.destroy();
+            game = new Game(houseId);
+        }
+    });
 }
 
 
@@ -100,6 +104,7 @@ class GameState extends Phaser.State {
         hub.invoke("IsRaining").done(function(val) {
             currentState.setRain(val);
         });
+
         hub.invoke("GetAllPlayers");
         hub.invoke("Update");
 

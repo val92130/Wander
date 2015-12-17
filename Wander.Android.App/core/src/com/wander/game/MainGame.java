@@ -112,7 +112,7 @@ public class MainGame extends Game {
         hubService.start();
     }
 
-    
+
         @Override
     public void render() {
         this.update();
