@@ -76,7 +76,12 @@ var GameState = (function (_super) {
         hub.invoke("IsRaining").done(function (val) {
             currentState.setRain(val);
         });
-        hub.invoke("GetAllPlayers");
+        if (this.houseId != -1) {
+            hub.invoke("GetPlayersHouse", this.houseId);
+        }
+        else {
+            hub.invoke("GetAllPlayers");
+        }
         hub.invoke("Update");
     };
     GameState.prototype.pressAction = function () {

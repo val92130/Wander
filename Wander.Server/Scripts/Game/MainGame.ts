@@ -105,7 +105,12 @@ class GameState extends Phaser.State {
             currentState.setRain(val);
         });
 
-        hub.invoke("GetAllPlayers");
+        if (this.houseId != -1) {
+            hub.invoke("GetPlayersHouse", this.houseId);
+        } else {
+            hub.invoke("GetAllPlayers");
+        }
+        
         hub.invoke("Update");
 
     }

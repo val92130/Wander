@@ -143,6 +143,16 @@ namespace Wander.Server.ClassLibrary.Services
 
         }
 
+        public List<ServerPlayerModel> GetAllPlayersHouse(int houseId)
+        {
+            lock (Players)
+            {
+                List<ServerPlayerModel> players = new List<ServerPlayerModel>();
+                players = Players.Where(x => x.HouseId == houseId).ToList();
+                return players;
+            }
+        }
+
         public bool EnterHouse(string connectionId, int houseId)
         {
             var player = Players.FirstOrDefault(x => x.SignalRId == connectionId);

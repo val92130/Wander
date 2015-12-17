@@ -322,6 +322,17 @@ namespace Wander.Server.ClassLibrary.Hubs
 
         }
 
+        public void GetPlayersHouse(int houseId)
+        {
+            var players = ServiceProvider.GetPlayerService().GetAllPlayersHouse(houseId);
+
+            for (int i = 0; i < players.Count; i++)
+            {
+                if (players[i].SignalRId == Context.ConnectionId) continue;
+                Clients.Caller.playerConnected(new { Pseudo = players[i].Pseudo, Position = players[i].Position, Direction = players[i].Direction });
+            }
+        }
+
         /// <summary>
         /// Returns a list of every jobs available
         /// </summary>
