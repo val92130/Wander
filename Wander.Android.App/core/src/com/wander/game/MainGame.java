@@ -7,7 +7,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Json;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
+import com.wander.game.dialogs.ChangeJobDialog;
 import com.wander.game.models.EMessageType;
+import com.wander.game.models.JobModel;
 import com.wander.game.models.MessageModel;
 import com.wander.game.models.NotificationMessage;
 import com.wander.game.models.ServerPropertyModel;
@@ -18,6 +25,9 @@ import com.wander.game.screens.MainMenuScreen;
 import com.wander.game.screens.ScreenManager;
 import com.wander.game.services.HubService;
 import com.wander.game.services.IHubService;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler;
@@ -36,11 +46,14 @@ public class MainGame extends Game {
     private NotificationManager notificationManager;
     public SpriteBatch batch;
     private ScreenManager screenManager;
+    private Gson gson;
 
     public MainGame()
     {
         this.notificationManager = new NotificationManager(this);
         this.screenManager = new ScreenManager(this);
+        this.gson = new Gson();
+
     }
 
     @Override
@@ -89,15 +102,15 @@ public class MainGame extends Game {
             }
         }, MessageModel.class);
 
+
     }
 
     public void connectHub(){
-        this.hubService = new HubService(this,"http://wander.nightlydev.fr", "GameHub");
+        this.hubService = new HubService(this,"http://wander.nightlydev.fr/", "GameHub");
         this.screenManager.switchToLoadingScreen();
 
         hubService.start();
     }
-
 
 
         @Override
@@ -143,6 +156,27 @@ public class MainGame extends Game {
         this.screenManager.switchToMenuScreen();
     }
 
+    public void openChangeJobDialog(final Stage stage)
+    {
+        if(!this.isConnected() || this.getScreenManager().getGameScreen() == null)return;
+        final MainGame _this = this;
+        this.getHubService().getHub().invoke(JsonElement.class, "GetAllJobs").done(new Action<JsonElement>() {
+
+            @Override
+            public void run(final JsonElement data) throws Exception {
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println(data);
+                        ArrayList<JobModel> jobs = gson.fromJson(data, new TypeToken<ArrayList<JobModel>>() {
+                        }.getType());
+                        _this.getScreenManager().getGameScreen().getModalManager().openChangeJobDialog(jobs);
+                    }
+                });
+            }
+        });
+    }
+
     public void sendPublicMessage(String content)
     {
         if(content == null)return;
@@ -166,6 +200,12 @@ public class MainGame extends Game {
     {
         if(!isConnected())return;
         this.getHubService().getHub().invoke("BuyProperty", model.PropertyId);
+    }
+
+    public void changeJob(JobModel job)
+    {
+        if(!isConnected())return;
+        this.getHubService().getHub().invoke("ApplyJob", job.JobId);
     }
 
     public void startGameScreen()
@@ -233,7 +273,7 @@ public class MainGame extends Game {
         this.logout();
     }
 
-
+    public Gson getGson(){return this.gson;}
     public IHubService getHubService()
     {
         return hubService;

@@ -321,6 +321,7 @@ namespace Wander.Server.ClassLibrary.Hubs
 
         }
 
+
         /// <summary>
         /// Returns a list of every jobs available
         /// </summary>
@@ -570,6 +571,18 @@ namespace Wander.Server.ClassLibrary.Hubs
                         ServiceProvider.GetUserService().GetUserPoints(Context.ConnectionId) - 5);
                 return false;
             }
+        }
+
+        public bool EnterHouse(int propertyId)
+        {
+            if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be connected to do this action", EMessageType.error));
+                return false;
+            }
+            ServerPropertyModel checkProperty = ServiceProvider.GetPropertiesService().GetProperty(propertyId);
+            if (checkProperty == null) return false;
+           return ServiceProvider.GetPlayerService().EnterHouse(this.Context.ConnectionId, propertyId);
         }
     }
 }

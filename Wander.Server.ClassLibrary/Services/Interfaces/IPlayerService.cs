@@ -11,6 +11,7 @@ namespace Wander.Server.ClassLibrary.Services
         List<ClientPlayerModel> GetAllPlayersClient();
         List<string> GetAllPlayersConnectionId();
         List<ServerPlayerModel> GetAllPlayersServer();
+        List<ServerPlayerModel> GetAllPlayersHouse(int houseId);
         ServerPlayerModel GetPlayer(string signalRId);
         ServerPlayerModel GetPlayer(int userId);
         ClientPlayerModel GetPlayerInfos(string connectionId);
@@ -19,5 +20,6 @@ namespace Wander.Server.ClassLibrary.Services
         void RemovePlayer(string SignalRId);
         bool TryMovePlayerTo(string connectionId, Vector2 to, EPlayerDirection direction);
         bool TryMovePlayerTo(ServerPlayerModel player, Vector2 to, EPlayerDirection direction);
+        bool EnterHouse(string connectionId, int houseId);
     }
 }

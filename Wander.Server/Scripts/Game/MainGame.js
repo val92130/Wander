@@ -9,26 +9,35 @@ function createGame() {
     $("#main-game").show();
     $("#main-container").hide();
     $(".overlay").fadeIn();
-    game = new Game();
+    game = new Game(-1);
     $(".overlay").fadeOut();
 }
 function deleteGame() {
     game.destroy();
     $("#main-container").fadeIn();
 }
+function changeMap(houseId) {
+    hub.invoke("EnterHouse", houseId).done(function (success) {
+        if (success) {
+            game.destroy();
+            game = new Game(houseId);
+        }
+    });
+}
 var Game = (function (_super) {
     __extends(Game, _super);
-    function Game() {
+    function Game(houseId) {
         // init game
-        currentState = new GameState();
+        currentState = new GameState(houseId);
         _super.call(this, "100%", "100%", Phaser.AUTO, "main-game", currentState);
     }
     return Game;
 })(Phaser.Game);
 var GameState = (function (_super) {
     __extends(GameState, _super);
-    function GameState() {
-        _super.apply(this, arguments);
+    function GameState(houseId) {
+        _super.call(this);
+        this.houseId = houseId;
     }
     GameState.prototype.preload = function () {
         this.game.canvas.id = "canvas";
@@ -37,12 +46,17 @@ var GameState = (function (_super) {
         this.game.stage.disableVisibilityChange = true;
         this.game.load.image("player", "Content/Game/Images/player.png");
         this.game.load.tilemap("Map", "Content/Game/Maps/map2.json", null, Phaser.Tilemap.TILED_JSON);
-        this.game.load.tilemap("MapHouse", "Content/Game/Maps/mapHouse.json", null, Phaser.Tilemap.TILED_JSON);
+        this.game.load.tilemap("MapHouse", "Content/Game/Maps/house.json", null, Phaser.Tilemap.TILED_JSON);
         this.game.load.image("Tiles", "Content/Game/Images/tileset3.png");
         this.game.load.image("Number_Tiles", "Content/Game/Images/number_spritesheet.png");
         this.game.load.image("Overlay", "Content/Game/Images/filter.png");
         this.game.load.image('blurred-circle', 'Content/Game/Images/blurred-circle.png');
-        this.map = new Map(this, this.game, "Map", "Tiles", "tileset3", 1);
+        if (this.houseId !== -1) {
+            this.map = new Map(this, this.game, "MapHouse", "Tiles", "tileset3", 1);
+        }
+        else {
+            this.map = new Map(this, this.game, "Map", "Tiles", "tileset3", 1);
+        }
         this.game.load.spritesheet('rain', 'Content/Game/Images/rain.png', 17, 17);
         this.soundManager = new SoundManager(this.game, this);
         this.soundManager.preload();
@@ -124,10 +138,6 @@ var GameState = (function (_super) {
             this.map.currentPlayer.move(EDirection.Down);
         }
     };
-    GameState.prototype.EnterHouse = function () {
-        this.map = new Map(this, this.game, "MapHouse", "Tiles", "tileset3", 1);
-        this.map.create();
-    };
     GameState.prototype.resizeGame = function () {
         var height = $(".game").height();
         var width = $(".game").width();
@@ -200,6 +210,7 @@ function openModalProperty(id) {
                         return;
                     $("#propertyModalBody").text("");
                     $("#propertyModalBody").append("<tr class='" + (res >= model.Threshold ? 'danger' : 'success') + "'><td>" + model.PropertyName + "</td><td>" + model.PropertyDescription + "</td><td>" + model.Threshold + "</td> <td>" + model.Price + "</td><td><button type='button ' " + (res >= model.Threshold ? 'disabled' : '') + " onclick = 'BuyProperty(" + model.PropertyId + ")' class='btn btn-success' data-dismiss='modal'>Buy</button></tr>");
+                    $("#hiddenEnterHouseId").val(model.PropertyId);
                     $("#propertyModal").modal();
                 }
             });
@@ -215,6 +226,14 @@ function openQuestionModal(question) {
         keyboard: false
     });
 }
+$("#enterHouseForm").submit(function (e) {
+    var houseId = $("#hiddenEnterHouseId").val();
+    e.preventDefault();
+    if (typeof (houseId) != "undefined" && houseId !== null) {
+        changeMap(houseId);
+        console.log("Changing map");
+    }
+});
 $("#questionForm").submit(function (e) {
     var answer = $('input[name=radioAnswer]:checked', '#questionForm').val();
     var questId = $("#questionid").val();
@@ -257,11 +276,6 @@ $(document).keypress(function (event) {
             if (event.which == 101) {
                 if (currentState.game != undefined) {
                     currentState.pressAction();
-                }
-            }
-            if (event.which == 65) {
-                if (currentState.game != undefined) {
-                    currentState.EnterHouse();
                 }
             }
         }

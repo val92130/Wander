@@ -266,6 +266,8 @@ public class GameMap {
     public void actionPressed(){
         int tileX = (int)(currentPlayer.getPosition().x / Constants.TILE_SIZE) + 1;
         int tileY = (int)(currentPlayer.getPosition().y / Constants.TILE_SIZE) - 1;
+
+
         int houseId = -1;
         try{
             String o = this.getHouseLayer().getCell(tileX, tileY).getTile().getProperties().get("propertyId").toString();
@@ -279,6 +281,8 @@ public class GameMap {
             System.out.println("found house : " + houseId);
         }
     }
+
+
 
     public ServerPlayer getPlayer(String pseudo)
     {

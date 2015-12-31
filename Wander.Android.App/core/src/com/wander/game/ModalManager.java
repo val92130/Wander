@@ -4,9 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.wander.game.dialogs.ChangeJobDialog;
 import com.wander.game.dialogs.ChatDialog;
 import com.wander.game.dialogs.HouseBuyDialog;
+import com.wander.game.models.JobModel;
 import com.wander.game.models.ServerPropertyModel;
+
+import java.util.ArrayList;
 
 import microsoft.aspnet.signalr.client.Action;
 
@@ -24,6 +28,17 @@ public class ModalManager {
         this.game = game;
         this.stage = stage;
         this.skin = AssetManager.getSkin();
+    }
+
+    public void openChangeJobDialog(ArrayList<JobModel> dataList)
+    {
+        if(this.currentDialogWindow == null )
+        {
+            this.currentDialogWindow = new ChangeJobDialog(this.game, this.stage, this.skin, dataList);
+        } else if(!this.currentDialogWindow.isVisible())
+        {
+            this.currentDialogWindow = new ChangeJobDialog(this.game, this.stage, this.skin, dataList);
+        }
     }
 
     public void openPublicChatBox(){

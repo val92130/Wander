@@ -69,7 +69,6 @@ public class ChatDialog extends Dialog {
         this.stage.setKeyboardFocus(this.area);
         this.area.setText("");
 
-
     }
 
     public ChatDialog(MainGame game, Stage stage, Skin skin,String labelContent, String userDest) {
