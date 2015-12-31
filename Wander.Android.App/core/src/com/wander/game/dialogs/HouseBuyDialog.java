@@ -7,9 +7,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.wander.game.MainGame;
 import com.wander.game.models.ServerPropertyModel;
+
+import java.awt.event.InputEvent;
 
 /**
  * Created by val on 12/12/2015.
@@ -44,6 +47,18 @@ public class HouseBuyDialog extends Dialog {
 
         TextButton dbutton = new TextButton("Buy", skin);
         this.button(dbutton, true);
+
+        TextButton closeButton = new TextButton("Close", skin);
+        final HouseBuyDialog _this = this;
+        closeButton.addListener(new ClickListener(){
+
+            @Override
+            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+                _this.setVisible(false);
+                _this.hide();
+            }
+        });
+        this.getButtonTable().add(closeButton);
 
         this.getContentTable().center();
 

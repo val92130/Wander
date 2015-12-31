@@ -161,7 +161,6 @@ namespace Wander.Server.ClassLibrary.Hubs
                 return;
             }
 
-
             string caller = candidate.Pseudo;
 
             string msg = HttpUtility.HtmlEncode(message);

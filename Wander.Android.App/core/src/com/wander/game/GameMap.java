@@ -253,6 +253,7 @@ public class GameMap {
     {
         if(message == null) throw new NullPointerException("Message is null");
         ServerPlayer candidate = this.getPlayer(message.UserName);
+        this.game.getChatArea().appendText(message.UserName + " : " + message.Content + "\n");
         if(candidate != null){
             candidate.setTextMessage(message.Content);
         } else if(message.UserName.equals(currentPlayer.getPseudo()))

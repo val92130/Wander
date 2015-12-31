@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -60,6 +61,7 @@ public class GameScreen implements Screen {
     private Skin skin;
     private ModalManager modalManager;
     private InputMultiplexer inputMultiplexer;
+    private TextArea chatArea;
 
 
     public GameScreen(final MainGame game)
@@ -68,8 +70,6 @@ public class GameScreen implements Screen {
         this.registerHubEvents();
         this.map = new GameMap("maps/map2.tmx", this);
         camera = new Camera(this);
-
-
 
         this.skin = AssetManager.getSkin();
 
@@ -100,6 +100,15 @@ public class GameScreen implements Screen {
         if(Gdx.app.getType() == Application.ApplicationType.Android) stage.addActor(touchpad);
         inputMultiplexer.addProcessor(stage);
 
+        float width = Gdx.graphics.getWidth();
+        float height = Gdx.graphics.getHeight();
+        Skin chatSkin = AssetManager.getSkin();
+        chatSkin.getFont("default-font").getData().setScale(0.5f,0.5f);
+        chatArea = new TextArea("", chatSkin);
+        chatArea.setSize(width/7, height/4);
+        chatArea.setPosition(0, 0);
+        chatArea.setDisabled(true);
+        this.stage.addActor(chatArea);
 
         TextButton menuButton=new TextButton("...",skin);
         menuButton.addListener(new ClickListener() {
@@ -175,6 +184,9 @@ public class GameScreen implements Screen {
                 });
             }
         }, Boolean.class);
+
+
+
     }
 
     @Override
@@ -252,6 +264,10 @@ public class GameScreen implements Screen {
             modalManager.openBuyPropertyModal(houseId);
         }
 
+    }
+
+    public TextArea getChatArea(){
+        return this.chatArea;
     }
 
 
