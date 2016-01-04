@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.SignalR;
@@ -75,6 +76,29 @@ namespace Wander.Server.ClassLibrary.Hubs
         }
 
         /// <summary>
+        /// Connect the user to the game and into the database
+        /// </summary>
+        /// <param name="user"></param>
+        public bool ConnectAdmin(UserModel user)
+        {
+            if (ServiceProvider.GetUserRegistrationService().IsBanned(user))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage(
+                    "Cannot login, this account has been banned", EMessageType.error));
+                return false;
+            }
+
+            if (ServiceProvider.GetAdminService().ConnectAdmin(user.Login, user.Password, Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage(
+                    "Successfully connected", EMessageType.success));
+                return true;
+            }
+            return false;
+
+        }
+
+        /// <summary>
         /// Register the User in the database if its valid
         /// </summary>
         /// <param name="user">Form fields represented by the UserModel</param>
@@ -99,6 +123,10 @@ namespace Wander.Server.ClassLibrary.Hubs
         /// </summary>
         public void Disconnect()
         {
+            if (ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
+            {
+                ServiceProvider.GetAdminService().DisconnectAdmin(Context.ConnectionId);               
+            }
             if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId))
             {
                 return;
@@ -584,5 +612,29 @@ namespace Wander.Server.ClassLibrary.Hubs
             if (checkProperty == null) return false;
            return ServiceProvider.GetPlayerService().EnterHouse(this.Context.ConnectionId, propertyId);
         }
+
+        #region admin
+
+        public int GetConnectedPlayersNumber()
+        {
+            if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be an admin", EMessageType.error));
+                return -1;
+            }
+            return ServiceProvider.GetPlayerService().GetAllPlayersServer().Count;
+        }
+
+        public int GetRegisteredPlayersNumber()
+        {
+            if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be an admin", EMessageType.error));
+                return -1;
+            }
+            return ServiceProvider.GetAdminService().GetPlayersTotalCount();
+        }
+
+        #endregion
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Wander.Server.ClassLibrary.Services
+﻿using Wander.Server.ClassLibrary.Services.Interfaces;
+
+namespace Wander.Server.ClassLibrary.Services
 {
 
     public class ServiceProvider
@@ -11,6 +13,7 @@
         private static IPropertyService PropertyService;
         private static IQuestionService QuestionService;
         private static GameManager GameManager;
+        private static IAdminService AdminService;
 
         public static IUserRegistrationService GetUserRegistrationService()
         {
@@ -64,6 +67,14 @@
                 QuestionService = new QuestionService();
 
             return QuestionService;
+        }
+
+        public static IAdminService GetAdminService()
+        {
+            if (AdminService == null)
+                AdminService = new AdminService();
+
+            return AdminService;
         }
         public static GameManager GetGameManager()
         {

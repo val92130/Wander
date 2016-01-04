@@ -303,6 +303,7 @@ namespace Wander.Server.ClassLibrary.Services
 
 
         }
+
         public void PayTax(ServerPlayerModel user)
         {
             if (user == null) throw new ArgumentException("parameter user is null");
@@ -370,6 +371,20 @@ namespace Wander.Server.ClassLibrary.Services
             return Convert.ToBoolean(this.ExecuteQueryInt("Banned", user));
         }
 
+        public bool IsAdmin(string connectionId)
+        {
+            if (connectionId == null) throw new ArgumentException("there is no id");
+            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(connectionId);
+            if (user == null) return false;
+            return Convert.ToBoolean(this.ExecuteQueryInt("Admin", user));
+        }
+
+        public bool IsAdmin(ServerPlayerModel user)
+        {
+            if (user == null) return false;
+            return Convert.ToBoolean(this.ExecuteQueryInt("Admin", user));
+        }
+
         public Vector2 GetLastPosition(ServerPlayerModel user)
         {
             if (user == null) throw new ArgumentException("parameter user is null");
@@ -403,6 +418,25 @@ namespace Wander.Server.ClassLibrary.Services
             ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(connectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
             return this.SetLastPosition(user, position);
+        }
+
+        public int GetRegisteredUsersCount()
+        {
+            int nbr = -1;
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = "SELECT COUNT(*) from dbo.Users";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    nbr = (int)cmd.ExecuteScalar();
+
+                    conn.Close();
+
+                }
+            }
+            return nbr;
         }
 
         public Vector2 GetLastPosition(int userId)
