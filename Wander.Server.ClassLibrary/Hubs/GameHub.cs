@@ -94,6 +94,11 @@ namespace Wander.Server.ClassLibrary.Hubs
                     "Successfully connected", EMessageType.success));
                 return true;
             }
+            else
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage(
+                    "Wrong login/password", EMessageType.error));
+            }
             return false;
 
         }
@@ -118,15 +123,35 @@ namespace Wander.Server.ClassLibrary.Hubs
             return false;
         }
 
+
+
+        /// <summary>
+        /// Called whenever a Client disconnects from SignalR
+        /// </summary>
+        /// <param name="stopCalled"></param>
+        /// <returns></returns>
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            if (ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
+            {
+                ServiceProvider.GetAdminService().DisconnectAdmin(Context.ConnectionId);
+            }
+            ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            // If the disconnected client is logged in the database, we log him out
+            if (candidate != null)
+            {
+                Disconnect();
+            }
+
+            return base.OnDisconnected(stopCalled);
+        }
+
         /// <summary>
         /// Disconnect the Player related to the Caller ConnectionId
         /// </summary>
         public void Disconnect()
         {
-            if (ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
-            {
-                ServiceProvider.GetAdminService().DisconnectAdmin(Context.ConnectionId);               
-            }
+
             if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId))
             {
                 return;
@@ -145,23 +170,6 @@ namespace Wander.Server.ClassLibrary.Hubs
             ServiceProvider.GetUserRegistrationService().LogOut(ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId));
             ServiceProvider.GetPlayerService().RemovePlayer(Context.ConnectionId);
             Clients.Caller.notify(Helper.CreateNotificationMessage("See you soon !", EMessageType.info));
-        }
-
-        /// <summary>
-        /// Called whenever a Client disconnects from SignalR
-        /// </summary>
-        /// <param name="stopCalled"></param>
-        /// <returns></returns>
-        public override Task OnDisconnected(bool stopCalled)
-        {
-            ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
-            // If the disconnected client is logged in the database, we log him out
-            if (candidate != null)
-            {
-                Disconnect();
-            }
-
-            return base.OnDisconnected(stopCalled);
         }
 
 
@@ -199,6 +207,12 @@ namespace Wander.Server.ClassLibrary.Hubs
             for (int i = 0; i < ids.Count; i++)
             {
                 Clients.Client(ids[i].SignalRId).MessageReceived(Helper.CreateChatMessage(caller, candidate.UserId, msg, ServiceProvider.GetUserService().GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString()));
+            }
+
+            var admins = ServiceProvider.GetAdminService().GetAllAdmins();
+            for (int i = 0; i < admins.Count; i++)
+            {
+                Clients.Client(admins[i].ConnectionId).MessageReceived(Helper.CreateChatMessage(caller, candidate.UserId, msg, ServiceProvider.GetUserService().GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString()));
             }
         }
 
@@ -633,6 +647,46 @@ namespace Wander.Server.ClassLibrary.Hubs
                 return -1;
             }
             return ServiceProvider.GetAdminService().GetPlayersTotalCount();
+        }
+
+        public int GetHouseBoughtsCount()
+        {
+            if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be an admin", EMessageType.error));
+                return -1;
+            }
+            return ServiceProvider.GetAdminService().GetBoughtsHouseCount();
+        }
+
+        public int GetMessagesCount()
+        {
+            if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be an admin", EMessageType.error));
+                return -1;
+            }
+            return ServiceProvider.GetAdminService().GetMessagesCount();
+        }
+
+        public List<ChatMessageModel> GetAllMessages()
+        {
+            if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be an admin", EMessageType.error));
+                return null;
+            }
+            return ServiceProvider.GetAdminService().GetAllMessages();
+        }
+
+        public List<ServerPlayerModel> GetAllPlayersAdmin()
+        {
+            if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be an admin", EMessageType.error));
+                return null;
+            }
+            return ServiceProvider.GetAdminService().GetAllPlayers();
         }
 
         #endregion

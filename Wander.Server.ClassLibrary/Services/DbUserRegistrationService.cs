@@ -261,7 +261,7 @@ namespace Wander.Server.ClassLibrary.Services
                     cmd.Parameters.AddWithValue("@Login", user.Login);
 
                     var data = cmd.ExecuteScalar();
-                    if (data == null) throw new ArgumentNullException("user is null or not found");
+                    if (data == null) return false;
                     bool value = Convert.ToBoolean(data);
                     conn.Close();
                     return value;

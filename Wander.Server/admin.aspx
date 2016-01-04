@@ -9,19 +9,13 @@
       <meta name="author" content="">
       <link href='https://fonts.googleapis.com/css?family=Quicksand:700,400' rel='stylesheet' type='text/css'>
       <title>Wander administration</title>
-      <!-- Bootstrap Core CSS -->
-      <link href="Content/Admin/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+       <link href="Content/bootstrap.min.css" rel="stylesheet" />
       <!-- Custom CSS -->
       <link href="Content/Admin/css/sb-admin-2.css" rel="stylesheet">
       <link href="Content/Admin/css/style.css" rel="stylesheet" />
       <!-- Custom Fonts -->
       <link href="Content/Admin/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-      <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-      <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-      <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-      <![endif]-->
    </head>
    <body ng-controller="manager">
       <div id="wrapper">
@@ -146,6 +140,21 @@
                   </div>
                </div>
             </div>
+             
+             <hr />
+             <h2>Players </h2>
+             <form class="form-inline" novalidate>
+              <div class="form-group">
+                <select class="form-control" id="selectPlayers">
+                  <option>1</option>
+                </select>
+              </div>
+              
+              <button type="button" class="btn btn-success">View infos</button>
+              <button type="button" class="btn btn-danger">Ban</button>
+              <button type="button" class="btn btn-info">Unban</button>
+            </form>
+             <hr />
             <!-- /.row -->
             <div class="row">
                <!-- /.col-lg-8 -->
@@ -154,35 +163,20 @@
                   <div class="chat-panel panel panel-default">
                      <div class="panel-heading">
                         <i class="fa fa-comments fa-fw"></i>
-                        Chat
+                        Players chat
                      </div>
                      <!-- /.panel-heading -->
                      <div class="panel-body">
-                        <ul class="chat">
-                           <li class="left clearfix">
-                              <span class="chat-img pull-left">
-                              <img src="http://placehold.it/50/55C1E7/fff" alt="User Avatar" class="img-circle" />
-                              </span>
-                              <div class="chat-body clearfix">
-                                 <div class="header">
-                                    <strong class="primary-font">Jack Sparrow</strong>
-                                    <small class="pull-right text-muted">
-                                    <i class="fa fa-clock-o fa-fw"></i> 12 mins ago
-                                    </small>
-                                 </div>
-                                 <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
-                                 </p>
-                              </div>
-                           </li>
+                        <ul class="chat" id="chatbox">
+
                         </ul>
                      </div>
                      <!-- /.panel-body -->
                      <div class="panel-footer">
                         <div class="input-group">
-                           <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                           <input id="btn-input" type="text" ng-bind="broadcast_message" class="form-control input-sm" placeholder="Type your broadcast message here..." />
                            <span class="input-group-btn">
-                           <button class="btn btn-warning btn-sm" id="btn-chat">
+                           <button class="btn btn-warning btn-sm" id="btn-chat" ng-click="broadcastMessage()">
                            Send
                            </button>
                            </span>
@@ -198,7 +192,7 @@
          </div>
          <!-- /#page-wrapper -->
       </div>
-      <div id="myModal" class="modal fade" role="dialog">
+      <div id="loginModal" class="modal fade" role="dialog">
          <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">

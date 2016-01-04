@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using Wander.Server.ClassLibrary.Model;
+using Wander.Server.ClassLibrary.Model.Players;
 using Wander.Server.ClassLibrary.Services.Interfaces;
 
 namespace Wander.Server.ClassLibrary.Services
@@ -117,12 +118,102 @@ namespace Wander.Server.ClassLibrary.Services
 
         public bool BanPlayer(int playerId)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = "UPDATE dbo.Users SET Banned = 1  WHERE UserId = @userId";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    cmd.Parameters.AddWithValue("@userId", playerId);
+
+
+                    int lines = cmd.ExecuteNonQuery();
+                    conn.Close();
+                    return lines != 0;
+                }
+            }
         }
 
         public bool UnBanPlayer(int playerId)
         {
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = "UPDATE dbo.Users SET Banned = 0  WHERE UserId = @userId";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    cmd.Parameters.AddWithValue("@userId", playerId);
+
+
+                    int lines = cmd.ExecuteNonQuery();
+                    conn.Close();
+                    return lines != 0;
+                }
+            }
+        }
+
+        public int GetMessagesCount()
+        {
+            return ServiceProvider.GetMessageService().GetAllMessages().Count;
+        }
+
+        public List<ChatMessageModel> GetAllMessages()
+        {
+            return ServiceProvider.GetMessageService().GetAllMessages();
+        }
+
+        public int GetBoughtsHouseCount()
+        {
+            int count = -1;
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = string.Format("SELECT COUNT(*) from dbo.UserProperties");
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    List<ServerPropertyModel> Properties = new List<ServerPropertyModel>();
+                    conn.Open();
+                    var data = cmd.ExecuteScalar();
+                    if (data != null)
+                    {
+                        count = (int)data;
+                    }
+                    conn.Close();
+
+                    return count;
+                }
+            }
+        }
+
+        public List<ServerPlayerModel> GetAllPlayers()
+        {
+            return ServiceProvider.GetPlayerService().GetAllPlayersServer();
+        }
+
+        public ServerPlayerModel GetPlayerInfo(int userId)
+        {
+            return ServiceProvider.GetPlayerService().GetPlayer(userId);
+        }
+
+        public ServerPlayerModel GetPlayerInfo(string connectionId)
+        {
+            return ServiceProvider.GetPlayerService().GetPlayer(connectionId);
+        }
+
+        public bool SetDay(bool value)
+        {
             throw new NotImplementedException();
+        }
+
+        public bool SetRain(bool value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<AdminModel> GetAllAdmins()
+        {
+            return _admins;
         }
     }
 }

@@ -7,6 +7,30 @@ namespace Wander.Server.ClassLibrary.Services
 {
     public class MessageService : IMessageService
     {
+        public List<ChatMessageModel> GetAllMessages()
+        {
+            List<ChatMessageModel> msg = new List<ChatMessageModel>();
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = "SELECT u.UserId, u.Sex, m.Message, m.Time, u.UserLogin FROM MessageLogs m JOIN Users u on u.UserId = m.UserId ORDER BY m.MessageId DESC ";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        msg.Add(Helper.CreateChatMessage(reader["UserLogin"].ToString(), Convert.ToInt32(reader["UserId"]), reader["Message"].ToString(), Convert.ToInt32(reader["Sex"]), reader["Time"].ToString()));
+                    }
+
+                    conn.Close();
+
+                    return msg;
+                }
+            }
+        }
+
         public List<ChatMessageModel> GetMessagesLimit(int limit)
         {
             List<ChatMessageModel> msg = new List<ChatMessageModel>();
@@ -18,8 +42,6 @@ namespace Wander.Server.ClassLibrary.Services
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
-
-                    cmd.Parameters.AddWithValue("@Limit", limit);
 
                     var reader = cmd.ExecuteReader();
 
