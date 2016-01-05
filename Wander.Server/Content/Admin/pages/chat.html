@@ -1,0 +1,36 @@
+﻿<div id="page-chat">
+    <!-- /.row -->
+    <div class="row" >
+        <!-- /.col-lg-8 -->
+        <div class="col-lg-4" style="width:100%">
+            <!-- /.panel -->
+            <div class="chat-panel panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-comments fa-fw"></i>
+                    Players chat
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body" id="chatBody" style="background-color: rgb(214, 248, 183);">
+                    <ul class="chat" id="chatbox"></ul>
+                </div>
+                <!-- /.panel-body -->
+                <div class="panel-footer">
+                    <form ng-submit="broadcastMessage(msg)" novalidate>
+                        <div class="input-group">
+                            <input id="btn-input" type="text" ng-model="msg.text" class="form-control input-sm" placeholder="Type your broadcast message here..." />
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-warning btn-sm" id="btn-chat">
+                                    Send
+                                </button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.panel-footer -->
+            </div>
+            <!-- /.panel .chat-panel -->
+        </div>
+        <!-- /.col-lg-4 -->
+    </div>
+    <!-- /.row -->
+</div>

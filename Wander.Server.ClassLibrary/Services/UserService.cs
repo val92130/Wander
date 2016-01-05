@@ -224,6 +224,7 @@ namespace Wander.Server.ClassLibrary.Services
                         client.Points = Convert.ToInt32(reader["Points"]);
                         client.UserName = reader["UserLogin"].ToString();
                         client.Email = reader["Email"].ToString();
+                        client.Job = ServiceProvider.GetJobService().GetUserJobInfos(connectionId);
                         break;
                     }
 

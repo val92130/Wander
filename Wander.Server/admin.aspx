@@ -7,10 +7,10 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="description" content="">
       <meta name="author" content="">
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/s/bs/jqc-1.11.3,dt-1.10.10/datatables.min.css"/>
       <link href='https://fonts.googleapis.com/css?family=Quicksand:700,400' rel='stylesheet' type='text/css'>
       <title>Wander administration</title>
-
-       <link href="Content/bootstrap.min.css" rel="stylesheet" />
+      <link href="Content/bootstrap.min.css" rel="stylesheet" />
       <!-- Custom CSS -->
       <link href="Content/Admin/css/sb-admin-2.css" rel="stylesheet">
       <link href="Content/Admin/css/style.css" rel="stylesheet" />
@@ -18,6 +18,7 @@
       <link href="Content/Admin/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
    </head>
    <body ng-controller="manager">
+      <div class="hideOverlay" style="position: absolute; bottom: 0px; width: 100%; height: 100%; background-color: #2B2B2B; z-index: 9000"></div>
       <div id="wrapper">
          <!-- Navigation -->
          <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -72,127 +73,34 @@
          </nav>
          <div id="page-wrapper">
             <div class="row">
-               <div class="col-lg-12">
-                  <h1 class="page-header">Dashboard</h1>
-               </div>
+                <br/>
+                 <ul class="nav nav-pills justified">
+                  <li role="presentation" class="active"><a href="#" ng-click="setPage('overview')">Overview</a></li>
+                  <li role="presentation"><a href="#" ng-click="setPage('players')">Players</a></li>
+                  <li role="presentation"><a href="#" ng-click="setPage('chat')">Chat</a></li>
+                  <li role="presentation"><a href="#" ng-click="setPage('weather')">Weather management</a></li>
+                </ul>
+                <hr/>
                <!-- /.col-lg-12 -->
             </div>
-            <!-- /.row -->
-            <div class="row">
-               <div class="col-lg-3 col-md-6">
-                  <div class="panel panel-primary">
-                     <div class="panel-heading">
-                        <div class="row">
-                           <div class="col-xs-3">
-                              <i class="fa fa-users fa-5x"></i>
-                           </div>
-                           <div class="col-xs-9 text-right">
-                              <div class="huge" ng-bind="online_players">26</div>
-                              <div>Players online</div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="col-lg-3 col-md-6">
-                  <div class="panel panel-green">
-                     <div class="panel-heading">
-                        <div class="row">
-                           <div class="col-xs-3">
-                              <i class="fa fa-user fa-5x"></i>
-                           </div>
-                           <div class="col-xs-9 text-right">
-                              <div class="huge" ng-bind="registered_players">12</div>
-                              <div>Players registered</div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="col-lg-3 col-md-6">
-                  <div class="panel panel-yellow">
-                     <div class="panel-heading">
-                        <div class="row">
-                           <div class="col-xs-3">
-                              <i class="fa fa-shopping-cart fa-5x"></i>
-                           </div>
-                           <div class="col-xs-9 text-right">
-                              <div class="huge" ng-bind="house_boughts">124</div>
-                              <div>House bought</div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="col-lg-3 col-md-6">
-                  <div class="panel panel-red">
-                     <div class="panel-heading">
-                        <div class="row">
-                           <div class="col-xs-3">
-                              <i class="fa fa-envelope-o fa-5x"></i>
-                           </div>
-                           <div class="col-xs-9 text-right">
-                              <div class="huge" ng-bind="sent_messages">13</div>
-                              <div>Messages sent</div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
              
-             <hr />
-             <h2>Players </h2>
-             <form class="form-inline" novalidate>
-              <div class="form-group">
-                <select class="form-control" id="selectPlayers">
-                  <option>1</option>
-                </select>
-              </div>
-              
-              <button type="button" class="btn btn-success">View infos</button>
-              <button type="button" class="btn btn-danger">Ban</button>
-              <button type="button" class="btn btn-info">Unban</button>
-            </form>
-             <hr />
-            <!-- /.row -->
-            <div class="row">
-               <!-- /.col-lg-8 -->
-               <div class="col-lg-4">
-                  <!-- /.panel -->
-                  <div class="chat-panel panel panel-default">
-                     <div class="panel-heading">
-                        <i class="fa fa-comments fa-fw"></i>
-                        Players chat
-                     </div>
-                     <!-- /.panel-heading -->
-                     <div class="panel-body">
-                        <ul class="chat" id="chatbox">
+             <div id="content">
+                 <%
+                     Response.WriteFile("/Content/Admin/pages/chat.html");
+                     Response.WriteFile("/Content/Admin/pages/overview.html");
+                     Response.WriteFile("/Content/Admin/pages/players.html");
+                     Response.WriteFile("/Content/Admin/pages/weather.html");
+                 %>
+             </div>
 
-                        </ul>
-                     </div>
-                     <!-- /.panel-body -->
-                     <div class="panel-footer">
-                        <div class="input-group">
-                           <input id="btn-input" type="text" ng-bind="broadcast_message" class="form-control input-sm" placeholder="Type your broadcast message here..." />
-                           <span class="input-group-btn">
-                           <button class="btn btn-warning btn-sm" id="btn-chat" ng-click="broadcastMessage()">
-                           Send
-                           </button>
-                           </span>
-                        </div>
-                     </div>
-                     <!-- /.panel-footer -->
-                  </div>
-                  <!-- /.panel .chat-panel -->
-               </div>
-               <!-- /.col-lg-4 -->
-            </div>
-            <!-- /.row -->
+             <!-- Overview -->
+
+            <!-- Players -->
+           
          </div>
          <!-- /#page-wrapper -->
       </div>
-      <div id="loginModal" class="modal fade" role="dialog">
+      <div id="loginModal" class="modal fade" role="dialog" style="z-index: 9999">
          <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
@@ -219,6 +127,7 @@
       <!-- /#wrapper -->
       <!-- jQuery -->
       <script src="Scripts/jquery-1.9.1.min.js"></script>
+      <script type="text/javascript" src="https://cdn.datatables.net/s/bs/jqc-1.11.3,dt-1.10.10/datatables.min.js"></script>
       <script src="Scripts/jquery.signalR-2.2.0.min.js"></script>
       <script src="Scripts/notify.min.js"></script>
       <script src="Scripts/bootstrap.min.js"></script>

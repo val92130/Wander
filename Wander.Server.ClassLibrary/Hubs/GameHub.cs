@@ -679,7 +679,7 @@ namespace Wander.Server.ClassLibrary.Hubs
             return ServiceProvider.GetAdminService().GetAllMessages();
         }
 
-        public List<ServerPlayerModel> GetAllPlayersAdmin()
+        public List<AdminPlayerModel> GetAllPlayersAdmin()
         {
             if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
             {
@@ -687,6 +687,62 @@ namespace Wander.Server.ClassLibrary.Hubs
                 return null;
             }
             return ServiceProvider.GetAdminService().GetAllPlayers();
+        }
+
+        public void BanPlayer(int userId)
+        {
+            if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be an admin", EMessageType.error));
+                return;
+            }
+
+            ServiceProvider.GetUserService().SetBan(new ServerPlayerModel() {UserId = userId}, true);
+        }
+
+        public void UnBanPlayer(int userId)
+        {
+            if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be an admin", EMessageType.error));
+                return;
+            }
+
+            ServiceProvider.GetUserService().SetBan(new ServerPlayerModel() { UserId = userId }, false);
+        }
+
+        public void BroadcastMessageAdmin(string message)
+        {
+            if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be an admin", EMessageType.error));
+                return;
+            }
+
+            string caller = "Admin";
+            var adm = ServiceProvider.GetAdminService()
+                .GetAllAdmins()
+                .FirstOrDefault(x => x.ConnectionId == Context.ConnectionId);
+            if (adm == null) return;
+
+            string msg = HttpUtility.HtmlEncode(message);
+            List<ServerPlayerModel> ids = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            ChatMessageModel messageModel = Helper.CreateChatMessage(caller, adm.Id, msg,0, DateTime.Now.ToShortTimeString());
+            ServiceProvider.GetMessageService().LogMessage(messageModel);
+            for (int i = 0; i < ids.Count; i++)
+            {
+                Clients.Client(ids[i].SignalRId).notify(Helper.CreateNotificationMessage("Message from admin : " + message, EMessageType.info));
+                Clients.Client(ids[i].SignalRId).MessageReceived(messageModel);
+            }
+
+            var admins = ServiceProvider.GetAdminService().GetAllAdmins();
+            for (int i = 0; i < admins.Count; i++)
+            {
+                Clients.Client(admins[i].ConnectionId).notify(Helper.CreateNotificationMessage("Message from admin : " + message, EMessageType.info));
+                Clients.Client(admins[i].ConnectionId).MessageReceived(messageModel);
+            }
+
+
         }
 
         #endregion

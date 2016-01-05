@@ -186,19 +186,46 @@ namespace Wander.Server.ClassLibrary.Services
             }
         }
 
-        public List<ServerPlayerModel> GetAllPlayers()
+        public List<AdminPlayerModel> GetAllPlayers()
         {
-            return ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            List<AdminPlayerModel> playerList = new List<AdminPlayerModel>();
+            var connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            for (int i = 0; i < connectedPlayers.Count; i++)
+            {
+                AdminPlayerModel mdl = GetPlayerInfo(connectedPlayers[i].SignalRId);
+                playerList.Add(mdl);
+            }
+            return playerList;
         }
 
-        public ServerPlayerModel GetPlayerInfo(int userId)
+        public AdminPlayerModel GetPlayerInfo(int userId)
         {
-            return ServiceProvider.GetPlayerService().GetPlayer(userId);
+            AdminPlayerModel mdl = new AdminPlayerModel();           
+            var candidate = ServiceProvider.GetPlayerService().GetPlayer(userId);            
+            return GetPlayerInfo(candidate.SignalRId);
         }
 
-        public ServerPlayerModel GetPlayerInfo(string connectionId)
+        public AdminPlayerModel GetPlayerInfo(string connectionId)
         {
-            return ServiceProvider.GetPlayerService().GetPlayer(connectionId);
+            AdminPlayerModel mdl = new AdminPlayerModel();
+            
+            var candidate = ServiceProvider.GetPlayerService().GetPlayer(connectionId);
+            if (candidate == null) return null;
+            var userInfo = ServiceProvider.GetUserService().GetAllUserInfos(connectionId);
+            mdl.Account = userInfo.Account;
+            mdl.Email = userInfo.Email;
+            mdl.Job = userInfo.Job;
+            mdl.Points = userInfo.Points;
+            mdl.Sex = userInfo.Sex;
+            mdl.Properties = userInfo.Properties;
+            mdl.HouseId = candidate.HouseId;
+            mdl.Direction = candidate.Direction;
+            mdl.Position = candidate.Position;
+            mdl.Pseudo = candidate.Pseudo;
+            mdl.UserId = candidate.UserId;
+            mdl.SignalRId = candidate.SignalRId;
+            mdl.IsBanned = ServiceProvider.GetUserService().IsBanned(mdl.SignalRId);
+            return mdl;
         }
 
         public bool SetDay(bool value)

@@ -74,6 +74,7 @@
     <Compile Include="Model\Forms\UserModel.cs" />
     <Compile Include="Model\Job\JobModel.cs" />
     <Compile Include="Model\Job\JobQuestionModel.cs" />
+    <Compile Include="Model\Players\AdminPlayerModel.cs" />
     <Compile Include="Model\Players\ClientPlayerModel.cs" />
     <Compile Include="Model\Players\EPlayerDirection.cs" />
     <Compile Include="Model\Players\ServerPlayerModel.cs" />

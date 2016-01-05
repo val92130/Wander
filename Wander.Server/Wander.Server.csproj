@@ -99,6 +99,10 @@
     <Content Include="admin.aspx" />
     <Content Include="Content\Admin\css\style.css" />
     <Content Include="Content\Admin\js\app.js" />
+    <Content Include="Content\Admin\pages\chat.html" />
+    <Content Include="Content\Admin\pages\overview.html" />
+    <Content Include="Content\Admin\pages\players.html" />
+    <Content Include="Content\Admin\pages\weather.html" />
     <Content Include="Content\background.jpg" />
     <Content Include="Content\Game\Images\blurred-circle.png" />
     <Content Include="Content\Game\Images\filter.png" />

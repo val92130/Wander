@@ -25,12 +25,15 @@ var manager = angular.module('manager', []);
 
 manager.controller('manager', ['$scope',
 function ($scope) {
+    var table = $('table.display').DataTable();
+
     $scope.sent_messages = -1;
     $scope.online_players = -1;
     $scope.registered_players = -1;
     $scope.house_boughts = -1;
     $scope.players = {};
-    $scope.broadcast_message = "";
+    $scope.currentPage = "overview";
+    $scope.availablePages = ["overview", "chat", "players", "weather"];
 
     $scope.login = function (user) {
         if (typeof(user) !== "undefined" && typeof (user.pseudo) != "undefined" && typeof(user.password) != "undefined") {
@@ -39,6 +42,8 @@ function ($scope) {
                 connected = res;
                 if (res) {
                     $("#loginModal").modal("hide");
+                    $(".hideOverlay").fadeOut();
+                    $scope.updateConnectedPlayers();
                     update();
                 }
             });
@@ -47,9 +52,42 @@ function ($scope) {
         
     };
 
-    $scope.broadcastMessage = function () {
-        alert($scope.broadcast_message);
+    $scope.broadcastMessage = function (msg) {
+        if (typeof (msg.text) !== "undefined") {
+            if (msg.text.length >= 1) {
+                hub.invoke("BroadcastMessageAdmin", msg.text);
+                msg.text = "";
+            }
+        }
     }
+
+    $scope.setPage = function(pageName)
+    {
+        if ($.inArray(pageName, $scope.availablePages) !== -1) {        
+            $scope.currentPage = pageName;
+            hideAllPagesExcept(pageName);
+
+        }
+        
+    }
+
+    function hideAllPages() {
+        for (var i = 0; i < $scope.availablePages.length; i++) {
+            $("#page-" + $scope.availablePages[i]).hide();
+        }
+    }
+
+    function hideAllPagesExcept(page) {
+        for (var i = 0; i < $scope.availablePages.length; i++) {
+            if ($scope.availablePages[i] === page) {
+                $("#page-" + $scope.availablePages[i]).show();
+                continue;
+            }
+            $("#page-" + $scope.availablePages[i]).hide();
+        }
+    }
+
+    $scope.setPage($scope.currentPage);
 
     setInterval(function () {
         update();
@@ -75,13 +113,38 @@ function ($scope) {
             $scope.sent_messages = nbr;
         });
 
+        $scope.$apply();
+    }
+
+    $scope.updateConnectedPlayers = function () {
+        $("#playerTable").html("");
         hub.invoke("GetAllPlayersAdmin").done(function (players) {
             if (players === null) return;
             $scope.players = players;
             $("#selectPlayers").html("");
+            table.clear();
+
             for (var i = 0; i < players.length; i++) {
-                $("#selectPlayers").append("<option>" + players[i].Pseudo + "</option>")
+                var p = players[i];
+                table.row.add([
+                p.Pseudo,
+                (p.Sex == 1 ? "male" : "female"),
+                p.Email,
+                p.UserId,
+                p.Direction,
+                '(' + Math.round(p.Position.X) + " : " + Math.round(p.Position.Y) + ')',
+                p.Account,
+                p.Points,
+                p.HouseId,
+                p.Job.JobDescription,
+                p.Properties,
+                 (p.IsBanned ? '<td><button class="btn btn-info" onclick="setBan(' + p.UserId + ',false)">Unban</button></td>' :
+                     '<td><button class="btn btn-danger" onclick="setBan(' + p.UserId + ',true)">Ban</button></td>')
+
+                                ]).draw(false);
             }
+
+
         });
 
         $scope.$apply();
@@ -105,11 +168,36 @@ function ($scope) {
             '</div>' +
             '</li>';
         $("#chatbox").append(txt);
+        $('#chatBody').scrollTop($('#chatBody')[0].scrollHeight);
     });
 
 
 }
 ]);
+
+setBan = function (userId, value) {
+    if (typeof (userId) === "number" && typeof (value) === "boolean") {
+        hub.invoke((value ? "BanPlayer" : "UnBanPlayer"), userId).done(function () {
+            $.notify("Player " + (value ? "banned" : "unbanned"), "info");
+        });
+    }
+}
+
+$(document).ready(function () {
+    $('.nav li a').click(function (e) {
+
+        $('.nav li').removeClass('active');
+
+        var $parent = $(this).parent();
+        if (!$parent.hasClass('active')) {
+            $parent.addClass('active');
+        }
+        e.preventDefault();
+    });
+});
+
+
+
 
 
 
