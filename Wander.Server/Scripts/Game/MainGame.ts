@@ -138,10 +138,12 @@ class GameState extends Phaser.State {
             var propId = tile.properties.propertyId;
             if (propId != undefined) {
                 openModalProperty(propId);
+                currentState.soundManager.playActionSound();
             } else {
                 var isMairie = tile.properties.Mairie;
                 if (isMairie != undefined) {
                     getAllJobs();
+                    currentState.soundManager.playActionSound();
                 }
             }
         }
@@ -251,6 +253,7 @@ hub.on("MessageReceived", function (msg) {
     if (u != undefined) {
         u.setTextMessage(msg.Content);
     }
+    currentState.soundManager.playChatSound();
 });
 
 hub.on("sendQuestionToClient", function (question) {

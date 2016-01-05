@@ -4,6 +4,8 @@
     nightAmbientSound: Phaser.Sound;
     rainAmbientSound: Phaser.Sound;
     footstepSound: Phaser.Sound;
+    actionSound: Phaser.Sound;
+    chatSound: Phaser.Sound;
     game: Phaser.Game;
     state: GameState;
 
@@ -17,6 +19,8 @@
         this.game.load.audio("nightAmbient", ["Content/Game/Sounds/ambient-night.mp3", "Content/Game/Sounds/ambient-night.ogg"]);
         this.game.load.audio("rainAmbient", ["Content/Game/Sounds/ambient-rain.mp3", "Content/Game/Sounds/ambient-rain.ogg"]);
         this.game.load.audio("footstep", "Content/Game/Sounds/footstep.ogg");
+        this.game.load.audio("action", "Content/Game/Sounds/action.ogg");
+        this.game.load.audio("chat", "Content/Game/Sounds/chat.ogg");
     }
 
     create() {
@@ -33,6 +37,11 @@
         this.rainAmbientSound.volume = 0;
 
         this.footstepSound = this.game.add.audio("footstep");
+
+        this.actionSound = this.game.add.audio("action");
+        this.actionSound.volume = 0.3;
+        this.chatSound = this.game.add.audio("chat");
+        this.chatSound.volume = 0.3;
     }
 
     playFootStep(player: Player) {
@@ -46,6 +55,14 @@
             this.footstepSound.volume = t > 1 ? 1 : t;
         }
         this.footstepSound.play();
+    }
+
+    playActionSound() {
+        this.actionSound.play();
+    }
+
+    playChatSound() {
+        this.chatSound.play();
     }
 
 

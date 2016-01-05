@@ -71,6 +71,66 @@ function ($scope) {
         
     }
 
+    $scope.updateConnectedPlayers = function () {
+        $("#playerTable").html("");
+        hub.invoke("GetAllPlayersAdmin").done(function (players) {
+            if (players === null) return;
+            $scope.players = players;
+            $("#selectPlayers").html("");
+            table.clear();
+
+            for (var i = 0; i < players.length; i++) {
+                var p = players[i];
+                table.row.add([
+                p.Pseudo,
+                (p.Sex == 1 ? "male" : "female"),
+                p.Email,
+                p.UserId,
+                p.Direction,
+                '(' + Math.round(p.Position.X) + " : " + Math.round(p.Position.Y) + ')',
+                p.Account,
+                p.Points,
+                p.HouseId,
+                p.Job.JobDescription,
+                p.Properties,
+                 (p.IsBanned ? '<td><button class="btn btn-info" onclick="setBan(' + p.UserId + ',false)">Unban</button></td>' :
+                     '<td><button class="btn btn-danger" onclick="setBan(' + p.UserId + ',true)">Ban</button></td>')
+
+                ]).draw(false);
+            }
+
+
+        });
+
+        $scope.$apply();
+    }
+
+    $scope.startRain = function (time) {
+        if (time <= 0) return;
+        $.notify("Starting rain for : " + time + " seconds", "info");
+        hub.invoke("ForceStartRainAdmin", time);
+        time = 1;
+    }
+
+    $scope.stopRain = function () {
+        $.notify("Stopping rain", "info");
+        hub.invoke("ForceStopRainAdmin");
+    }
+
+    $scope.setDay = function (time) {
+        if (time <= 0) return;
+        $.notify("Setting day for : " + time + " seconds", "info");
+        hub.invoke("ForceDayAdmin", time);
+        time = 1;
+    }
+
+    $scope.setNight = function (time) {
+        if (time <= 0) return;
+        $.notify("Setting night for : " + time + " seconds", "info");
+        hub.invoke("ForceNightAdmin", time);
+        time = 1;
+    }
+
     function hideAllPages() {
         for (var i = 0; i < $scope.availablePages.length; i++) {
             $("#page-" + $scope.availablePages[i]).hide();
@@ -116,40 +176,6 @@ function ($scope) {
         $scope.$apply();
     }
 
-    $scope.updateConnectedPlayers = function () {
-        $("#playerTable").html("");
-        hub.invoke("GetAllPlayersAdmin").done(function (players) {
-            if (players === null) return;
-            $scope.players = players;
-            $("#selectPlayers").html("");
-            table.clear();
-
-            for (var i = 0; i < players.length; i++) {
-                var p = players[i];
-                table.row.add([
-                p.Pseudo,
-                (p.Sex == 1 ? "male" : "female"),
-                p.Email,
-                p.UserId,
-                p.Direction,
-                '(' + Math.round(p.Position.X) + " : " + Math.round(p.Position.Y) + ')',
-                p.Account,
-                p.Points,
-                p.HouseId,
-                p.Job.JobDescription,
-                p.Properties,
-                 (p.IsBanned ? '<td><button class="btn btn-info" onclick="setBan(' + p.UserId + ',false)">Unban</button></td>' :
-                     '<td><button class="btn btn-danger" onclick="setBan(' + p.UserId + ',true)">Ban</button></td>')
-
-                                ]).draw(false);
-            }
-
-
-        });
-
-        $scope.$apply();
-    }
-
     hub.on("MessageReceived", function (msg) {
         var txt = '<li class="left clearfix">' +
             '<span class="chat-img pull-left">' +
@@ -170,7 +196,6 @@ function ($scope) {
         $("#chatbox").append(txt);
         $('#chatBody').scrollTop($('#chatBody')[0].scrollHeight);
     });
-
 
 }
 ]);

@@ -97,6 +97,50 @@ namespace Wander.Server.ClassLibrary
             _randomRainTimer.Interval = nextRain;
         }
 
+        public void ForceStartRain(int seconds)
+        {
+            if (seconds <= 0) return;
+            Debug.Print("Forcing rain for : " + seconds + " seconds");
+            List<ServerPlayerModel> connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            int milli = seconds*1000;
+            _isRaining = true;
+            for (int i = 0; i < connectedPlayers.Count; i++)
+            {
+                context.Clients.Client(connectedPlayers[i].SignalRId).setRain(_isRaining);
+            }
+            _randomRainTimer.Stop();
+            _randomRainTimer.Interval = milli;
+            _randomRainTimer.Start();
+        }
+
+        public void ForceStopRain()
+        {
+            Debug.Print("Forcing rain to stop");
+            if (_isRaining) ToggleRain();
+        }
+
+        public void ForceNight(int seconds)
+        {          
+            if (seconds <= 0) return;
+            Debug.Print("Forcing night for : " + seconds + " seconds");
+            _isDay = false;
+            _updateTimer.Stop();
+            _updateTimer.Interval = seconds*1000;
+            _updateTimer.Start();
+
+        }
+
+        public void ForceDay(int seconds)
+        {
+            if (seconds <= 0) return;
+            Debug.Print("Forcing day for : " + seconds + " seconds");
+            _isDay = true;
+            _updateTimer.Stop();
+            _updateTimer.Interval = seconds * 1000;
+            _updateTimer.Start();
+        }
+
+
         public void Start()
         {
             _payTimer.Start();

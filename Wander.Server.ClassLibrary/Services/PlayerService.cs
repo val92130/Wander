@@ -43,7 +43,7 @@ namespace Wander.Server.ClassLibrary.Services
         /// Remove a specified player using the SignalRId if it exists
         /// </summary>
         /// <param name="SignalRId">User's Connection Id</param>
-        public void RemovePlayer(string SignalRId)
+        public bool RemovePlayer(string SignalRId)
         {
             lock (Players)
             {
@@ -51,7 +51,9 @@ namespace Wander.Server.ClassLibrary.Services
                 if (p != null)
                 {
                     Players.Remove(p);
+                    return true;
                 }
+                return false;
             }
         }
 

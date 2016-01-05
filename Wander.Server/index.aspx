@@ -56,7 +56,7 @@
          <form id="quickChatForm">
             <div class="input-group">
                <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></span>
-               <input type="text" id="quickChatInput" class="form-control" placeholder="Message" aria-describedby="basic-addon1" maxlength="95">
+               <input type="text" autocomplete="off" id="quickChatInput" class="form-control" placeholder="Message" aria-describedby="basic-addon1" maxlength="95">
                <input type="hidden" id="privateMessagePseudo" name="pseudo" value=""/>
             </div>
          </form>

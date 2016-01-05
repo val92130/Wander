@@ -584,6 +584,12 @@ namespace Wander.Server.ClassLibrary.Hubs
             return ServiceProvider.GetPropertiesService().GetOwnersCount(propertyId);
         }
 
+        /// <summary>
+        /// Checks if the answer to a question is correct
+        /// </summary>
+        /// <param name="questId"></param>
+        /// <param name="response"></param>
+        /// <returns></returns>
         public bool CheckAnswer(int questId, bool response)
         {
             if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId))
@@ -615,6 +621,11 @@ namespace Wander.Server.ClassLibrary.Hubs
             }
         }
 
+        /// <summary>
+        /// Try to enter in the house with the specified propertyId
+        /// </summary>
+        /// <param name="propertyId"></param>
+        /// <returns></returns>
         public bool EnterHouse(int propertyId)
         {
             if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId))
@@ -629,6 +640,10 @@ namespace Wander.Server.ClassLibrary.Hubs
 
         #region admin
 
+        /// <summary>
+        /// Gets the number of connected players on the server
+        /// </summary>
+        /// <returns></returns>
         public int GetConnectedPlayersNumber()
         {
             if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
@@ -639,6 +654,10 @@ namespace Wander.Server.ClassLibrary.Hubs
             return ServiceProvider.GetPlayerService().GetAllPlayersServer().Count;
         }
 
+        /// <summary>
+        /// Gets the number of registered users
+        /// </summary>
+        /// <returns></returns>
         public int GetRegisteredPlayersNumber()
         {
             if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
@@ -649,6 +668,10 @@ namespace Wander.Server.ClassLibrary.Hubs
             return ServiceProvider.GetAdminService().GetPlayersTotalCount();
         }
 
+        /// <summary>
+        /// Gets the number of house boughts on the server
+        /// </summary>
+        /// <returns></returns>
         public int GetHouseBoughtsCount()
         {
             if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
@@ -659,6 +682,10 @@ namespace Wander.Server.ClassLibrary.Hubs
             return ServiceProvider.GetAdminService().GetBoughtsHouseCount();
         }
 
+        /// <summary>
+        /// Gets the number of message sent in the game
+        /// </summary>
+        /// <returns></returns>
         public int GetMessagesCount()
         {
             if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
@@ -669,6 +696,10 @@ namespace Wander.Server.ClassLibrary.Hubs
             return ServiceProvider.GetAdminService().GetMessagesCount();
         }
 
+        /// <summary>
+        /// Gets a list of every messages sent
+        /// </summary>
+        /// <returns></returns>
         public List<ChatMessageModel> GetAllMessages()
         {
             if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
@@ -679,6 +710,10 @@ namespace Wander.Server.ClassLibrary.Hubs
             return ServiceProvider.GetAdminService().GetAllMessages();
         }
 
+        /// <summary>
+        /// Gets all the informations about every players
+        /// </summary>
+        /// <returns></returns>
         public List<AdminPlayerModel> GetAllPlayersAdmin()
         {
             if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
@@ -689,28 +724,57 @@ namespace Wander.Server.ClassLibrary.Hubs
             return ServiceProvider.GetAdminService().GetAllPlayers();
         }
 
-        public void BanPlayer(int userId)
+        /// <summary>
+        /// Ban a player
+        /// </summary>
+        /// <param name="userId">The player's id<</param>
+        /// <returns></returns>
+        public bool BanPlayer(int userId)
         {
             if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
             {
                 Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be an admin", EMessageType.error));
-                return;
+                return false;
             }
+            var candidate = ServiceProvider.GetPlayerService().GetPlayer(userId);
+            if (candidate != null)
+            {
+                ServiceProvider.GetPlayerService().RemovePlayer(candidate.SignalRId);
+                ServiceProvider.GetUserService().SetBan(new ServerPlayerModel() { UserId = userId }, true);
+                Clients.Client(candidate.SignalRId).forceDisconnect();
+                return true;
+            }
+            return false;
 
-            ServiceProvider.GetUserService().SetBan(new ServerPlayerModel() {UserId = userId}, true);
         }
 
-        public void UnBanPlayer(int userId)
+        /// <summary>
+        /// Unban a player
+        /// </summary>
+        /// <param name="userId">The player's id</param>
+        /// <returns></returns>
+        public bool UnBanPlayer(int userId)
         {
             if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
             {
                 Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be an admin", EMessageType.error));
-                return;
+                return false;
             }
 
-            ServiceProvider.GetUserService().SetBan(new ServerPlayerModel() { UserId = userId }, false);
+            var candidate = ServiceProvider.GetPlayerService().GetPlayer(userId);
+            if (candidate != null)
+            {
+                ServiceProvider.GetPlayerService().RemovePlayer(candidate.SignalRId);
+                ServiceProvider.GetUserService().SetBan(new ServerPlayerModel() { UserId = userId }, false);
+                return true;
+            }
+            return false;
         }
 
+        /// <summary>
+        /// Broadcast a message to every connected player
+        /// </summary>
+        /// <param name="message"></param>
         public void BroadcastMessageAdmin(string message)
         {
             if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
@@ -742,7 +806,50 @@ namespace Wander.Server.ClassLibrary.Hubs
                 Clients.Client(admins[i].ConnectionId).MessageReceived(messageModel);
             }
 
+        }
 
+        public void ForceStartRainAdmin(int timeInSeconds)
+        {
+            if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be an admin", EMessageType.error));
+                return;
+            }
+
+            ServiceProvider.GetGameManager().ForceStartRain(timeInSeconds);
+        }
+
+        public void ForceStopRainAdmin()
+        {
+            if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be an admin", EMessageType.error));
+                return;
+            }
+
+            ServiceProvider.GetGameManager().ForceStopRain();
+        }
+
+        public void ForceDayAdmin(int timeInSeconds)
+        {
+            if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be an admin", EMessageType.error));
+                return;
+            }
+
+            ServiceProvider.GetGameManager().ForceDay(timeInSeconds);
+        }
+
+        public void ForceNightAdmin(int timeInSeconds)
+        {
+            if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be an admin", EMessageType.error));
+                return;
+            }
+
+            ServiceProvider.GetGameManager().ForceNight(timeInSeconds);
         }
 
         #endregion

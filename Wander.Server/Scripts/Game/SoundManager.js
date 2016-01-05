@@ -8,6 +8,8 @@ var SoundManager = (function () {
         this.game.load.audio("nightAmbient", ["Content/Game/Sounds/ambient-night.mp3", "Content/Game/Sounds/ambient-night.ogg"]);
         this.game.load.audio("rainAmbient", ["Content/Game/Sounds/ambient-rain.mp3", "Content/Game/Sounds/ambient-rain.ogg"]);
         this.game.load.audio("footstep", "Content/Game/Sounds/footstep.ogg");
+        this.game.load.audio("action", "Content/Game/Sounds/action.ogg");
+        this.game.load.audio("chat", "Content/Game/Sounds/chat.ogg");
     };
     SoundManager.prototype.create = function () {
         this.dayAmbientSound = this.game.add.audio("dayAmbient");
@@ -20,6 +22,10 @@ var SoundManager = (function () {
         this.nightAmbientSound.volume = 0;
         this.rainAmbientSound.volume = 0;
         this.footstepSound = this.game.add.audio("footstep");
+        this.actionSound = this.game.add.audio("action");
+        this.actionSound.volume = 0.3;
+        this.chatSound = this.game.add.audio("chat");
+        this.chatSound.volume = 0.3;
     };
     SoundManager.prototype.playFootStep = function (player) {
         if (currentState.map.currentPlayer == player) {
@@ -33,6 +39,12 @@ var SoundManager = (function () {
             this.footstepSound.volume = t > 1 ? 1 : t;
         }
         this.footstepSound.play();
+    };
+    SoundManager.prototype.playActionSound = function () {
+        this.actionSound.play();
+    };
+    SoundManager.prototype.playChatSound = function () {
+        this.chatSound.play();
     };
     SoundManager.prototype.update = function () {
         if (this.state.dayNightCycle.isDay) {
@@ -65,4 +77,3 @@ var SoundManager = (function () {
     };
     return SoundManager;
 })();
-//# sourceMappingURL=SoundManager.js.map
