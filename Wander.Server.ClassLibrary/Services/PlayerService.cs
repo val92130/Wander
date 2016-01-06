@@ -24,7 +24,7 @@ namespace Wander.Server.ClassLibrary.Services
                 ServerPlayerModel p = Players.FirstOrDefault(x => x.SignalRId == signalRId);
                 if (p == null)
                 {
-                    Players.Add(new ServerPlayerModel() { SignalRId = signalRId, UserId = userId, Position = lastPos, Pseudo = ServiceProvider.GetUserService().GetUserLoginById(userId), Direction = EPlayerDirection.Idle });
+                    Players.Add(new ServerPlayerModel() { SignalRId = signalRId, UserId = userId, Position = lastPos, Pseudo = ServiceProvider.GetUserService().GetUserLogin(userId), Direction = EPlayerDirection.Idle });
                 }
             }
         }
@@ -37,6 +37,11 @@ namespace Wander.Server.ClassLibrary.Services
         public bool Exists(string signalRId)
         {
             return Players.FirstOrDefault(x => x.SignalRId == signalRId) != null;
+        }
+
+        public bool Exists(int userId)
+        {
+            return Players.FirstOrDefault(x => x.UserId == userId) != null;
         }
 
         /// <summary>
@@ -162,6 +167,7 @@ namespace Wander.Server.ClassLibrary.Services
             player.HouseId = houseId;
             return true;
         }
+
 
         /// <summary>
         /// Gets a copy of all the connected players

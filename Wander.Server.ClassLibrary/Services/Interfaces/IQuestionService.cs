@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Wander.Server.ClassLibrary.Model.Job;
+using Wander.Server.ClassLibrary.Model.Players;
 
 namespace Wander.Server.ClassLibrary.Services
 {
@@ -7,6 +8,8 @@ namespace Wander.Server.ClassLibrary.Services
     {
         bool CheckAnswer(JobQuestionModel questionModel);
         List<JobQuestionModel> GetAllQuestions();
-        JobQuestionModel GetRandomQuestion(string ConnectionId);
+        JobQuestionModel GetRandomQuestion(string connectionId);
+        JobQuestionModel GetRandomQuestion(int userId);
+        JobQuestionModel GetRandomQuestion(ServerPlayerModel user);
     }
 }

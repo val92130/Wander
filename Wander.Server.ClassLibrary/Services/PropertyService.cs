@@ -122,6 +122,12 @@ namespace Wander.Server.ClassLibrary.Services
         public List<ServerPropertyModel> GetUserProperties(ServerPlayerModel user)
         {
             if (user == null) throw new ArgumentException("parameter user is null");
+            return GetUserProperties(user.UserId);
+        }
+
+        public List<ServerPropertyModel> GetUserProperties(int userId)
+        {
+            if (!ServiceProvider.GetUserService().UserExists(userId)) return null;
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
                 string query = ("SELECT l.ListPropertyId, l.NameProperty, l.PropertyDescription, l.Threshold, l.Price from dbo.UserProperties p JOIN dbo.Users u on p.UserId = u.UserId JOIN dbo.ListProperties l ON l.ListPropertyId = p.ListPropertyId WHERE p.UserId = @id");
@@ -129,7 +135,7 @@ namespace Wander.Server.ClassLibrary.Services
                 {
                     List<ServerPropertyModel> Properties = new List<ServerPropertyModel>();
                     conn.Open();
-                    cmd.Parameters.AddWithValue("@id", user.UserId);
+                    cmd.Parameters.AddWithValue("@id", userId);
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -151,7 +157,23 @@ namespace Wander.Server.ClassLibrary.Services
 
         public ServerNotificationMessage BuyProperty(string connectionId, ServerPropertyModel property)
         {
-            if (connectionId == null) throw new ArgumentException("parameter user is null");
+            if (connectionId == null) throw new ArgumentException("parameter connection id is null");
+            return BuyProperty(ServiceProvider.GetPlayerService().GetPlayer(connectionId).UserId, property);
+
+
+        }
+
+        public ServerNotificationMessage BuyProperty(ServerPlayerModel user, ServerPropertyModel property)
+        {
+            if (user == null) throw new ArgumentException("parameter user is null");
+            return BuyProperty(user.UserId, property);
+
+
+        }
+
+        public ServerNotificationMessage BuyProperty(int userId, ServerPropertyModel property)
+        {
+            if (!ServiceProvider.GetUserService().UserExists(userId)) return null;
             if (property == null) throw new ArgumentException("parameter property is null");
 
             ServerNotificationMessage message = new ServerNotificationMessage() { Content = "error", MessageType = EMessageType.error };
@@ -178,11 +200,11 @@ namespace Wander.Server.ClassLibrary.Services
 
             if (count < threshold || (count == 0 && threshold == -1) || threshold == 0)
             {
-                var properties = GetUserProperties(connectionId);
+                var properties = GetUserProperties(userId);
 
                 bool alreadyHas = properties.FirstOrDefault(x => x.PropertyId == property.PropertyId) != null;
-                int money = ServiceProvider.GetUserService().GetUserBankAccount(connectionId);
-                int id = ServiceProvider.GetPlayerService().GetPlayer(connectionId).UserId;
+                int money = ServiceProvider.GetUserService().GetUserBankAccount(userId);
+                int id = ServiceProvider.GetPlayerService().GetPlayer(userId).UserId;
                 if (!alreadyHas && money >= property.Price)
                 {
                     using (SqlConnection conn = SqlConnectionService.GetConnection())
@@ -202,7 +224,7 @@ namespace Wander.Server.ClassLibrary.Services
                         }
                     }
                     int remainingMoney = money - property.Price;
-                    ServiceProvider.GetUserService().SetUserBankAccount(connectionId, remainingMoney);
+                    ServiceProvider.GetUserService().SetUserBankAccount(userId, remainingMoney);
                     message.Content = "Success";
                     message.MessageType = EMessageType.success;
                 }
@@ -231,6 +253,20 @@ namespace Wander.Server.ClassLibrary.Services
         public ServerNotificationMessage MakePropertyInSell(string connectionId, ServerPropertyModel property, int price)
         {
             if (connectionId == null) throw new ArgumentException("parameter user is null");
+            int id = ServiceProvider.GetPlayerService().GetPlayer(connectionId).UserId;
+            return MakePropertyInSell(id, property, price);
+
+        }
+
+        public ServerNotificationMessage MakePropertyInSell(ServerPlayerModel user, ServerPropertyModel property, int price)
+        {
+            if(user == null)throw new ArgumentNullException("User is null");
+            return MakePropertyInSell(user.UserId, property,price);
+        }
+
+        public ServerNotificationMessage MakePropertyInSell(int userId, ServerPropertyModel property, int price)
+        {
+            if (!ServiceProvider.GetUserService().UserExists(userId)) return null;
             if (property == null) throw new ArgumentException("parameter property is null");
             if (price <= 0) throw new ArgumentException("price must be greater than 0");
 
@@ -238,11 +274,10 @@ namespace Wander.Server.ClassLibrary.Services
 
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
-                var properties = GetUserProperties(connectionId);
+                var properties = GetUserProperties(userId);
                 bool alreadyHas = properties.FirstOrDefault(x => x.PropertyId == property.PropertyId) != null;
                 bool alreadyInSell = GetPropertiesInSell().FirstOrDefault(x => x.PropertyId == property.PropertyId) !=
                                      null;
-                int id = ServiceProvider.GetPlayerService().GetPlayer(connectionId).UserId;
 
                 if (alreadyInSell)
                 {
@@ -259,7 +294,7 @@ namespace Wander.Server.ClassLibrary.Services
                         using (SqlCommand cmd = new SqlCommand(query, conn))
                         {
                             conn.Open();
-                            cmd.Parameters.AddWithValue("@UserId", id);
+                            cmd.Parameters.AddWithValue("@UserId", userId);
                             cmd.Parameters.AddWithValue("@ListPropertyId", property.PropertyId);
                             cmd.Parameters.AddWithValue("@Price", price);
                             cmd.ExecuteNonQuery();
@@ -276,7 +311,6 @@ namespace Wander.Server.ClassLibrary.Services
             }
 
             return message;
-
         }
 
         public void BuyPropertyFromUser(string connectionId, string connectionId2, ServerPropertyModel property)

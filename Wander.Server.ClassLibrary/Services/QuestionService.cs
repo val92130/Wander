@@ -3,16 +3,24 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using Wander.Server.ClassLibrary.Model.Job;
+using Wander.Server.ClassLibrary.Model.Players;
 
 namespace Wander.Server.ClassLibrary.Services
 {
     class QuestionService : IQuestionService
     {
-        public JobQuestionModel GetRandomQuestion(string ConnectionId)
+        public JobQuestionModel GetRandomQuestion(string connectionId)
         {
-            if (ConnectionId == null) throw new ArgumentException("there is no id");
+            if (connectionId == null) throw new ArgumentException("there is no id");
 
-            int jobId = ServiceProvider.GetJobService().GetUserJobInfos(ConnectionId).JobId;
+            return GetRandomQuestion(ServiceProvider.GetPlayerService().GetPlayer(connectionId).UserId);
+        }
+
+        public JobQuestionModel GetRandomQuestion(int userId)
+        {
+            if (!ServiceProvider.GetUserService().UserExists(userId)) return null;
+
+            int jobId = ServiceProvider.GetJobService().GetUserJobInfos(userId).JobId;
             JobQuestionModel randomQuestion = null;
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
@@ -21,7 +29,7 @@ namespace Wander.Server.ClassLibrary.Services
                 {
                     conn.Open();
                     cmd.Parameters.AddWithValue("@JobId",
-                        ServiceProvider.GetJobService().GetUserJobInfos(ConnectionId).JobId);
+                        ServiceProvider.GetJobService().GetUserJobInfos(userId).JobId);
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -37,6 +45,12 @@ namespace Wander.Server.ClassLibrary.Services
                     return randomQuestion;
                 }
             }
+        }
+
+        public JobQuestionModel GetRandomQuestion(ServerPlayerModel user)
+        {
+            if (user == null) return null;
+            return GetRandomQuestion(user.UserId);
         }
 
         public bool CheckAnswer(JobQuestionModel questionModel)

@@ -23,6 +23,13 @@ namespace Wander.Server.ClassLibrary.Services
             ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(connectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
 
+            return GetUserJobInfos(user.UserId);
+        }
+
+        public JobModel GetUserJobInfos(int userId)
+        {
+            if (!ServiceProvider.GetUserService().UserExists(userId)) return null;
+
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
                 string query = "SELECT * from dbo.Users u JOIN dbo.Jobs j on j.JobId = u.JobId WHERE u.UserId = @id";
@@ -30,7 +37,7 @@ namespace Wander.Server.ClassLibrary.Services
                 {
                     conn.Open();
 
-                    cmd.Parameters.AddWithValue("@id", user.UserId);
+                    cmd.Parameters.AddWithValue("@id", userId);
 
                     JobModel model = new JobModel();
 
@@ -62,6 +69,7 @@ namespace Wander.Server.ClassLibrary.Services
             if (user == null) throw new ArgumentException("parameter user is null");
             return GetUserJobInfos(user.SignalRId);
         }
+
 
 
         /// <summary>
@@ -110,6 +118,12 @@ namespace Wander.Server.ClassLibrary.Services
             ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(connectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
 
+            return ChangeUserJob(jobId, user.UserId);
+
+        }
+
+        public bool ChangeUserJob(int jobId, int userId)
+        {
             JobModel job = GetAllJobs().FirstOrDefault(x => x.JobId == jobId);
 
             if (job == null)
@@ -118,7 +132,7 @@ namespace Wander.Server.ClassLibrary.Services
             }
 
 
-            if (job.NecessaryPoints > ServiceProvider.GetUserService().GetUserPoints(user))
+            if (job.NecessaryPoints > ServiceProvider.GetUserService().GetUserPoints(userId))
             {
                 return false;
             }
@@ -140,9 +154,6 @@ namespace Wander.Server.ClassLibrary.Services
 
                 if (count >= job.Threshold)
                 {
-                    GlobalHost.ConnectionManager.GetHubContext<GameHub>()
-                        .Clients.Client(connectionId)
-                        .notify(Helper.CreateNotificationMessage("This job is already full !", EMessageType.error));
                     return false;
                 }
 
@@ -150,7 +161,7 @@ namespace Wander.Server.ClassLibrary.Services
                 {
                     conn.Open();
                     cmd.Parameters.AddWithValue("@Id", jobId);
-                    cmd.Parameters.AddWithValue("@UserId", user.UserId);
+                    cmd.Parameters.AddWithValue("@UserId", userId);
 
                     int lgn = cmd.ExecuteNonQuery();
                     conn.Close();
@@ -158,8 +169,6 @@ namespace Wander.Server.ClassLibrary.Services
                     return lgn != 0;
                 }
             }
-
-
         }
 
 

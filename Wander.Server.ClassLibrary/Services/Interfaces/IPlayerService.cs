@@ -21,5 +21,6 @@ namespace Wander.Server.ClassLibrary.Services
         bool TryMovePlayerTo(string connectionId, Vector2 to, EPlayerDirection direction);
         bool TryMovePlayerTo(ServerPlayerModel player, Vector2 to, EPlayerDirection direction);
         bool EnterHouse(string connectionId, int houseId);
+        bool Exists(int userId);
     }
 }

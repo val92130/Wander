@@ -10,11 +10,13 @@ namespace Wander.Server.ClassLibrary.Services
         int AddJob(JobModel model);
         ServerNotificationMessage BuyDrugs(string seller, string buyer);
         bool ChangeUserJob(int jobId, string connectionId);
+        bool ChangeUserJob(int jobId, int userId);
         bool ChangeUserJob(int jobId, ServerPlayerModel user);
         bool DeleteJob(JobModel model);
         bool DeleteJob(int jobId);
         List<JobModel> GetAllJobs();
         JobModel GetUserJobInfos(string connectionId);
         JobModel GetUserJobInfos(ServerPlayerModel user);
+        JobModel GetUserJobInfos(int userId);
     }
 }
