@@ -96,14 +96,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="admin.aspx" />
-    <Content Include="Content\Admin\css\style.css" />
-    <Content Include="Content\Admin\js\app.js" />
-    <Content Include="Content\Admin\pages\chat.html" />
-    <Content Include="Content\Admin\pages\overview.html" />
-    <Content Include="Content\Admin\pages\players.html" />
-    <Content Include="Content\Admin\pages\users.html" />
-    <Content Include="Content\Admin\pages\weather.html" />
     <Content Include="Content\background.jpg" />
     <Content Include="Content\Game\Images\blurred-circle.png" />
     <Content Include="Content\Game\Images\filter.png" />
@@ -132,6 +124,8 @@
     <Content Include="Content\Game\Sounds\ambient-night.ogg" />
     <Content Include="Content\Game\Sounds\ambient-rain.ogg" />
     <Content Include="Content\Game\Sounds\footstep.ogg" />
+    <Content Include="Content\Game\Sounds\action.ogg" />
+    <Content Include="Content\Game\Sounds\chat.ogg" />
     <None Include="Properties\PublishProfiles\FTP.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -165,13 +159,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="admin.aspx.cs">
-      <DependentUpon>admin.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="admin.aspx.designer.cs">
-      <DependentUpon>admin.aspx</DependentUpon>
-    </Compile>
     <Compile Include="index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

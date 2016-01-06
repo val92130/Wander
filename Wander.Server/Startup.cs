@@ -1,4 +1,5 @@
-﻿using Microsoft.Owin;
+﻿using Microsoft.AspNet.SignalR;
+using Microsoft.Owin;
 using Owin;
 using Wander.Server.ClassLibrary.Services;
 
@@ -14,7 +15,10 @@ namespace Wander.Server
         }
         public void Configuration(IAppBuilder app)
         {
-            app.MapSignalR();
+            var config = new HubConfiguration();
+            config.EnableJSONP = true;
+            app.MapSignalR(config);
+            
         }
     }
 }

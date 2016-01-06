@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wander.StressTest.App", "Wa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wander.Server.ClassLibrary", "Wander.Server.ClassLibrary\Wander.Server.ClassLibrary.csproj", "{7ED60C0E-E7CF-47F1-BE78-0AE6084F3D63}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wander.Administration", "Wander.Administration\Wander.Administration.csproj", "{3DE669FF-E28D-4290-AC3A-F6650C2765A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{7ED60C0E-E7CF-47F1-BE78-0AE6084F3D63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7ED60C0E-E7CF-47F1-BE78-0AE6084F3D63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7ED60C0E-E7CF-47F1-BE78-0AE6084F3D63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DE669FF-E28D-4290-AC3A-F6650C2765A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DE669FF-E28D-4290-AC3A-F6650C2765A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DE669FF-E28D-4290-AC3A-F6650C2765A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DE669FF-E28D-4290-AC3A-F6650C2765A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
