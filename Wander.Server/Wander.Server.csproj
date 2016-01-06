@@ -119,7 +119,6 @@
     <Content Include="Content\user-boy.png" />
     <Content Include="Content\user-girl.png" />
     <Content Include="Content\wander-logo2.png" />
-    <Content Include="Includes\bottom-navbar.html" />
     <Content Include="Includes\info-box.html" />
     <Content Include="Includes\message-box.html" />
     <Content Include="Includes\modals.html" />
