@@ -1,6 +1,6 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="index.aspx.cs" Inherits="Wander.Server.index" %>
 <!DOCTYPE html>
-<html ng-app="gameApp">
+<html>
    <head>
       <title>Wander Game</title>
       <script src="Scripts/jquery-1.9.1.min.js"></script>
@@ -14,11 +14,11 @@
       <script src="Scripts/phaser.js"></script>
       <script src="Scripts/jquery-ui.min.js"></script>
        <script src="Scripts/angular.min.js"></script>
-       
+       <script src="Scripts/app.js"></script>
       <link href='https://fonts.googleapis.com/css?family=Quicksand:700,400' rel='stylesheet' type='text/css'>
       <meta charset="utf-8" />
    </head>
-   <body ng-controller="gameManager">
+   <body>
       <nav class="navbar navbar-trans navbar-fixed-top" role="navigation" style="position: relative; margin-bottom: 0px">
          <div class="container">
             <div class="navbar-header">
@@ -32,14 +32,14 @@
             </div>
             <div class="navbar-collapse collapse" id="navbar-collapsible">
                <ul class="nav navbar-nav navbar-left">
-                  <li><a href="#" ng-show="!isConnected" ng-click="openModal('loginModal')" id="loginBtn"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Login</a></li>
-                  <li><a href="#" ng-show="!isConnected" ng-click="openModal('signUpModal')" id="registerBtn"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Register</a></li>
-                  <li><a href="#players" ng-show="isConnected" id="playersBtn" ng-click="showPlayers()"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Players</a></li>
-                  <li><a href="#rules" id="rulesBtn" ng-click="openModal('rulesModal')"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Rules</a></li>
-                  <li><a href="#logout" ng-show="isConnected" ng-click="disconnect" id="logoutBtn" ><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Logout</a></li>
+                  <li><a href="#login" id="loginBtn"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Login</a></li>
+                  <li><a href="#register" id="registerBtn"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Register</a></li>
+                  <li><a href="#players" id="playersBtn" style="display:none"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Players</a></li>
+                  <li><a href="#players" id="rulesBtn"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Rules</a></li>
+                  <li><a href="#logout" id="logoutBtn" style="display:none"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Logout</a></li>
                </ul>
                <ul class="nav navbar-nav navbar-right">
-                  <li><a href="#logout" id="labelPseudo" ng-bind="userPseudo"></a></li>
+                  <li><a href="#logout" id="labelPseudo"></a></li>
                </ul>
             </div>
          </div>
@@ -87,16 +87,16 @@
                      <h4 class="modal-title">Login</h4>
                   </div>
                   <div class="modal-body">
-                     <form id="loginForm" ng-submit="login(user)" novalidate="">
+                     <form id="loginForm">
                         <div class="form-group">
                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                            <label for="login">Login:</label>
-                           <input type="text" ng-model="user.login" class="form-control" id="login" name="login" required>
+                           <input type="text" class="form-control" id="login" name="login" required>
                         </div>
                         <div class="form-group">
                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                            <label for="pwd">Password:</label>
-                           <input type="password" ng-model="user.password" class="form-control" id="pwd" name="pwd" required>
+                           <input type="password" class="form-control" id="pwd" name="pwd" required>
                         </div>
                         <button id="loginFormBtn" class="btn btn-success" type="submit">Login</button>
                      </form>
@@ -116,28 +116,28 @@
                      <h4 class="modal-title">Sign Up</h4>
                   </div>
                   <div class="modal-body">
-                     <form id="registerForm" ng-submit="register(user)" novalidate="">
+                     <form id="registerForm">
                         <div class="form-group">
                            <label for="login">Login:</label>
-                           <input type="text" ng-model="user.pseudo" pattern=".{4,}"   required title="4 characters minimum" class="form-control" name="login" >
+                           <input type="text" pattern=".{4,}"   required title="4 characters minimum" class="form-control" name="login" >
                         </div>
                         <div class="form-group">
                            <label for="email">Email:</label>
-                           <input type="email" ng-model="user.email" class="form-control" id="email" name="email" required>
+                           <input type="email" class="form-control" id="email" name="email" required>
                         </div>
                         <div class="form-group">
                            <label for="pwd">Password:</label>
-                           <input type="password" ng-model="user.password" class="form-control" name="pwd"  pattern=".{4,}"   required title="4 characters minimum">
+                           <input type="password" class="form-control" name="pwd"  pattern=".{4,}"   required title="4 characters minimum">
                         </div>
                         <div class="form-group">
                            <label for="pwdConfirm">Password Confirmation:</label>
-                           <input type="password" ng-model="user.passwordConfirm" class="form-control" id="pwdConfirm" name="pwdConfirm"  pattern=".{4,}"   required title="4 characters minimum">
+                           <input type="password" class="form-control" id="pwdConfirm" name="pwdConfirm"  pattern=".{4,}"   required title="4 characters minimum">
                         </div>
                         <div class="radio">
-                           <label><input type="radio" ng-model="user.sex" name="sex" value="1" required>Male</label>
+                           <label><input type="radio" name="sex" value="1" required>Male</label>
                         </div>
                         <div class="radio">
-                           <label><input type="radio"  ng-model="user.sex" name="sex" value="0" required>Female</label>
+                           <label><input type="radio" name="sex" value="0" required>Female</label>
                         </div>
                         <button id="registerFormBtn" class="btn btn-success" style="width: 20%;margin-left: 40%;">Register</button>
                      </form>
@@ -166,7 +166,7 @@
                               <th>Private Message</th>
                            </tr>
                         </thead>
-                        <tbody id="playersModalBody" ng-bind="playersModalBody"></tbody>
+                        <tbody id="playersModalBody"></tbody>
                      </table>
                   </div>
                   <div class="modal-footer">
@@ -379,10 +379,10 @@
             </div>
          </div>
       </div>
-      <div class="container" id="box-message-container" ng-show="isConnected" style="display: none; height:0px">
+      <div class="container" id="box-message-container" style="display: none; height:0px">
          <%Response.WriteFile("includes/message-box.html"); %>
       </div>
-      <div class="container" id="box-info-container" ng-show="isConnected" style="display: none;height:0px">
+      <div class="container" id="box-info-container" style="display: none;height:0px">
          <%Response.WriteFile("includes/info-box.html"); %>
       </div>
       <nav class="navbar navbar-trans navbar-fixed-bottom" role="navigation" style="position: relative; display:none" id="bottom_navbar">
@@ -397,18 +397,19 @@
             </div>
             <div class="navbar-collapse collapse" id="navbar-collapsible-bottom">
                <ul class="nav navbar-nav navbar-left">
-                  <li><a href="#" id="chat_btn" ng-click="showChat()"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> Public chat</a></li>
-                  <li><a href="#" id="my_infos" ng-click="showMyinfos()"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> My Infos</a></li>
+                  <li><a href="#chat" id="chat_btn"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> Public chat</a></li>
+                  <li><a href="#infos" id="my_infos"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> My Infos</a></li>
                </ul>
             </div>
          </div>
       </nav>
    </body>
-    <script src="Scripts/app.js"></script>
    <script src="Scripts/Game/NightFilter.js"></script>
    <script src="Scripts/Game/DayNightCycle.js"></script>
    <script src="Scripts/Game/Map.js"></script>
+   <script src="Scripts/HubConnection.js"></script>
    <script src="Scripts/JobManagement.js"></script>
+   <script src="Scripts/UserInteraction.js"></script>
    <script src="Scripts/Game/EDirection.js"></script>
    <script src="Scripts/Messaging.js"></script>
    <script src="Scripts/Game/Player.js"></script>
