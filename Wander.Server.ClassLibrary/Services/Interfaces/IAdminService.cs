@@ -23,6 +23,7 @@ namespace Wander.Server.ClassLibrary.Services.Interfaces
         List<ChatMessageModel> GetAllMessages();
         int GetBoughtsHouseCount();
         List<AdminPlayerModel> GetAllPlayers();
+        List<AdminUserModel> GetAllUsers();
         AdminPlayerModel GetPlayerInfo(int userId);
         AdminPlayerModel GetPlayerInfo(string connectionId);
         bool SetDay(bool value);

@@ -77,6 +77,7 @@
                  <ul class="nav nav-pills justified">
                   <li role="presentation" class="active"><a href="#" ng-click="setPage('overview')">Overview</a></li>
                   <li role="presentation"><a href="#" ng-click="setPage('players')">Players</a></li>
+                  <li role="presentation"><a href="#" ng-click="setPage('users')">Users</a></li>
                   <li role="presentation"><a href="#" ng-click="setPage('chat')">Chat</a></li>
                   <li role="presentation"><a href="#" ng-click="setPage('weather')">Weather management</a></li>
                 </ul>
@@ -90,6 +91,7 @@
                      Response.WriteFile("/Content/Admin/pages/overview.html");
                      Response.WriteFile("/Content/Admin/pages/players.html");
                      Response.WriteFile("/Content/Admin/pages/weather.html");
+                     Response.WriteFile("/Content/Admin/pages/users.html");
                  %>
              </div>
 

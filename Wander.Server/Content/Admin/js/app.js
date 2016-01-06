@@ -26,14 +26,16 @@ var manager = angular.module('manager', []);
 manager.controller('manager', ['$scope',
 function ($scope) {
     var table = $('table.display').DataTable();
+    var userTable = $('#usersTable').DataTable();
 
     $scope.sent_messages = -1;
     $scope.online_players = -1;
     $scope.registered_players = -1;
     $scope.house_boughts = -1;
     $scope.players = {};
+    $scope.users = {};
     $scope.currentPage = "overview";
-    $scope.availablePages = ["overview", "chat", "players", "weather"];
+    $scope.availablePages = ["overview", "chat", "players", "weather", "users"];
 
     $scope.login = function (user) {
         if (typeof(user) !== "undefined" && typeof (user.pseudo) != "undefined" && typeof(user.password) != "undefined") {
@@ -67,8 +69,37 @@ function ($scope) {
             $scope.currentPage = pageName;
             hideAllPagesExcept(pageName);
 
-        }
-        
+        }       
+    }
+
+    $scope.updateUsers = function() {
+        $("#usersTableContent").html("");
+        hub.invoke("GetAllUsersAdmin").done(function (users) {
+            if (users === null) return;
+            $scope.users = users;
+            userTable.clear();
+
+            for (var i = 0; i < users.length; i++) {
+                var p = users[i];
+                userTable.row.add([
+                p.Pseudo,
+                (p.Sex == 1 ? "male" : "female"),
+                p.Email,
+                p.UserId,
+                '(' + Math.round(p.Position.X) + " : " + Math.round(p.Position.Y) + ')',
+                p.Account,
+                p.Points,
+                p.Job.JobDescription,
+                p.Properties,
+                 (p.IsBanned ? '<td><button class="btn btn-info" onclick="setBan(' + p.UserId + ',false)">Unban</button></td>' :
+                     '<td><button class="btn btn-danger" onclick="setBan(' + p.UserId + ',true)">Ban</button></td>')
+
+                ]).draw(false);
+            }
+
+
+        });
+
     }
 
     $scope.updateConnectedPlayers = function () {
@@ -76,7 +107,6 @@ function ($scope) {
         hub.invoke("GetAllPlayersAdmin").done(function (players) {
             if (players === null) return;
             $scope.players = players;
-            $("#selectPlayers").html("");
             table.clear();
 
             for (var i = 0; i < players.length; i++) {

@@ -724,6 +724,16 @@ namespace Wander.Server.ClassLibrary.Hubs
             return ServiceProvider.GetAdminService().GetAllPlayers();
         }
 
+        public List<AdminUserModel> GetAllUsersAdmin()
+        {
+            if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be an admin", EMessageType.error));
+                return null;
+            }
+            return ServiceProvider.GetAdminService().GetAllUsers();
+        }
+
         /// <summary>
         /// Ban a player
         /// </summary>
@@ -740,8 +750,13 @@ namespace Wander.Server.ClassLibrary.Hubs
             if (candidate != null)
             {
                 ServiceProvider.GetPlayerService().RemovePlayer(candidate.SignalRId);
-                ServiceProvider.GetUserService().SetBan(new ServerPlayerModel() { UserId = userId }, true);
+                ServiceProvider.GetUserService().SetBan(userId, true);
                 Clients.Client(candidate.SignalRId).forceDisconnect();
+                return true;
+            }
+            if(ServiceProvider.GetUserService().UserExists(userId))
+            {
+                ServiceProvider.GetUserService().SetBan(userId, true);
                 return true;
             }
             return false;
@@ -765,7 +780,12 @@ namespace Wander.Server.ClassLibrary.Hubs
             if (candidate != null)
             {
                 ServiceProvider.GetPlayerService().RemovePlayer(candidate.SignalRId);
-                ServiceProvider.GetUserService().SetBan(new ServerPlayerModel() { UserId = userId }, false);
+                ServiceProvider.GetUserService().SetBan(userId, false);
+                return true;
+            }
+            if (ServiceProvider.GetUserService().UserExists(userId))
+            {
+                ServiceProvider.GetUserService().SetBan(userId, false);
                 return true;
             }
             return false;

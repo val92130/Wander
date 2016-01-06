@@ -13,6 +13,8 @@
       <script src="Scripts/notify.min.js"></script>
       <script src="Scripts/phaser.js"></script>
       <script src="Scripts/jquery-ui.min.js"></script>
+       <script src="Scripts/angular.min.js"></script>
+       <script src="Scripts/app.js"></script>
       <link href='https://fonts.googleapis.com/css?family=Quicksand:700,400' rel='stylesheet' type='text/css'>
       <meta charset="utf-8" />
    </head>

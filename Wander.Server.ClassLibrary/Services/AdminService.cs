@@ -198,6 +198,30 @@ namespace Wander.Server.ClassLibrary.Services
             return playerList;
         }
 
+        public List<AdminUserModel> GetAllUsers()
+        {
+            var usersId = ServiceProvider.GetUserService().GetAllUsersId();
+            List<AdminUserModel> users = new List<AdminUserModel>();
+            for (int i = 0; i < usersId.Count; i++)
+            {
+                int id = usersId[i];
+                AdminUserModel u = new AdminUserModel();
+                var model = ServiceProvider.GetUserService().GetAllUserInfos(id);
+                u.UserId = id;
+                u.Account = model.Account;
+                u.Email = model.Email;
+                u.IsBanned = ServiceProvider.GetUserService().IsBanned(id);
+                u.Job = model.Job;
+                u.Points = model.Points;
+                u.Position = ServiceProvider.GetUserService().GetLastPosition(id);
+                u.Properties = model.Properties;
+                u.Pseudo = model.UserName;
+                u.Sex = model.Sex;
+                users.Add(u);
+            }
+            return users;
+        }
+
         public AdminPlayerModel GetPlayerInfo(int userId)
         {
             AdminPlayerModel mdl = new AdminPlayerModel();           

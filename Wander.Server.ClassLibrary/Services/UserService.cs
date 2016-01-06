@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using Wander.Server.ClassLibrary.Model;
 using Wander.Server.ClassLibrary.Model.Players;
@@ -8,27 +9,6 @@ namespace Wander.Server.ClassLibrary.Services
     public class UserService : IUserService
     {
 
-        private bool ExecuteUpdate(string field, string value, ServerPlayerModel user)
-        {
-
-            if (user == null) throw new ArgumentException("parameter user is null");
-
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
-            {
-                string query = string.Format("UPDATE dbo.Users SET {0} = {1}  WHERE UserId = @connectionId", field, value);
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    conn.Open();
-
-                    cmd.Parameters.AddWithValue("@connectionId", user.UserId);
-
-
-                    int lines = cmd.ExecuteNonQuery();
-                    conn.Close();
-                    return lines != 0;
-                }
-            }
-        }
         private bool ExecuteUpdate(string field, string value, int userId)
         {
 
@@ -51,29 +31,6 @@ namespace Wander.Server.ClassLibrary.Services
             }
         }
 
-        private string ExecuteQuery(string value, ServerPlayerModel user)
-        {
-
-            if (user == null) throw new ArgumentException("parameter user is null");
-
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
-            {
-                string query = string.Format("SELECT {0} from dbo.Users WHERE UserId = @connectionId", value);
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    conn.Open();
-
-                    cmd.Parameters.AddWithValue("@connectionId", user.UserId);
-
-
-                    string data = (string)cmd.ExecuteScalar();
-
-                    conn.Close();
-
-                    return data;
-                }
-            }
-        }
 
         private string ExecuteQuery(string value, int userId)
         {
@@ -323,6 +280,13 @@ namespace Wander.Server.ClassLibrary.Services
             if (connectionId == null) throw new ArgumentException("there is no id");
             ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(connectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
+            return GetAllUserInfos(user.UserId);
+
+        }
+
+        public ClientPlayerModel GetAllUserInfos(int userId)
+        {
+            if (!UserExists(userId)) return null;
 
             using (SqlConnection conn = SqlConnectionService.GetConnection())
             {
@@ -331,7 +295,7 @@ namespace Wander.Server.ClassLibrary.Services
                 {
                     conn.Open();
 
-                    cmd.Parameters.AddWithValue("@Id", user.UserId);
+                    cmd.Parameters.AddWithValue("@Id", userId);
 
                     ClientPlayerModel client = new ClientPlayerModel();
                     var reader = cmd.ExecuteReader();
@@ -340,10 +304,9 @@ namespace Wander.Server.ClassLibrary.Services
                         client.Sex = Convert.ToInt32(reader["Sex"]);
                         client.Account = Convert.ToInt32(reader["Account"]);
                         client.Points = Convert.ToInt32(reader["Points"]);
-                        client.Points = Convert.ToInt32(reader["Points"]);
                         client.UserName = reader["UserLogin"].ToString();
                         client.Email = reader["Email"].ToString();
-                        client.Job = ServiceProvider.GetJobService().GetUserJobInfos(connectionId);
+                        client.Job = ServiceProvider.GetJobService().GetUserJobInfos(userId);
                         break;
                     }
 
@@ -582,6 +545,31 @@ namespace Wander.Server.ClassLibrary.Services
             bool xUpdate = ExecuteUpdate("LastPosX", Math.Round(position.X).ToString(), userId);
             bool yUpdate = ExecuteUpdate("LastPosY", Math.Round(position.Y).ToString(), userId);
             return (xUpdate && yUpdate);
+        }
+
+        public List<int> GetAllUsersId()
+        {
+            List<int> usersId = new List<int>();
+            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            {
+                string query = "SELECT UserId from dbo.Users ";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    conn.Open();
+
+                    var data = cmd.ExecuteReader();
+                    while (data.Read())
+                    {
+                        int id = (int)(data["UserId"]);
+                        usersId.Add(id);
+                    }
+                    data.Close();
+
+                    conn.Close();
+
+                    return usersId;
+                }
+            }
         }
 
         public int GetRegisteredUsersCount()

@@ -68,6 +68,7 @@
     <Compile Include="GameManager.cs" />
     <Compile Include="Hubs\GameHub.cs" />
     <Compile Include="Model\AdminModel.cs" />
+    <Compile Include="Model\AdminUserModel.cs" />
     <Compile Include="Model\ChatMessageModel.cs" />
     <Compile Include="Model\ClientNotificationMessageModel.cs" />
     <Compile Include="Model\EMessageType.cs" />

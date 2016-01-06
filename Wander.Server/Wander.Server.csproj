@@ -102,6 +102,7 @@
     <Content Include="Content\Admin\pages\chat.html" />
     <Content Include="Content\Admin\pages\overview.html" />
     <Content Include="Content\Admin\pages\players.html" />
+    <Content Include="Content\Admin\pages\users.html" />
     <Content Include="Content\Admin\pages\weather.html" />
     <Content Include="Content\background.jpg" />
     <Content Include="Content\Game\Images\blurred-circle.png" />
@@ -124,6 +125,8 @@
     <Content Include="Includes\modals.html" />
     <Content Include="index.aspx" />
     <Content Include="packages.config" />
+    <Content Include="Scripts\angular.min.js" />
+    <Content Include="Scripts\app.js" />
     <Content Include="Scripts\jquery-1.9.1.min.map" />
     <Content Include="Content\Game\Maps\map2.json" />
     <Content Include="Content\Game\Sounds\ambient-day.ogg" />

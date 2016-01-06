@@ -1,4 +1,5 @@
-﻿using Wander.Server.ClassLibrary.Model;
+﻿using System.Collections.Generic;
+using Wander.Server.ClassLibrary.Model;
 using Wander.Server.ClassLibrary.Model.Players;
 
 namespace Wander.Server.ClassLibrary.Services
@@ -12,7 +13,8 @@ namespace Wander.Server.ClassLibrary.Services
         void DeliverPoints(string ConnectionId);
         void DeliverPoints(ServerPlayerModel user);
         void DeliverPoints(int userId);
-        ClientPlayerModel GetAllUserInfos(string ConnectionId);
+        ClientPlayerModel GetAllUserInfos(string connectionId);
+        ClientPlayerModel GetAllUserInfos(int userId);
         bool GetUserActivatedStatus(string ConnectionId);
         bool GetUserActivatedStatus(ServerPlayerModel user);
         bool GetUserActivatedStatus(int userId);
@@ -57,5 +59,6 @@ namespace Wander.Server.ClassLibrary.Services
         bool SetLastPosition(ServerPlayerModel user, Vector2 position);
         bool SetLastPosition(string connectionId, Vector2 position);
         bool SetLastPosition(int userId, Vector2 position);
+        List<int> GetAllUsersId();
     }
 }
