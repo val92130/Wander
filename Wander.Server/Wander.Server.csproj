@@ -126,6 +126,7 @@
     <Content Include="Content\Game\Sounds\footstep.ogg" />
     <Content Include="Content\Game\Sounds\action.ogg" />
     <Content Include="Content\Game\Sounds\chat.ogg" />
+    <Content Include="Content\Game\Maps\mapHouse.json" />
     <None Include="Properties\PublishProfiles\FTP.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
