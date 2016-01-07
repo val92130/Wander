@@ -6,7 +6,7 @@ namespace Wander.Server.ClassLibrary.Services
 {
     public interface IPlayerService
     {
-        void AddPlayer(string signalRId, int userId);
+        ServerPlayerModel AddPlayer(string signalRId, int userId);
         bool Exists(string signalRId);
         List<ClientPlayerModel> GetAllPlayersClient();
         List<string> GetAllPlayersConnectionId();
@@ -21,6 +21,9 @@ namespace Wander.Server.ClassLibrary.Services
         bool TryMovePlayerTo(string connectionId, Vector2 to, EPlayerDirection direction);
         bool TryMovePlayerTo(ServerPlayerModel player, Vector2 to, EPlayerDirection direction);
         bool EnterHouse(string connectionId, int houseId);
+        bool ExitHouse(string connectionId);
+        bool SavePositionInDatabase(string connectionId, Vector2 newPos);
+        bool SavePositionInDatabase(string connectionId);
         bool Exists(int userId);
     }
 }

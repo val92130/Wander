@@ -15,7 +15,7 @@ namespace Wander.Server.ClassLibrary.Services
         /// </summary>
         /// <param name="signalRId"></param>
         /// <param name="userId"></param>
-        public void AddPlayer(string signalRId, int userId)
+        public ServerPlayerModel AddPlayer(string signalRId, int userId)
         {
             lock (Players)
             {
@@ -24,8 +24,18 @@ namespace Wander.Server.ClassLibrary.Services
                 ServerPlayerModel p = Players.FirstOrDefault(x => x.SignalRId == signalRId);
                 if (p == null)
                 {
-                    Players.Add(new ServerPlayerModel() { SignalRId = signalRId, UserId = userId, Position = lastPos, Pseudo = ServiceProvider.GetUserService().GetUserLogin(userId), Direction = EPlayerDirection.Idle });
+                    var player = new ServerPlayerModel()
+                    {
+                        SignalRId = signalRId,
+                        UserId = userId,
+                        Position = lastPos,
+                        Pseudo = ServiceProvider.GetUserService().GetUserLogin(userId),
+                        Direction = EPlayerDirection.Idle
+                    };
+                    Players.Add(player);
+                    return player;
                 }
+                return null;
             }
         }
 
@@ -155,7 +165,7 @@ namespace Wander.Server.ClassLibrary.Services
             lock (Players)
             {
                 List<ServerPlayerModel> players = new List<ServerPlayerModel>();
-                players = Players.Where(x => x.HouseId == houseId).ToList();
+                players = Players.Where(x => x.MapId == houseId).ToList();
                 return players;
             }
         }
@@ -164,8 +174,36 @@ namespace Wander.Server.ClassLibrary.Services
         {
             var player = Players.FirstOrDefault(x => x.SignalRId == connectionId);
             if (player == null) return false;
-            player.HouseId = houseId;
+            player.MapId = houseId;
+            player.SavedPosition = new Vector2(player.Position.X, player.Position.Y);
+            player.Position = new Vector2(0,0);
+            SavePositionInDatabase(connectionId);
             return true;
+        }
+
+        public bool ExitHouse(string connectionId)
+        {
+            var player = Players.FirstOrDefault(x => x.SignalRId == connectionId);
+            if (player == null) return false;
+            player.MapId = -1;
+            player.Position = player.SavedPosition;
+            return true;
+        }
+
+        public bool SavePositionInDatabase(string connectionId, Vector2 newPos)
+        {
+            if (connectionId == null) return false;
+            ServerPlayerModel player = GetPlayer(connectionId);
+            if (player == null) return false;
+            return ServiceProvider.GetUserService().SetLastPosition(player.UserId, newPos);
+        }
+
+        public bool SavePositionInDatabase(string connectionId)
+        {
+            if (connectionId == null) return false;
+            ServerPlayerModel player = GetPlayer(connectionId);
+            if (player == null) return false;
+            return ServiceProvider.GetUserService().SetLastPosition(player.UserId, player.Position);
         }
 
 

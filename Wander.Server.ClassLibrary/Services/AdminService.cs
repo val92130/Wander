@@ -242,7 +242,7 @@ namespace Wander.Server.ClassLibrary.Services
             mdl.Points = userInfo.Points;
             mdl.Sex = userInfo.Sex;
             mdl.Properties = userInfo.Properties;
-            mdl.HouseId = candidate.HouseId;
+            mdl.MapId = candidate.MapId;
             mdl.Direction = candidate.Direction;
             mdl.Position = candidate.Position;
             mdl.Pseudo = candidate.Pseudo;

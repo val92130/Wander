@@ -19,11 +19,16 @@ function deleteGame() {
 
 function changeMap(houseId: number) {
     hub.invoke("EnterHouse", houseId).done(function(success) {
-        if (success) {
+        if (success) {                        
             game.destroy();
             game = new Game(houseId);
         }
     });
+}
+
+function resetGame() {
+    game.destroy();
+    game = new Game(-1);
 }
 
 
@@ -105,7 +110,12 @@ class GameState extends Phaser.State {
             currentState.setRain(val);
         });
 
-        hub.invoke("GetAllPlayers");
+        hub.invoke("GetAllPlayersMap", this.houseId).done(function (players) {
+            if (players == null)return;
+            for (var i = 0; i < players.length; i++) {
+                currentState.map.addPlayer(players[i].Pseudo, new Phaser.Point(players[i].Position.X, players[i].Position.Y));
+            }
+        });
         
         hub.invoke("Update");
 
@@ -141,6 +151,10 @@ class GameState extends Phaser.State {
                 currentState.soundManager.playActionSound();
             } else {
                 var isMairie = tile.properties.Mairie;
+                var isExit = tile.properties.exit;
+                if (isExit) {
+                    exitMap();                
+                }
                 if (isMairie != undefined) {
                     getAllJobs();
                     currentState.soundManager.playActionSound();
@@ -150,6 +164,10 @@ class GameState extends Phaser.State {
     }
 
     setRain(val: boolean) {
+        if (this.houseId !== -1) {
+            this.weatherManager.rainEmiter.on = false;
+            return;
+        }
         this.weatherManager.rainEmiter.on = val;
     }
 
@@ -225,25 +243,23 @@ hub.on("setRain", function(rain)
 });
 
 hub.on("playerConnected", function (player) {
-    if (currentState == undefined || currentState.map == undefined) return;
-    currentState.map.addPlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
     $.notify("player connected : " + player.Pseudo, "warn");
 });
 
 hub.on("playerDisconnected", function (player) {
-    if (typeof(currentState) == undefined || typeof(currentState.map) == undefined) return;
+    if (typeof(currentState) == "undefined" || typeof(currentState.map) == "undefined") return;
     currentState.map.removePlayer(player.Pseudo);
     $.notify("player disconnected : " + player.Pseudo, "error");
 });
 
 hub.on("playerMoved", function (player) {
-    if (typeof (currentState) !== undefined && typeof (currentState.map) !== undefined) {
+    if (typeof (currentState) !== "undefined" && typeof (currentState.map) !== "undefined") {
         currentState.map.updatePlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y), player.Direction);
     }
 });
 
 hub.on("updateTime", function (isDay) {
-    if (typeof (currentState) !== undefined && typeof (currentState.map) !== undefined) {
+    if (typeof (currentState) !== "undefined" && typeof (currentState.map) !== "undefined") {
         currentState.dayNightCycle.isDay = isDay;
     }
 });
@@ -256,12 +272,38 @@ hub.on("MessageReceived", function (msg) {
     currentState.soundManager.playChatSound();
 });
 
+hub.on("playerEnterMap", function (player) {
+    if (typeof (currentState) == "undefined" || typeof (currentState.map) === "undefined") return;
+    currentState.map.addPlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
+    $.notify("Player entered map");
+});
+
+hub.on("playerExitMap", function (player) {
+    if (typeof (currentState) == "undefined" || typeof (currentState.map) === "undefined") return;
+    currentState.map.removePlayer(player.Pseudo);
+    $.notify("Player exited map");
+});
+
 hub.on("sendQuestionToClient", function (question) {
     if (currentState == undefined) return;
     console.log(question);
     $('#questionContent').text(question.Question);
     openQuestionModal(question);
 });
+
+hub.on("notifyNewPosition", function(newPos) {
+    if (typeof (currentState) === "undefined" || typeof (currentState.map) === "undefined") return;
+    currentState.map.currentPlayer.texture.x = newPos.X;
+    currentState.map.currentPlayer.texture.y = newPos.Y;
+});
+
+function exitMap() {
+    hub.invoke("ExitHouse").done(function(val){
+        if (val) {
+            resetGame();
+        }
+    });
+}
 
 
 function openModalProperty(id) {
@@ -297,7 +339,8 @@ $("#enterHouseForm").submit(function (e) {
     var houseId = $("#hiddenEnterHouseId").val();
     
     e.preventDefault();
-    if (typeof(houseId) != "undefined" && houseId !== null) {
+    if (typeof (houseId) != "undefined" && houseId !== null) {
+        $("#propertyModal").modal('hide');
         changeMap(houseId);
         console.log("Changing map");
     }

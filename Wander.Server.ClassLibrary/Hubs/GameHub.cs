@@ -55,15 +55,19 @@ namespace Wander.Server.ClassLibrary.Hubs
                 Debug.Print("Client connected : " + idSignalR);
 
                 Clients.Caller.onConnected(user.Login);
-                ServiceProvider.GetPlayerService().AddPlayer(idSignalR, playerId);
+                ServerPlayerModel newPlayer = ServiceProvider.GetPlayerService().AddPlayer(idSignalR, playerId);
                 var lastPos = ServiceProvider.GetUserService().GetLastPosition(idSignalR);
-
                 //Notify all connected users that someone just connected
                 foreach (ServerPlayerModel players in ServiceProvider.GetPlayerService().GetAllPlayersServer())
                 {
-                    if (players.SignalRId == Context.ConnectionId) continue;
+                    if (players.SignalRId == Context.ConnectionId) continue;                    
                     Clients.Client(players.SignalRId).playerConnected(new { Pseudo = user.Login, Position = lastPos, Direction = EPlayerDirection.Idle });
+                    if (players.MapId == -1)
+                    {
+                        NotifyPlayerEnterHouse(newPlayer, players);
+                    }
                 }
+
                 Debug.Print(idSignalR);
                 Clients.Caller.notify(Helper.CreateNotificationMessage("Welcome ! You are now online", EMessageType.success));
             }
@@ -157,14 +161,24 @@ namespace Wander.Server.ClassLibrary.Hubs
                 return;
             }
             Debug.Print("Client disconnected : " + Context.ConnectionId);
+
+            ServerPlayerModel disconnectingUser = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            if (disconnectingUser == null) return;
+            if (disconnectingUser.MapId != -1) disconnectingUser.Position = new Vector2();
+
             ServiceProvider.GetUserService()
                 .SetLastPosition(Context.ConnectionId,
-                    ServiceProvider.GetPlayerService().GetPlayerInfos(Context.ConnectionId).Position);
+                    disconnectingUser.Position);
+
             foreach (ServerPlayerModel players in ServiceProvider.GetPlayerService().GetAllPlayersServer())
             {
                 if (players.SignalRId == Context.ConnectionId) continue;
                 Clients.Client(players.SignalRId).playerDisconnected(
                 new { Pseudo = ServiceProvider.GetUserService().GetUserLogin(Context.ConnectionId) });
+                if (disconnectingUser.MapId == players.MapId)
+                {
+                    NotifyPlayerExitHouse(disconnectingUser, players);
+                }
             }
 
             ServiceProvider.GetUserRegistrationService().LogOut(ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId));
@@ -361,6 +375,23 @@ namespace Wander.Server.ClassLibrary.Hubs
                 Clients.Caller.playerConnected(new { Pseudo = players[i].Pseudo, Position = players[i].Position, Direction = players[i].Direction });
             }
 
+        }
+
+        public List<Object> GetAllPlayersMap(int mapId)
+        {
+            ServerPlayerModel currentPlayer = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            if (currentPlayer == null) return null;
+            var players = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            List<Object> playerList = new List<Object>();
+            for (int i = 0; i < players.Count; i++)
+            {
+                if (players[i].SignalRId == Context.ConnectionId) continue;
+                if (players[i].MapId == currentPlayer.MapId)
+                {
+                    playerList.Add(new { Pseudo = players[i].Pseudo, Position = players[i].Position, Direction = players[i].Direction });
+                }
+            }
+            return playerList;
         }
 
 
@@ -569,6 +600,8 @@ namespace Wander.Server.ClassLibrary.Hubs
 
         public Vector2 GetCurrentPosition()
         {
+            ServerPlayerModel player = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            if (player != null) return player.Position;
             if (!ServiceProvider.GetPlayerService().Exists(Context.ConnectionId)) return new Vector2();
             return ServiceProvider.GetUserService().GetLastPosition(Context.ConnectionId);
         }
@@ -621,6 +654,20 @@ namespace Wander.Server.ClassLibrary.Hubs
             }
         }
 
+        private void NotifyPlayerEnterHouse(ServerPlayerModel player, ServerPlayerModel target)
+        {
+            if (player == null || target == null) return;
+            if (player.SignalRId == target.SignalRId) return;
+            Clients.Client(target.SignalRId).playerEnterMap(new { Pseudo = player.Pseudo, Position = player.Position, Direction = player.Direction });
+        }
+
+        private void NotifyPlayerExitHouse(ServerPlayerModel player, ServerPlayerModel target)
+        {
+            if (player == null || target == null) return;
+            if (player.SignalRId == target.SignalRId) return;
+            Clients.Client(target.SignalRId).playerExitMap(new { Pseudo = player.Pseudo, Position = player.Position, Direction = player.Direction });
+        }
+
         /// <summary>
         /// Try to enter in the house with the specified propertyId
         /// </summary>
@@ -635,7 +682,49 @@ namespace Wander.Server.ClassLibrary.Hubs
             }
             ServerPropertyModel checkProperty = ServiceProvider.GetPropertiesService().GetProperty(propertyId);
             if (checkProperty == null) return false;
-           return ServiceProvider.GetPlayerService().EnterHouse(this.Context.ConnectionId, propertyId);
+            bool value =  ServiceProvider.GetPlayerService().EnterHouse(this.Context.ConnectionId, propertyId);
+            if (value)
+            {
+                var player = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+                if (player == null) return false;
+                foreach (ServerPlayerModel p in ServiceProvider.GetPlayerService().GetAllPlayersServer())
+                {
+                    if (p.MapId == player.MapId)
+                    {
+                        NotifyPlayerEnterHouse(player, p);
+                    }
+                    else
+                    {
+                        NotifyPlayerExitHouse(player,p);
+                    }
+                    
+                }
+            }
+
+            return value;
+        }
+
+        public bool ExitHouse()
+        {
+            var player = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            if (player == null) return false;
+
+            bool value = ServiceProvider.GetPlayerService().ExitHouse(player.SignalRId);
+            if (value)
+            {
+                foreach (ServerPlayerModel p in ServiceProvider.GetPlayerService().GetAllPlayersServer())
+                {
+                    if (p.MapId == player.MapId)
+                    {
+                        NotifyPlayerEnterHouse(player, p);
+                    }
+                    else
+                    {
+                        NotifyPlayerExitHouse(player, p);
+                    }
+                }
+            }
+            return value;
         }
 
         #region admin
