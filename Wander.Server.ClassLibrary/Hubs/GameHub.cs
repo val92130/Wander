@@ -164,7 +164,7 @@ namespace Wander.Server.ClassLibrary.Hubs
 
             ServerPlayerModel disconnectingUser = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
             if (disconnectingUser == null) return;
-            if (disconnectingUser.MapId != -1) disconnectingUser.Position = new Vector2();
+            if (disconnectingUser.MapId != -1) disconnectingUser.Position = disconnectingUser.SavedPosition;
 
             ServiceProvider.GetUserService()
                 .SetLastPosition(Context.ConnectionId,
