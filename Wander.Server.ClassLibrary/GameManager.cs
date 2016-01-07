@@ -47,6 +47,7 @@ namespace Wander.Server.ClassLibrary
 
             this._questionTimer.Interval = 1000 * 60 * 25;
             this._questionTimer.Elapsed += AskQuestion;
+
         }
 
         private void AskQuestion(object sender, ElapsedEventArgs e)

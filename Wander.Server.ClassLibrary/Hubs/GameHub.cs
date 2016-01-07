@@ -16,13 +16,17 @@ namespace Wander.Server.ClassLibrary.Hubs
 {
     public class GameHub : Hub
     {
-
+        private void CallHookMethod(Action<GameHook> action)
+        {
+            ServiceProvider.GetHookService().GetHooks().ForEach(action);
+        }
         /// <summary>
         /// Connect the user to the game and into the database
         /// </summary>
         /// <param name="user"></param>
         public bool Connect(UserModel user)
         {
+            CallHookMethod(hook => hook.OnUserTyLogin(Clients, user));
             if (ServiceProvider.GetUserRegistrationService().CheckLogin(user))
             {
                 if (ServiceProvider.GetUserRegistrationService().IsBanned(user))
@@ -56,6 +60,9 @@ namespace Wander.Server.ClassLibrary.Hubs
 
                 Clients.Caller.onConnected(user.Login);
                 ServerPlayerModel newPlayer = ServiceProvider.GetPlayerService().AddPlayer(idSignalR, playerId);
+
+                CallHookMethod(hook => hook.OnPlayerConnect(Clients, newPlayer));
+
                 var lastPos = ServiceProvider.GetUserService().GetLastPosition(idSignalR);
                 //Notify all connected users that someone just connected
                 foreach (ServerPlayerModel players in ServiceProvider.GetPlayerService().GetAllPlayersServer())
@@ -85,6 +92,7 @@ namespace Wander.Server.ClassLibrary.Hubs
         /// <param name="user"></param>
         public bool ConnectAdmin(UserModel user)
         {
+            CallHookMethod(hook => hook.OnAdminTryConnect(Clients, user));
             if (ServiceProvider.GetUserRegistrationService().IsBanned(user))
             {
                 Clients.Caller.notify(Helper.CreateNotificationMessage(
@@ -96,6 +104,7 @@ namespace Wander.Server.ClassLibrary.Hubs
             {
                 Clients.Caller.notify(Helper.CreateNotificationMessage(
                     "Successfully connected", EMessageType.success));
+                CallHookMethod(hook => hook.OnAdminConnect(Clients, user));
                 return true;
             }
             else
@@ -113,10 +122,12 @@ namespace Wander.Server.ClassLibrary.Hubs
         /// <param name="user">Form fields represented by the UserModel</param>
         public bool RegisterUser(UserModel user)
         {
+            CallHookMethod(hook => hook.OnUserTryRegister(Clients, user));
             Debug.Print(ServiceProvider.GetUserRegistrationService().CheckRegisterForm(user).ToString());
             if (ServiceProvider.GetUserRegistrationService().CheckRegisterForm(user))
             {
                 ServiceProvider.GetUserRegistrationService().Register(user);
+                CallHookMethod(hook => hook.OnUserTryRegister(Clients, user));
                 Clients.Caller.notify(Helper.CreateNotificationMessage("Successfuly registered", EMessageType.success));
                 return true;
             }
@@ -127,7 +138,11 @@ namespace Wander.Server.ClassLibrary.Hubs
             return false;
         }
 
-
+        public override Task OnConnected()
+        {
+            CallHookMethod(hook => hook.OnClientConnect(Clients));
+            return base.OnConnected();
+        }
 
         /// <summary>
         /// Called whenever a Client disconnects from SignalR
@@ -136,6 +151,7 @@ namespace Wander.Server.ClassLibrary.Hubs
         /// <returns></returns>
         public override Task OnDisconnected(bool stopCalled)
         {
+            CallHookMethod(hook => hook.OnClientDisconnect(Clients));
             if (ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
             {
                 ServiceProvider.GetAdminService().DisconnectAdmin(Context.ConnectionId);
@@ -164,6 +180,7 @@ namespace Wander.Server.ClassLibrary.Hubs
 
             ServerPlayerModel disconnectingUser = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
             if (disconnectingUser == null) return;
+            CallHookMethod(hook => hook.OnPlayerDisconnect(Clients, disconnectingUser));
             if (disconnectingUser.MapId != -1) disconnectingUser.Position = disconnectingUser.SavedPosition;
 
             ServiceProvider.GetUserService()
@@ -217,6 +234,7 @@ namespace Wander.Server.ClassLibrary.Hubs
             List<ServerPlayerModel> ids = ServiceProvider.GetPlayerService().GetAllPlayersServer();
             ChatMessageModel messageModel = Helper.CreateChatMessage(caller, candidate.UserId, msg,
             ServiceProvider.GetUserService().GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString());
+            CallHookMethod(hook => hook.OnPlayerSendPublicMessage(Clients, candidate, messageModel));
             ServiceProvider.GetMessageService().LogMessage(messageModel);
             for (int i = 0; i < ids.Count; i++)
             {
@@ -267,7 +285,10 @@ namespace Wander.Server.ClassLibrary.Hubs
                 .notify(Helper.CreateNotificationMessage("You got a private message from : " + candidate.Pseudo,
                     EMessageType.info));
             string caller = candidate.Pseudo;
-            Clients.Client(dest.SignalRId).PrivateMessageReceived(Helper.CreateChatMessage(caller, candidate.UserId, message, ServiceProvider.GetUserService().GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString()));
+            ChatMessageModel model = Helper.CreateChatMessage(caller, candidate.UserId, message,
+                ServiceProvider.GetUserService().GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString());
+            CallHookMethod(hook => hook.OnPlayerSendPrivateMessage(Clients, candidate, dest, model));
+            Clients.Client(dest.SignalRId).PrivateMessageReceived(model);
         }
 
         /// <summary>
