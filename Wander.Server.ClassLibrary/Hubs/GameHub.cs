@@ -235,6 +235,13 @@ namespace Wander.Server.ClassLibrary.Hubs
             ChatMessageModel messageModel = Helper.CreateChatMessage(caller, candidate.UserId, msg,
             ServiceProvider.GetUserService().GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString());
             CallHookMethod(hook => hook.OnPlayerSendPublicMessage(Clients, candidate, messageModel));
+
+            CommandModel command = Helper.ParseCommand(messageModel);
+            if (command != null)
+            {
+                CallHookMethod(hook => hook.OnPlayerSendCommand(Clients, candidate, command));
+                return;
+            }
             ServiceProvider.GetMessageService().LogMessage(messageModel);
             for (int i = 0; i < ids.Count; i++)
             {
@@ -330,6 +337,8 @@ namespace Wander.Server.ClassLibrary.Hubs
             {
                 ServerPropertyModel m =
                     ServiceProvider.GetPropertiesService().GetProperties().FirstOrDefault(x => x.PropertyId == id);
+                ServerPlayerModel buyer = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+                if (buyer == null) return;
                 if (m != null)
                 {
                     ServerNotificationMessage message = ServiceProvider.GetPropertiesService().BuyProperty(this.Context.ConnectionId, m);
@@ -344,6 +353,7 @@ namespace Wander.Server.ClassLibrary.Hubs
                         Clients.Caller.notify(
                             Helper.CreateNotificationMessage("Success ! Enjoy your new property",
                                 message.MessageType));
+                        CallHookMethod(hook => hook.OnPlayerBuyProperty(Clients, buyer, m));
                     }
 
                 }
@@ -372,6 +382,7 @@ namespace Wander.Server.ClassLibrary.Hubs
             if (!success) return;
             string login = candidate.Pseudo;
 
+            CallHookMethod(hook => hook.OnPlayerUpdatePosition(Clients, candidate, position, direction));
             // Notify all the connected players that a player moved
             var players = ServiceProvider.GetPlayerService().GetAllPlayersServer();
             object newPos = new { Pseudo = login, Position = position, Direction = direction };
@@ -441,6 +452,9 @@ namespace Wander.Server.ClassLibrary.Hubs
                     .GetUserProperties(Context.ConnectionId)
                     .FirstOrDefault(x => x.PropertyId == id);
 
+            ServerPlayerModel seller = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            if (seller == null) return;
+
             if (model == null)
             {
                 Clients.Caller.notify(Helper.CreateNotificationMessage(
@@ -463,6 +477,8 @@ namespace Wander.Server.ClassLibrary.Hubs
                 Clients.Caller.notify(
                     Helper.CreateNotificationMessage("Error, cannot sell this property. Reason : " + message.Content,
                         EMessageType.error));
+
+                CallHookMethod(hook => hook.OnPlayerSellProperty(Clients, seller, model, price));
 
             }
             else

@@ -64,6 +64,29 @@ namespace Wander.Server.ClassLibrary
         {
             Debug.Print("Hook on player send private message works");
         }
+
+        public virtual void OnPlayerSendCommand(IHubCallerConnectionContext<dynamic> clients, ServerPlayerModel player,CommandModel command)
+        {
+            Debug.Print("Hook on player send command works");
+        }
         #endregion
+
+        #region Properties
+        public virtual void OnPlayerBuyProperty(IHubCallerConnectionContext<dynamic> clients, ServerPlayerModel player, ServerPropertyModel property)
+        {
+            Debug.Print("Hook on player buy property works");
+        }
+
+        public virtual void OnPlayerSellProperty(IHubCallerConnectionContext<dynamic> clients, ServerPlayerModel player, ServerPropertyModel property, int price)
+        {
+            Debug.Print("Hook on player sell property works");
+        }
+        #endregion
+
+        public void OnPlayerUpdatePosition(IHubCallerConnectionContext<dynamic> clients, ServerPlayerModel player,
+            Vector2 position, EPlayerDirection direction)
+        {
+            Debug.Print("Hook on player update position works");
+        }
     }
 }

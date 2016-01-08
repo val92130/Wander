@@ -65,14 +65,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameHook.cs" />
+    <Compile Include="Hooks\GameHook.cs" />
     <Compile Include="GameManager.cs" />
+    <Compile Include="Hooks\PluginDescription.cs" />
+    <Compile Include="Hooks\PluginName.cs" />
     <Compile Include="Hubs\GameHub.cs" />
     <Compile Include="IEnumerableExtensions.cs" />
     <Compile Include="Model\AdminModel.cs" />
     <Compile Include="Model\AdminUserModel.cs" />
     <Compile Include="Model\ChatMessageModel.cs" />
     <Compile Include="Model\ClientNotificationMessageModel.cs" />
+    <Compile Include="Model\CommandModel.cs" />
     <Compile Include="Model\EMessageType.cs" />
     <Compile Include="Model\Forms\UserModel.cs" />
     <Compile Include="Model\Job\JobModel.cs" />
@@ -85,8 +88,7 @@
     <Compile Include="Model\Players\ServerPropertyUserModel.cs" />
     <Compile Include="Model\ServerNotificationMessage.cs" />
     <Compile Include="Model\Vector2.cs" />
-    <Compile Include="Plugins\AnotherHook.cs" />
-    <Compile Include="Plugins\TestHook.cs" />
+    <Compile Include="Plugins\TeleportationPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AdminService.cs" />
     <Compile Include="Services\DbUserRegistrationService.cs" />

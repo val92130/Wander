@@ -21,6 +21,14 @@ var ServerPlayer = (function (_super) {
         }
     };
     ServerPlayer.prototype.updateInfos = function (newPosition, newDirection) {
+        var distX = Math.abs(this.texture.position.x - newPosition.x);
+        var distY = Math.abs(this.texture.position.y - newPosition.y);
+        if (distX >= 10 || distY >= 10) {
+            this.texture.position.x = newPosition.x;
+            this.texture.position.y = newPosition.y;
+            this.direction = newDirection;
+        }
+        console.log("DistX : " + distX + " DistY : " + distY);
         this.newPosition = newPosition;
         if (this.direction != newDirection) {
             this.direction = newDirection;
@@ -29,4 +37,3 @@ var ServerPlayer = (function (_super) {
     };
     return ServerPlayer;
 })(Player);
-//# sourceMappingURL=ServerPlayer.js.map
