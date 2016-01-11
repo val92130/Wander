@@ -87,6 +87,8 @@
     <Compile Include="Model\Players\ServerPropertyUserModel.cs" />
     <Compile Include="Model\ServerNotificationMessage.cs" />
     <Compile Include="Model\Vector2.cs" />
+    <Compile Include="Plugins\PayPlugin.cs" />
+    <Compile Include="Plugins\TaxPlugin.cs" />
     <Compile Include="Plugins\TeleportationPlugin.cs" />
     <Compile Include="Plugins\TestTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
