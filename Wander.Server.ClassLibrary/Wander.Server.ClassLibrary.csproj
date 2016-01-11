@@ -66,11 +66,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Hooks\GameHook.cs" />
-    <Compile Include="GameManager.cs" />
-    <Compile Include="Hooks\PluginDescription.cs" />
-    <Compile Include="Hooks\PluginName.cs" />
+    <Compile Include="Game\GameManager.cs" />
+    <Compile Include="Hooks\PluginInfo.cs" />
     <Compile Include="Hubs\GameHub.cs" />
-    <Compile Include="IEnumerableExtensions.cs" />
+    <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Model\AdminModel.cs" />
     <Compile Include="Model\AdminUserModel.cs" />
     <Compile Include="Model\ChatMessageModel.cs" />
@@ -89,10 +88,11 @@
     <Compile Include="Model\ServerNotificationMessage.cs" />
     <Compile Include="Model\Vector2.cs" />
     <Compile Include="Plugins\TeleportationPlugin.cs" />
+    <Compile Include="Plugins\TestTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AdminService.cs" />
     <Compile Include="Services\DbUserRegistrationService.cs" />
-    <Compile Include="Services\Helper.cs" />
+    <Compile Include="Utilities\Helper.cs" />
     <Compile Include="Services\HookService.cs" />
     <Compile Include="Services\Interfaces\IAdminService.cs" />
     <Compile Include="Services\Interfaces\IHookService.cs" />
@@ -111,6 +111,7 @@
     <Compile Include="Services\ServiceProvider.cs" />
     <Compile Include="Services\SqlConnectionService.cs" />
     <Compile Include="Services\UserService.cs" />
+    <Compile Include="Utilities\Timer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -12,8 +12,7 @@ using Wander.Server.ClassLibrary.Services;
 
 namespace Wander.Server.ClassLibrary.Plugins
 {
-    [PluginName("Teleportation")]
-    [PluginDescription("Teleports a player to another player")]
+    [PluginInfo(name:"Teleportation", description:"Teleports a player to another player", author:"Val", version:"1.0")]
     public class TeleportationPlugin : GameHook
     {
         public override void OnPlayerSendCommand(IHubCallerConnectionContext<dynamic> clients, ServerPlayerModel player, CommandModel command)

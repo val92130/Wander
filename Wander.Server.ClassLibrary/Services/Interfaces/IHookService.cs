@@ -9,5 +9,6 @@ namespace Wander.Server.ClassLibrary.Services.Interfaces
     public interface IHookService
     {
         IEnumerable<GameHook> GetHooks();
+        void CallHookMethod(Action<GameHook> action);
     }
 }
