@@ -117,7 +117,7 @@ var GameState = (function (_super) {
                 var isMairie = tile.properties.Mairie;
                 var isExit = tile.properties.exit;
                 if (isExit) {
-                    exitMap();
+                    openExitPropertyModal();
                 }
                 if (isMairie != undefined) {
                     getAllJobs();
@@ -259,6 +259,9 @@ function openModalProperty(id) {
             });
         }
     });
+}
+function openExitPropertyModal() {
+    $("#exitPropertyModal").modal();
 }
 function openQuestionModal(question) {
     if (question == null)
