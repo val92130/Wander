@@ -106,6 +106,7 @@
     <Content Include="Content\Game\Sounds\ambient-day.mp3" />
     <Content Include="Content\Game\Sounds\ambient-night.mp3" />
     <Content Include="Content\Game\Sounds\ambient-rain.mp3" />
+    <Content Include="Content\Game\Sounds\footstepHouse.wav" />
     <Content Include="Content\jquery-ui.theme.min.css" />
     <Content Include="Content\Style.css" />
     <Content Include="Content\user-boy.png" />

@@ -153,7 +153,7 @@ class GameState extends Phaser.State {
                 var isMairie = tile.properties.Mairie;
                 var isExit = tile.properties.exit;
                 if (isExit) {
-                    exitMap();                
+                    openExitPropertyModal();                
                 }
                 if (isMairie != undefined) {
                     getAllJobs();
@@ -260,7 +260,11 @@ hub.on("playerMoved", function (player) {
 
 hub.on("updateTime", function (isDay) {
     if (typeof (currentState) !== "undefined" && typeof (currentState.map) !== "undefined") {
+        if (currentState.houseId !== -1) {
+            currentState.dayNightCycle.isDay = true;
+        }
         currentState.dayNightCycle.isDay = isDay;
+
     }
 });
 
@@ -300,6 +304,7 @@ hub.on("notifyNewPosition", function(newPos) {
 function exitMap() {
     hub.invoke("ExitHouse").done(function(val){
         if (val) {
+
             resetGame();
         }
     });
@@ -325,6 +330,11 @@ function openModalProperty(id) {
     });
 
 }
+
+function openExitPropertyModal() {
+    $("#exitPropertyModal").modal();
+}
+
 function openQuestionModal(question) {
     if (question == null) return;
     $("#questionid").val(question.QuestionId);

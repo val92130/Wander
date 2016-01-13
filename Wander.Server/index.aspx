@@ -250,6 +250,27 @@
                </div>
             </div>
          </div>
+          
+           <!-- EXIT PROPERTY MODAL-->
+         <div class="modal fade" id="exitPropertyModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <h4 class="modal-title"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Exit Property</h4>
+                  </div>
+                  <div class="modal-body">
+                    
+                      <button type="button" class="btn btn-default" onclick="exitMap()" data-dismiss="modal">Exit</button>
+                     
+                  </div>
+                  <div class="modal-footer">           
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                     
+                  </div>
+               </div>
+            </div>
+         </div>
          <!-- SELL PROPERTY MODAL-->
          <div class="modal fade" id="sellPropertyModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">

@@ -7,9 +7,14 @@ var SoundManager = (function () {
         this.game.load.audio("dayAmbient", ["Content/Game/Sounds/ambient-day.mp3", "Content/Game/Sounds/ambient-day.ogg"]);
         this.game.load.audio("nightAmbient", ["Content/Game/Sounds/ambient-night.mp3", "Content/Game/Sounds/ambient-night.ogg"]);
         this.game.load.audio("rainAmbient", ["Content/Game/Sounds/ambient-rain.mp3", "Content/Game/Sounds/ambient-rain.ogg"]);
-        this.game.load.audio("footstep", "Content/Game/Sounds/footstep.ogg");
         this.game.load.audio("action", "Content/Game/Sounds/action.ogg");
         this.game.load.audio("chat", "Content/Game/Sounds/chat.ogg");
+        if (currentState.houseId == -1) {
+            this.game.load.audio("footstep", "Content/Game/Sounds/footstep.ogg");
+        }
+        else {
+            this.game.load.audio("footstep", "Content/Game/Sounds/footstepHouse.wav");
+        }
     };
     SoundManager.prototype.create = function () {
         this.dayAmbientSound = this.game.add.audio("dayAmbient");
@@ -47,6 +52,9 @@ var SoundManager = (function () {
         this.chatSound.play();
     };
     SoundManager.prototype.update = function () {
+        if (currentState.houseId !== -1) {
+            return;
+        }
         if (this.state.dayNightCycle.isDay) {
             if (!this.dayAmbientSound.isPlaying)
                 this.dayAmbientSound.play();
@@ -77,4 +85,3 @@ var SoundManager = (function () {
     };
     return SoundManager;
 })();
-//# sourceMappingURL=SoundManager.js.map
