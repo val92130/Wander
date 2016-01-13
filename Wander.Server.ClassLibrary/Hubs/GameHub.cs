@@ -692,7 +692,8 @@ namespace Wander.Server.ClassLibrary.Hubs
         {
             if (player == null || target == null) return;
             if (player.SignalRId == target.SignalRId) return;
-            Clients.Client(target.SignalRId).playerEnterMap(new { Pseudo = player.Pseudo, Position = player.Position, Direction = player.Direction });
+            int sex = ServiceProvider.GetUserService().GetUserSex(player.UserId);
+            Clients.Client(target.SignalRId).playerEnterMap(new { Pseudo = player.Pseudo, Position = player.Position, Direction = player.Direction, Sex = sex});
         }
 
         private void NotifyPlayerExitHouse(ServerPlayerModel player, ServerPlayerModel target)
