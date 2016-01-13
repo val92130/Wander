@@ -24,6 +24,7 @@
             this.game.load.audio("footstep", "Content/Game/Sounds/footstep.ogg");
         } else {
             this.game.load.audio("footstep", "Content/Game/Sounds/footstepHouse.wav");
+
         }
     }
 
@@ -72,6 +73,9 @@
 
 
     update() {
+        if (currentState.houseId !== -1) {
+            return;
+        }
         if (this.state.dayNightCycle.isDay) {
             if (!this.dayAmbientSound.isPlaying) this.dayAmbientSound.play();           
             this.nightAmbientSound.volume = Lerp(0, this.nightAmbientSound.volume, 0.01);

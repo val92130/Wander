@@ -52,6 +52,9 @@ var SoundManager = (function () {
         this.chatSound.play();
     };
     SoundManager.prototype.update = function () {
+        if (currentState.houseId !== -1) {
+            return;
+        }
         if (this.state.dayNightCycle.isDay) {
             if (!this.dayAmbientSound.isPlaying)
                 this.dayAmbientSound.play();
@@ -82,4 +85,3 @@ var SoundManager = (function () {
     };
     return SoundManager;
 })();
-//# sourceMappingURL=SoundManager.js.map
