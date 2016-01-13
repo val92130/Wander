@@ -9,31 +9,42 @@ using Wander.Server.ClassLibrary.Services.Interfaces;
 
 namespace Wander.Server.ClassLibrary.Services
 {
-    public class HookService : IHookService
+    public sealed class HookService : IHookService
     {
-        private IEnumerable<GameHook> hooks;
-        public HookService()
+        private IReadOnlyCollection<GameHook> hooks;
+        private static HookService _instance = new HookService();
+        private HookService()
         {
             this.hooks = typeof(GameHook)
-            .Assembly.GetTypes()
-            .Where(t => t.IsSubclassOf(typeof(GameHook)) && !t.IsAbstract)
-            .Select(t => (GameHook)Activator.CreateInstance(t));
+                .Assembly.GetTypes()
+                .Where(t => t.IsSubclassOf(typeof(GameHook)) && !t.IsAbstract)
+                .Select(t => (GameHook)Activator.CreateInstance(t)).ToList();
 
             foreach (var v in hooks)
             {
-                v.Init();
-
+                string pluginName = v.ToString();
                 foreach (Attribute attr in Attribute.GetCustomAttributes(v.GetType()))
                 {
-                    if (attr is PluginInfo)
+                    
+                    var info = attr as PluginInfo;
+                    if (info != null)
                     {
-                        PluginInfo a = (PluginInfo)attr;
-                        Debug.Print("Plugin : " + a.Name);
+                        PluginInfo a = info;
+                        pluginName = a.Name;
                     }
+                    else
+                    {
+                        pluginName = v.ToString();
+                    }
+
+                    
                 }
+                Debug.Print("Plugin loaded : " + pluginName);
             }
 
         }
+
+        public static HookService Instance => _instance;
 
         public IEnumerable<GameHook> GetHooks() => hooks;
 

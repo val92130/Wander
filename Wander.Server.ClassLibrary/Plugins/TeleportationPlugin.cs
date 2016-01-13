@@ -12,13 +12,12 @@ using Wander.Server.ClassLibrary.Services;
 
 namespace Wander.Server.ClassLibrary.Plugins
 {
-    [PluginInfo(name:"Teleportation", description:"Teleports a player to another player", author:"Val", version:"1.0")]
+    [PluginInfo(name:"Teleportation", description:"Teleports a player to another player", author:"Wander", version:"1.0")]
     public class TeleportationPlugin : GameHook
     {
         public override void OnPlayerSendCommand(IHubCallerConnectionContext<dynamic> clients, ServerPlayerModel player, CommandModel command)
         {
             if (command == null || player == null || clients == null) return;
-
             if (command.Command == "tp")
             {
                 if (command.Args.Length != 0)
@@ -46,7 +45,7 @@ namespace Wander.Server.ClassLibrary.Plugins
                     else
                     {
                         clients.Caller.notify(
-                            Helper.CreateNotificationMessage("Can't find player : " + candidate.Pseudo,
+                            Helper.CreateNotificationMessage("Can't find player" + player.Pseudo,
                                 EMessageType.error));
                     }
                 }

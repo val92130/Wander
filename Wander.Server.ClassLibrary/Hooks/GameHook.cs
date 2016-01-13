@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNet.SignalR;
+using Wander.Server.ClassLibrary.Hubs;
 using Wander.Server.ClassLibrary.Model;
 using Wander.Server.ClassLibrary.Model.Forms;
 using Wander.Server.ClassLibrary.Model.Players;
@@ -13,10 +15,23 @@ namespace Wander.Server.ClassLibrary
 {
     public abstract class GameHook
     {
-        public virtual void Init()
+        public GameHook()
         {
-            Debug.Print("Plugin initialized");
+            Init();
         }
+        protected virtual void Init()
+        {
+            Debug.Print("Init works");
+        }
+
+        public IHubContext Context
+        {
+            get
+            {
+                return GlobalHost.ConnectionManager.GetHubContext<GameHub>();
+            }
+        }
+
         #region User management
         public virtual void OnUserTyLogin(IHubCallerConnectionContext<dynamic> clients, UserModel user) => Debug.Print("Hook on player try login works");
         public virtual void OnUserTryRegister(IHubCallerConnectionContext<dynamic> clients, UserModel user) => Debug.Print("Hook on player try register works");

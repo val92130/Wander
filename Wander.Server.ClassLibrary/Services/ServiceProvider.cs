@@ -14,7 +14,6 @@ namespace Wander.Server.ClassLibrary.Services
         private static IQuestionService QuestionService;
         private static GameManager GameManager;
         private static IAdminService AdminService;
-        private static IHookService HookService;
 
         public static IUserRegistrationService GetUserRegistrationService()
         {
@@ -80,10 +79,7 @@ namespace Wander.Server.ClassLibrary.Services
 
         public static IHookService GetHookService()
         {
-            if (HookService == null)
-                HookService = new HookService();
-
-            return HookService;
+            return HookService.Instance;
         }
         public static GameManager GetGameManager()
         {
