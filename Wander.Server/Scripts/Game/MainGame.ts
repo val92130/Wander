@@ -260,7 +260,11 @@ hub.on("playerMoved", function (player) {
 
 hub.on("updateTime", function (isDay) {
     if (typeof (currentState) !== "undefined" && typeof (currentState.map) !== "undefined") {
+        if (currentState.houseId !== -1) {
+            currentState.dayNightCycle.isDay = true;
+        }
         currentState.dayNightCycle.isDay = isDay;
+
     }
 });
 
