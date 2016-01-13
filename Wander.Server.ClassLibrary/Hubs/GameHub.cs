@@ -16,17 +16,14 @@ namespace Wander.Server.ClassLibrary.Hubs
 {
     public class GameHub : Hub
     {
-        private void CallHookMethod(Action<GameHook> action)
-        {
-            ServiceProvider.GetHookService().GetHooks().ForEach(action);
-        }
+
         /// <summary>
         /// Connect the user to the game and into the database
         /// </summary>
         /// <param name="user"></param>
         public bool Connect(UserModel user)
         {
-            CallHookMethod(hook => hook.OnUserTyLogin(Clients, user));
+            ServiceProvider.GetHookService().CallHookMethod(hook => hook.OnUserTyLogin(Clients, user));
             if (ServiceProvider.GetUserRegistrationService().CheckLogin(user))
             {
                 if (ServiceProvider.GetUserRegistrationService().IsBanned(user))
@@ -61,7 +58,7 @@ namespace Wander.Server.ClassLibrary.Hubs
                 Clients.Caller.onConnected(user.Login);
                 ServerPlayerModel newPlayer = ServiceProvider.GetPlayerService().AddPlayer(idSignalR, playerId);
 
-                CallHookMethod(hook => hook.OnPlayerConnect(Clients, newPlayer));
+                ServiceProvider.GetHookService().CallHookMethod(hook => hook.OnPlayerConnect(Clients, newPlayer));
 
                 var lastPos = ServiceProvider.GetUserService().GetLastPosition(idSignalR);
                 //Notify all connected users that someone just connected
@@ -92,7 +89,7 @@ namespace Wander.Server.ClassLibrary.Hubs
         /// <param name="user"></param>
         public bool ConnectAdmin(UserModel user)
         {
-            CallHookMethod(hook => hook.OnAdminTryConnect(Clients, user));
+            ServiceProvider.GetHookService().CallHookMethod(hook => hook.OnAdminTryConnect(Clients, user));
             if (ServiceProvider.GetUserRegistrationService().IsBanned(user))
             {
                 Clients.Caller.notify(Helper.CreateNotificationMessage(
@@ -104,7 +101,7 @@ namespace Wander.Server.ClassLibrary.Hubs
             {
                 Clients.Caller.notify(Helper.CreateNotificationMessage(
                     "Successfully connected", EMessageType.success));
-                CallHookMethod(hook => hook.OnAdminConnect(Clients, user));
+                ServiceProvider.GetHookService().CallHookMethod(hook => hook.OnAdminConnect(Clients, user));
                 return true;
             }
             else
@@ -122,12 +119,12 @@ namespace Wander.Server.ClassLibrary.Hubs
         /// <param name="user">Form fields represented by the UserModel</param>
         public bool RegisterUser(UserModel user)
         {
-            CallHookMethod(hook => hook.OnUserTryRegister(Clients, user));
+            ServiceProvider.GetHookService().CallHookMethod(hook => hook.OnUserTryRegister(Clients, user));
             Debug.Print(ServiceProvider.GetUserRegistrationService().CheckRegisterForm(user).ToString());
             if (ServiceProvider.GetUserRegistrationService().CheckRegisterForm(user))
             {
                 ServiceProvider.GetUserRegistrationService().Register(user);
-                CallHookMethod(hook => hook.OnUserTryRegister(Clients, user));
+                ServiceProvider.GetHookService().CallHookMethod(hook => hook.OnUserTryRegister(Clients, user));
                 Clients.Caller.notify(Helper.CreateNotificationMessage("Successfuly registered", EMessageType.success));
                 return true;
             }
@@ -140,7 +137,7 @@ namespace Wander.Server.ClassLibrary.Hubs
 
         public override Task OnConnected()
         {
-            CallHookMethod(hook => hook.OnClientConnect(Clients));
+            ServiceProvider.GetHookService().CallHookMethod(hook => hook.OnClientConnect(Clients));
             return base.OnConnected();
         }
 
@@ -151,7 +148,7 @@ namespace Wander.Server.ClassLibrary.Hubs
         /// <returns></returns>
         public override Task OnDisconnected(bool stopCalled)
         {
-            CallHookMethod(hook => hook.OnClientDisconnect(Clients));
+            ServiceProvider.GetHookService().CallHookMethod(hook => hook.OnClientDisconnect(Clients));
             if (ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
             {
                 ServiceProvider.GetAdminService().DisconnectAdmin(Context.ConnectionId);
@@ -180,7 +177,7 @@ namespace Wander.Server.ClassLibrary.Hubs
 
             ServerPlayerModel disconnectingUser = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
             if (disconnectingUser == null) return;
-            CallHookMethod(hook => hook.OnPlayerDisconnect(Clients, disconnectingUser));
+            ServiceProvider.GetHookService().CallHookMethod(hook => hook.OnPlayerDisconnect(Clients, disconnectingUser));
             if (disconnectingUser.MapId != -1) disconnectingUser.Position = disconnectingUser.SavedPosition;
 
             ServiceProvider.GetUserService()
@@ -234,7 +231,14 @@ namespace Wander.Server.ClassLibrary.Hubs
             List<ServerPlayerModel> ids = ServiceProvider.GetPlayerService().GetAllPlayersServer();
             ChatMessageModel messageModel = Helper.CreateChatMessage(caller, candidate.UserId, msg,
             ServiceProvider.GetUserService().GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString());
-            CallHookMethod(hook => hook.OnPlayerSendPublicMessage(Clients, candidate, messageModel));
+            ServiceProvider.GetHookService().CallHookMethod(hook => hook.OnPlayerSendPublicMessage(Clients, candidate, messageModel));
+
+            CommandModel command = Helper.ParseCommand(messageModel);
+            if (command != null)
+            {
+                ServiceProvider.GetHookService().CallHookMethod(hook => hook.OnPlayerSendCommand(Clients, candidate, command));
+                return;
+            }
             ServiceProvider.GetMessageService().LogMessage(messageModel);
             for (int i = 0; i < ids.Count; i++)
             {
@@ -287,7 +291,7 @@ namespace Wander.Server.ClassLibrary.Hubs
             string caller = candidate.Pseudo;
             ChatMessageModel model = Helper.CreateChatMessage(caller, candidate.UserId, message,
                 ServiceProvider.GetUserService().GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString());
-            CallHookMethod(hook => hook.OnPlayerSendPrivateMessage(Clients, candidate, dest, model));
+            ServiceProvider.GetHookService().CallHookMethod(hook => hook.OnPlayerSendPrivateMessage(Clients, candidate, dest, model));
             Clients.Client(dest.SignalRId).PrivateMessageReceived(model);
         }
 
@@ -330,6 +334,8 @@ namespace Wander.Server.ClassLibrary.Hubs
             {
                 ServerPropertyModel m =
                     ServiceProvider.GetPropertiesService().GetProperties().FirstOrDefault(x => x.PropertyId == id);
+                ServerPlayerModel buyer = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+                if (buyer == null) return;
                 if (m != null)
                 {
                     ServerNotificationMessage message = ServiceProvider.GetPropertiesService().BuyProperty(this.Context.ConnectionId, m);
@@ -344,6 +350,7 @@ namespace Wander.Server.ClassLibrary.Hubs
                         Clients.Caller.notify(
                             Helper.CreateNotificationMessage("Success ! Enjoy your new property",
                                 message.MessageType));
+                        ServiceProvider.GetHookService().CallHookMethod(hook => hook.OnPlayerBuyProperty(Clients, buyer, m));
                     }
 
                 }
@@ -372,6 +379,7 @@ namespace Wander.Server.ClassLibrary.Hubs
             if (!success) return;
             string login = candidate.Pseudo;
 
+            ServiceProvider.GetHookService().CallHookMethod(hook => hook.OnPlayerUpdatePosition(Clients, candidate, position, direction));
             // Notify all the connected players that a player moved
             var players = ServiceProvider.GetPlayerService().GetAllPlayersServer();
             object newPos = new { Pseudo = login, Position = position, Direction = direction };
@@ -441,6 +449,9 @@ namespace Wander.Server.ClassLibrary.Hubs
                     .GetUserProperties(Context.ConnectionId)
                     .FirstOrDefault(x => x.PropertyId == id);
 
+            ServerPlayerModel seller = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            if (seller == null) return;
+
             if (model == null)
             {
                 Clients.Caller.notify(Helper.CreateNotificationMessage(
@@ -463,6 +474,8 @@ namespace Wander.Server.ClassLibrary.Hubs
                 Clients.Caller.notify(
                     Helper.CreateNotificationMessage("Error, cannot sell this property. Reason : " + message.Content,
                         EMessageType.error));
+
+                ServiceProvider.GetHookService().CallHookMethod(hook => hook.OnPlayerSellProperty(Clients, seller, model, price));
 
             }
             else

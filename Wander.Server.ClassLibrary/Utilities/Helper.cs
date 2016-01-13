@@ -1,4 +1,6 @@
-﻿using Wander.Server.ClassLibrary.Model;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Wander.Server.ClassLibrary.Model;
 using Wander.Server.ClassLibrary.Model.Players;
 
 namespace Wander.Server.ClassLibrary.Services
@@ -43,6 +45,24 @@ namespace Wander.Server.ClassLibrary.Services
             byte[] data = System.Text.Encoding.ASCII.GetBytes(input);
             data = new System.Security.Cryptography.SHA256Managed().ComputeHash(data);
             return System.Text.Encoding.ASCII.GetString(data);
+        }
+
+        public static CommandModel ParseCommand(ChatMessageModel chatMessage)
+        {
+            if (chatMessage == null) return null;
+            CommandModel command = new CommandModel();
+            string messageContent = chatMessage.Content;
+            if (!messageContent.StartsWith("/")) return null;
+            if (messageContent.Length <= 1) return null;
+            List<string> data = messageContent.Split(' ').ToList<string>();
+            if (data.Count <= 0) return null;
+            string cmd = data[0].Substring(1);
+            data.RemoveAt(0);
+            string[] args = data.ToArray<string>();
+
+            command.Args = args;
+            command.Command = cmd;
+            return command;
         }
 
     }

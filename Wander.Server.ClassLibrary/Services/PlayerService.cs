@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNet.SignalR;
+using Wander.Server.ClassLibrary.Hubs;
 using Wander.Server.ClassLibrary.Model;
 using Wander.Server.ClassLibrary.Model.Players;
 
@@ -95,6 +97,14 @@ namespace Wander.Server.ClassLibrary.Services
             lock (Players)
             {
                 return Players.FirstOrDefault(x => x.UserId == userId);
+            }
+        }
+
+        public ServerPlayerModel GetPlayerByPseudo(string pseudo)
+        {
+            lock (Players)
+            {
+                return Players.FirstOrDefault(x => x.Pseudo == pseudo);
             }
         }
 
@@ -265,6 +275,55 @@ namespace Wander.Server.ClassLibrary.Services
         public bool TryMovePlayerTo(string connectionId, Vector2 to, EPlayerDirection direction)
         {
             return MovePlayerTo(connectionId, to, direction);
+        }
+
+        public bool ForcePlayerNewPosition(ServerPlayerModel player, Vector2 newPos)
+        {
+            if (player == null) return false;
+            return ForcePlayerNewPosition(player.SignalRId, newPos);
+        }
+
+        public bool ForcePlayerNewPosition(int userId, Vector2 newPos)
+        {
+            lock (Players)
+            {
+                ServerPlayerModel p = GetPlayer(userId);
+                if (p == null)
+                    return false;
+                p.Position = newPos;
+                IHubContext context = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
+                context.Clients.Client(p.SignalRId).notifyNewPosition(p.Position);
+                object posModel = new { Pseudo = p.Pseudo, Position = newPos, Direction = p.Direction };
+                for (int i = 0; i < Players.Count; i++)
+                {
+                    if (Players[i].SignalRId == p.SignalRId) continue;
+
+                    context.Clients.Client(Players[i].SignalRId).playerMoved(posModel);
+                }
+                return true;
+            }
+        }
+
+        public bool ForcePlayerNewPosition(string connectionId, Vector2 newPos)
+        {
+            if (connectionId == null) return false;
+            lock (Players)
+            {
+                ServerPlayerModel p = GetPlayer(connectionId);
+                if (p == null)
+                    return false;
+                p.Position = newPos;
+                IHubContext context = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
+                context.Clients.Client(p.SignalRId).notifyNewPosition(p.Position);
+                object posModel = new { Pseudo = p.Pseudo, Position = newPos, Direction = p.Direction };
+                for (int i = 0; i < Players.Count; i++)
+                {
+                    if (Players[i].SignalRId == p.SignalRId) continue;
+
+                    context.Clients.Client(Players[i].SignalRId).playerMoved(posModel);
+                }
+                return true;
+            }
         }
     }
 }
