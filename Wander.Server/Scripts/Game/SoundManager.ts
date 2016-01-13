@@ -18,9 +18,13 @@
         this.game.load.audio("dayAmbient", ["Content/Game/Sounds/ambient-day.mp3", "Content/Game/Sounds/ambient-day.ogg"]);
         this.game.load.audio("nightAmbient", ["Content/Game/Sounds/ambient-night.mp3", "Content/Game/Sounds/ambient-night.ogg"]);
         this.game.load.audio("rainAmbient", ["Content/Game/Sounds/ambient-rain.mp3", "Content/Game/Sounds/ambient-rain.ogg"]);
-        this.game.load.audio("footstep", "Content/Game/Sounds/footstep.ogg");
         this.game.load.audio("action", "Content/Game/Sounds/action.ogg");
         this.game.load.audio("chat", "Content/Game/Sounds/chat.ogg");
+        if (currentState.houseId == -1) {
+            this.game.load.audio("footstep", "Content/Game/Sounds/footstep.ogg");
+        } else {
+            this.game.load.audio("footstep", "Content/Game/Sounds/footstepHouse.wav");
+        }
     }
 
     create() {
@@ -46,6 +50,7 @@
 
     playFootStep(player: Player) {
         if (currentState.map.currentPlayer == player) {
+           
             this.footstepSound.volume = 1;
         } else {
             var dist = this.game.physics.arcade.distanceBetween(player.texture, currentState.map.currentPlayer.texture);
