@@ -19,7 +19,9 @@ namespace Wander.Server.ClassLibrary.Utilities
 
         public static void Repeat(TimerEvent callback, int intervalSecond)
         {
-            RepeatAfter(callback, 0, intervalSecond);
+            new System.Threading.Timer((param) => callback(), null,
+                              TimeSpan.FromSeconds(0),
+                              TimeSpan.FromSeconds(intervalSecond));
         }
 
         public static void RepeatAfter(TimerEvent callback,int delaySecond, int intervalSecond)
