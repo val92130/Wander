@@ -105,10 +105,10 @@ public class GameScreen implements Screen {
         Skin chatSkin = AssetManager.getSkin();
         chatSkin.getFont("default-font").getData().setScale(0.5f,0.5f);
         chatArea = new TextArea("", chatSkin);
-        chatArea.setSize(width/7, height/4);
+        chatArea.setSize(width / 7, height / 4);
         chatArea.setPosition(0, 0);
         chatArea.setDisabled(true);
-        this.stage.addActor(chatArea);
+        //this.stage.addActor(chatArea);
 
         TextButton menuButton=new TextButton("...",AssetManager.getTextButtonStyle());
         menuButton.addListener(new ClickListener() {
@@ -116,8 +116,8 @@ public class GameScreen implements Screen {
                 game.goToMainMenu();
             }
         });
-        menuButton.setSize(Gdx.graphics.getHeight() / 10, Gdx.graphics.getHeight()/10);
-        menuButton.setPosition(Gdx.graphics.getWidth() - menuButton.getWidth() - 50,50);
+        menuButton.setSize(Gdx.graphics.getHeight() / 10, Gdx.graphics.getHeight() / 10);
+        menuButton.setPosition(Gdx.graphics.getWidth() - menuButton.getWidth() - 50, 50);
         this.stage.addActor(menuButton);
 
         this.modalManager = new ModalManager(this.getMainGame(), this.stage);
@@ -134,7 +134,7 @@ public class GameScreen implements Screen {
                 Gdx.app.postRunnable(new Runnable() {
                     @Override
                     public void run() {
-                        map.addPlayer(p);
+                        //map.addPlayer(p);
                     }
                 });
 
@@ -142,6 +142,34 @@ public class GameScreen implements Screen {
         }, PlayerModel.class);
 
         this.game.getHubService().getHub().on("playerDisconnected", new SubscriptionHandler1<PlayerModel>() {
+            @Override
+            public void run(PlayerModel o) {
+                final PlayerModel p = o;
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        map.removePlayer(p);
+                    }
+                });
+            }
+        }, PlayerModel.class);
+
+        this.game.getHubService().getHub().on("playerEnterMap", new SubscriptionHandler1<PlayerModel>() {
+            @Override
+            public void run(PlayerModel o) {
+                System.out.println("player connected " + o);
+                final PlayerModel p = o;
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        map.addPlayer(p);
+                    }
+                });
+
+            }
+        }, PlayerModel.class);
+
+        this.game.getHubService().getHub().on("playerExitMap", new SubscriptionHandler1<PlayerModel>() {
             @Override
             public void run(PlayerModel o) {
                 final PlayerModel p = o;

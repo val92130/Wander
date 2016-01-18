@@ -33,7 +33,7 @@ namespace Wander.Server.ClassLibrary.Plugins
                     ServiceProvider.GetUserService().DeliverPoints(connectedPlayers[i]);
                     _time = DateTime.Now;
                 }
-            }, 60 * _intervalMinutes, 60* _intervalMinutes);
+            }, 60 * _intervalMinutes, 60 * _intervalMinutes);
 
             // Alert the player of the upcoming pay every 2 minutes
             Utilities.Timer.RepeatAfter(() =>
