@@ -7,6 +7,7 @@ using Wander.Server.ClassLibrary.Hubs;
 using Wander.Server.ClassLibrary.Model;
 using Wander.Server.ClassLibrary.Model.Players;
 using Wander.Server.ClassLibrary.Services;
+using System.Threading;
 
 namespace Wander.Server.ClassLibrary
 {
@@ -15,8 +16,8 @@ namespace Wander.Server.ClassLibrary
         IHubContext context;
         int _intervalMinutes = 15;
         bool _isDay;
-        Timer _updateTimer = new Timer();
-        Timer _randomRainTimer = new Timer();
+        System.Timers.Timer _updateTimer = new System.Timers.Timer();
+        System.Timers.Timer _randomRainTimer = new System.Timers.Timer();
         public static int DefaultUnemployedEarningPoints = 2;
         bool _isRaining = false;
         public GameManager()
@@ -28,6 +29,21 @@ namespace Wander.Server.ClassLibrary
 
             _randomRainTimer.Interval = 2000;
             _randomRainTimer.Elapsed += RainEvent;
+
+            Thread tickThread = new Thread(() =>
+            {
+                System.Timers.Timer t = new System.Timers.Timer();
+                t.Interval = 200;
+                t.Elapsed += (sender, e) =>
+                {
+                    ServiceProvider.GetHookService().GetHooks().ForEach(x => x.OnTick());
+                };
+                t.Start();
+
+
+            });
+
+            tickThread.Start();
         }
 
 

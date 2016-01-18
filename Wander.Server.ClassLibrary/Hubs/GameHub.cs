@@ -11,10 +11,11 @@ using Wander.Server.ClassLibrary.Model.Forms;
 using Wander.Server.ClassLibrary.Model.Job;
 using Wander.Server.ClassLibrary.Model.Players;
 using Wander.Server.ClassLibrary.Services;
+using Wander.Server.ClassLibrary.Services.Interfaces;
 
 namespace Wander.Server.ClassLibrary.Hubs
 {
-    public class GameHub : Hub
+    public class GameHub : Hub<IClient>
     {
 
         /// <summary>
@@ -32,6 +33,7 @@ namespace Wander.Server.ClassLibrary.Hubs
                         "Cannot login, this account has been banned", EMessageType.error));
                     return false;
                 }
+
                 List<ChatMessageModel> lastMessages = ServiceProvider.GetMessageService().GetMessagesLimit(5);
                 Clients.Caller.LoadMessages(lastMessages);
 

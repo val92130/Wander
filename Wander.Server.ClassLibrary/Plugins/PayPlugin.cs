@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,6 +50,11 @@ namespace Wander.Server.ClassLibrary.Plugins
                 }
             }, 60 * _alertIntervalMinutes, 60 * _alertIntervalMinutes);
             base.Init();
+        }
+
+        public override void OnTick()
+        {
+            base.OnTick();
         }
     }
 }
