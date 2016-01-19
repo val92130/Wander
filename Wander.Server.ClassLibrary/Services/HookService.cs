@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -11,14 +12,15 @@ namespace Wander.Server.ClassLibrary.Services
 {
     public sealed class HookService : IHookService
     {
-        private IReadOnlyCollection<GameHook> hooks;
+        private ConcurrentBag<GameHook> hooks;
         private static HookService _instance = new HookService();
         private HookService()
         {
-            this.hooks = typeof(GameHook)
+            var h  = typeof(GameHook)
                 .Assembly.GetTypes()
                 .Where(t => t.IsSubclassOf(typeof(GameHook)) && !t.IsAbstract)
                 .Select(t => (GameHook)Activator.CreateInstance(t)).ToList();
+            this.hooks = new ConcurrentBag<GameHook>(h);
 
             foreach (var v in hooks)
             {

@@ -9,13 +9,14 @@ using Wander.Server.ClassLibrary.Hooks;
 using Wander.Server.ClassLibrary.Model;
 using Wander.Server.ClassLibrary.Model.Players;
 using Wander.Server.ClassLibrary.Services;
+using Wander.Server.ClassLibrary.Services.Interfaces;
 
 namespace Wander.Server.ClassLibrary.Plugins
 {
     [PluginInfo(name:"Teleportation", description:"Teleports a player to another player", author:"Wander", version:"1.0")]
     public class TeleportationPlugin : GameHook
     {
-        public override void OnPlayerSendCommand(IHubCallerConnectionContext<dynamic> clients, ServerPlayerModel player, CommandModel command)
+        public override void OnPlayerSendCommand(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player, CommandModel command)
         {
             if (command == null || player == null || clients == null) return;
             if (command.Command == "tp")
