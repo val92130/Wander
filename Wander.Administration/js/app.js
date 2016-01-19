@@ -84,6 +84,7 @@ function ($scope) {
 
             for (var i = 0; i < users.length; i++) {
                 var p = users[i];
+                var property = (typeof(p.Properties) === "undefined" ? "None" : p.Properties);
                 userTable.row.add([
                 p.Pseudo,
                 (p.Sex == 1 ? "male" : "female"),
@@ -93,7 +94,7 @@ function ($scope) {
                 p.Account,
                 p.Points,
                 p.Job.JobDescription,
-                p.Properties,
+                property,
                  (p.IsBanned ? '<td><button class="btn btn-info" onclick="setBan(' + p.UserId + ',false)">Unban</button></td>' :
                      '<td><button class="btn btn-danger" onclick="setBan(' + p.UserId + ',true)">Ban</button></td>')
 
@@ -113,6 +114,7 @@ function ($scope) {
             table.clear();
 
             for (var i = 0; i < players.length; i++) {
+                var property = (typeof (p.Properties) === "undefined" ? "None" : p.Properties);
                 var p = players[i];
                 table.row.add([
                 p.Pseudo,
@@ -125,7 +127,7 @@ function ($scope) {
                 p.Points,
                 p.HouseId,
                 p.Job.JobDescription,
-                p.Properties,
+                property,
                  (p.IsBanned ? '<td><button class="btn btn-info" onclick="setBan(' + p.UserId + ',false)">Unban</button></td>' :
                      '<td><button class="btn btn-danger" onclick="setBan(' + p.UserId + ',true)">Ban</button></td>')
 
