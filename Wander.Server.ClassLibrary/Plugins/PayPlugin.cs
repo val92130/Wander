@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace Wander.Server.ClassLibrary.Plugins
                     ServiceProvider.GetUserService().DeliverPoints(connectedPlayers[i]);
                     _time = DateTime.Now;
                 }
-            }, 60 * _intervalMinutes, 60* _intervalMinutes);
+            }, 60 * _intervalMinutes, 60 * _intervalMinutes);
 
             // Alert the player of the upcoming pay every 2 minutes
             Utilities.Timer.RepeatAfter(() =>
@@ -49,6 +50,11 @@ namespace Wander.Server.ClassLibrary.Plugins
                 }
             }, 60 * _alertIntervalMinutes, 60 * _alertIntervalMinutes);
             base.Init();
+        }
+
+        public override void OnTick()
+        {
+            base.OnTick();
         }
     }
 }
