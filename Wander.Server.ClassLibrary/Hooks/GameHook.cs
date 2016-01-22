@@ -30,13 +30,7 @@ namespace Wander.Server.ClassLibrary
             
         }
 
-        public IHubContext Context
-        {
-            get
-            {
-                return GlobalHost.ConnectionManager.GetHubContext<GameHub>();
-            }
-        }
+        public IHubContext Context => GlobalHost.ConnectionManager.GetHubContext<GameHub>();
 
         #region User management
         public virtual void OnUserTyLogin(IHubCallerConnectionContext<IClient> clients, UserModel user) => Debug.Print("Hook on player try login works");

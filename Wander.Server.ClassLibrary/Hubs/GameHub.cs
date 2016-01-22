@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.SignalR;
+using Wander.Server.ClassLibrary.Hooks;
 using Wander.Server.ClassLibrary.Model;
 using Wander.Server.ClassLibrary.Model.Forms;
 using Wander.Server.ClassLibrary.Model.Job;
@@ -952,6 +953,17 @@ namespace Wander.Server.ClassLibrary.Hubs
                 Clients.Client(admins[i].ConnectionId).MessageReceived(messageModel);
             }
 
+        }
+
+        public List<PluginInfo> GetLoadedPlugins()
+        {
+            if (!ServiceProvider.GetAdminService().IsAdminConnected(Context.ConnectionId))
+            {
+                Clients.Caller.notify(Helper.CreateNotificationMessage("You have to be an admin", EMessageType.error));
+                return null;
+            }
+
+            return ServiceProvider.GetHookService().PluginsInfos();
         }
 
         public void ForceStartRainAdmin(int timeInSeconds)

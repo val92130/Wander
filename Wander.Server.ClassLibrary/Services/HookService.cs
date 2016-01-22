@@ -14,6 +14,7 @@ namespace Wander.Server.ClassLibrary.Services
     {
         private ConcurrentBag<GameHook> hooks;
         private static HookService _instance = new HookService();
+        List<PluginInfo> pluginsInfos = new List<PluginInfo>();
         private HookService()
         {
             var h  = typeof(GameHook)
@@ -32,11 +33,14 @@ namespace Wander.Server.ClassLibrary.Services
                     if (info != null)
                     {
                         PluginInfo a = info;
+                        pluginsInfos.Add(a);
                         pluginName = a.Name;
                     }
                     else
                     {
                         pluginName = v.ToString();
+                        PluginInfo pluginInfo = new PluginInfo(pluginName, "Unnamed", "Unnamed", "No version found");
+                        pluginsInfos.Add(pluginInfo);
                     }
 
                     
@@ -49,6 +53,10 @@ namespace Wander.Server.ClassLibrary.Services
         public static HookService Instance => _instance;
 
         public IEnumerable<GameHook> GetHooks() => hooks;
+        public List<PluginInfo> PluginsInfos()
+        {
+            return pluginsInfos;
+        }
 
         public void CallHookMethod(Action<GameHook> action) => hooks.ForEach(action);
 

@@ -4,8 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Wander.Server.ClassLibrary.Hooks;
+using Wander.Server.ClassLibrary.Hubs;
 using Wander.Server.ClassLibrary.Model;
 using Wander.Server.ClassLibrary.Model.Players;
 using Wander.Server.ClassLibrary.Services;
@@ -23,6 +25,7 @@ namespace Wander.Server.ClassLibrary.Plugins
             {
                 if (command.Args.Length != 0)
                 {
+                    
                     string toPlayer = command.Args[0];
                     ServerPlayerModel candidate = ServiceProvider.GetPlayerService().GetPlayerByPseudo(toPlayer);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net;
 using System.Timers;
 using Microsoft.AspNet.SignalR;
 using Wander.Server.ClassLibrary.Hubs;
@@ -8,6 +9,8 @@ using Wander.Server.ClassLibrary.Model;
 using Wander.Server.ClassLibrary.Model.Players;
 using Wander.Server.ClassLibrary.Services;
 using System.Threading;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Wander.Server.ClassLibrary
 {
@@ -22,6 +25,7 @@ namespace Wander.Server.ClassLibrary
         bool _isRaining = false;
         public GameManager()
         {
+            LoadMap();
             context = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
 
             _updateTimer.Interval = 2000;
@@ -44,6 +48,15 @@ namespace Wander.Server.ClassLibrary
             });
 
             tickThread.Start();
+        }
+
+        public void LoadMap()
+        {
+            string contents;
+            using (var wc = new System.Net.WebClient())
+                contents = wc.DownloadString("http://wander.nightlydev.fr/Content/Game/Maps/map2.json");
+            JObject map = JsonConvert.DeserializeObject<JObject>(contents);
+
         }
 
 
