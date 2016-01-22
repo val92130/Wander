@@ -11,6 +11,7 @@ var Map = (function () {
         this.tilemap = this.game.add.tilemap(this.mapName);
         this.tilemap.addTilesetImage(this.tilesetName, this.tilesetImage);
         this.tilemap.addTilesetImage("number_spritesheet", "Number_Tiles");
+        this.tilemap.addTilesetImage("tileHouse", "tileHouse");
         this.backgroundLayer = this.tilemap.createLayer("backgroundLayer");
         this.lightsLayer = this.tilemap.createLayer("lightsLayer");
         this.lightsLayer.visible = false;

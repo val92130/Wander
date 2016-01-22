@@ -72,6 +72,7 @@ class GameState extends Phaser.State {
         this.game.load.tilemap("Map", "Content/Game/Maps/map2.json", null, Phaser.Tilemap.TILED_JSON);
         this.game.load.tilemap("MapHouse", "Content/Game/Maps/house.json", null, Phaser.Tilemap.TILED_JSON);
         this.game.load.image("Tiles", "Content/Game/Images/tileset3.png");
+        this.game.load.image("tileHouse", "Content/Game/Images/tileHouse.png");
         this.game.load.image("Number_Tiles", "Content/Game/Images/number_spritesheet.png");
         this.game.load.image("Overlay", "Content/Game/Images/filter.png");
         this.game.load.image('blurred-circle', 'Content/Game/Images/blurred-circle.png');
