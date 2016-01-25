@@ -35,8 +35,6 @@ namespace Wander.Server.ClassLibrary
             _randomRainTimer.Interval = 2000;
             _randomRainTimer.Elapsed += RainEvent;
 
-            var r = ServiceProvider.GetMapService();
-
             Thread tickThread = new Thread(() =>
             {
                 System.Timers.Timer t = new System.Timers.Timer();

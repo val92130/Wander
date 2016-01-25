@@ -117,6 +117,7 @@
     <Compile Include="Services\SqlConnectionService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Utilities\Timer.cs" />
+    <Compile Include="Utilities\Variables.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
