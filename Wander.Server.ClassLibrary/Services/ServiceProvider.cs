@@ -14,6 +14,7 @@ namespace Wander.Server.ClassLibrary.Services
         private static IQuestionService QuestionService;
         private static GameManager GameManager;
         private static IAdminService AdminService;
+        private static IMapService MapService;
 
         public static IUserRegistrationService GetUserRegistrationService()
         {
@@ -87,6 +88,14 @@ namespace Wander.Server.ClassLibrary.Services
                 GameManager = new GameManager();
 
             return GameManager;
+        }
+
+        public static IMapService GetMapService()
+        {
+            if(MapService == null)
+                MapService = new MapService();
+
+            return MapService;
         }
 
 

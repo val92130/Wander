@@ -95,6 +95,8 @@
     <Compile Include="Services\AdminService.cs" />
     <Compile Include="Services\DbUserRegistrationService.cs" />
     <Compile Include="Services\Interfaces\IClient.cs" />
+    <Compile Include="Services\Interfaces\IMapService.cs" />
+    <Compile Include="Services\MapService.cs" />
     <Compile Include="Utilities\Helper.cs" />
     <Compile Include="Services\HookService.cs" />
     <Compile Include="Services\Interfaces\IAdminService.cs" />
