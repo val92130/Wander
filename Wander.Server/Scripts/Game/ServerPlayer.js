@@ -5,8 +5,8 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var ServerPlayer = (function (_super) {
     __extends(ServerPlayer, _super);
-    function ServerPlayer(state, game, pseudo, position) {
-        _super.call(this, state, game, pseudo, position);
+    function ServerPlayer(state, game, pseudo, position, sex) {
+        _super.call(this, state, game, pseudo, position, sex);
         this.newPosition = new Phaser.Point(this.position.x, this.position.y);
     }
     ServerPlayer.prototype.update = function () {

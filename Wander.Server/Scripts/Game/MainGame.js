@@ -68,6 +68,7 @@ var GameState = (function (_super) {
         this.soundManager.preload();
         this.weatherManager = new WeatherManager(this.game, this);
         this.dayNightCycle = new DayNightCycle(this.game);
+        this.game.load.spritesheet('player-girl-anim', 'Content/Game/Images/girl_playerSheet.png', 64, 64);
         this.game.load.spritesheet('player-anim', 'Content/Game/Images/player-spritesheet.png', 64, 64);
         this.game.load.script('gray', 'https://cdn.rawgit.com/photonstorm/phaser/master/filters/Gray.js');
     };
@@ -86,7 +87,7 @@ var GameState = (function (_super) {
             if (players == null)
                 return;
             for (var i = 0; i < players.length; i++) {
-                currentState.map.addPlayer(players[i].Pseudo, new Phaser.Point(players[i].Position.X, players[i].Position.Y));
+                currentState.map.addPlayer(players[i].Pseudo, new Phaser.Point(players[i].Position.X, players[i].Position.Y), players[i].Sex);
             }
         });
         hub.invoke("Update");
@@ -219,7 +220,7 @@ hub.on("MessageReceived", function (msg) {
 hub.on("playerEnterMap", function (player) {
     if (typeof (currentState) == "undefined" || typeof (currentState.map) === "undefined")
         return;
-    currentState.map.addPlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y));
+    currentState.map.addPlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y), player.Sex);
     $.notify("Player entered map");
 });
 hub.on("playerExitMap", function (player) {

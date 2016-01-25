@@ -4,6 +4,7 @@ console.log("loaded");
 var $: any;
 var isConnected = false;
 var userPseudo: any;
+var userSex: any;
 var currentUser: any;
 
 $(document).ready(function () {
@@ -164,11 +165,12 @@ $(document).ready(function () {
         $.notify(message.Content, message.MessageType);
     });
 
-    hub.on("onConnected", function(pseudo) {
+    hub.on("onConnected", function(user) {
         OnLogin();
         isConnected = true;
-        $("#labelPseudo").text(pseudo);
-        userPseudo = pseudo;
+        $("#labelPseudo").text(user.Pseudo);
+        userPseudo = user.Pseudo;
+        userSex = user.Sex;
     });
 
 

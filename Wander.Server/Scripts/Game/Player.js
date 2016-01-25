@@ -1,6 +1,7 @@
 var Player = (function () {
-    function Player(state, game, pseudo, position) {
+    function Player(state, game, pseudo, position, sex) {
         this.game = game;
+        this.sex = sex;
         this.state = state;
         this.direction = EDirection.Idle;
         this.speed = 5;
@@ -10,7 +11,7 @@ var Player = (function () {
         this.texture.height = 25;
         this.texture.visible = true;
         this.texture.autoCull = true;
-        this.animTexture = this.game.add.sprite(position.x, position.y, 'player-anim');
+        this.animTexture = this.game.add.sprite(position.x, position.y, (sex === 1 ? 'player-anim' : 'player-girl-anim'));
         this.animTexture.animations.add('walk-up', Phaser.ArrayUtils.numberArray(105, 112));
         this.animTexture.animations.add('walk-left', Phaser.ArrayUtils.numberArray(118, 125));
         this.animTexture.animations.add('walk-down', Phaser.ArrayUtils.numberArray(131, 137));

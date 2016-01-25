@@ -57,8 +57,8 @@ namespace Wander.Server.ClassLibrary.Hubs
                 }
 
                 Debug.Print("Client connected : " + idSignalR);
-
-                Clients.Caller.onConnected(user.Login);
+                int sex = ServiceProvider.GetUserService().GetUserSex(playerId);
+                Clients.Caller.onConnected(new {Pseudo = user.Login, Sex= sex});
                 ServerPlayerModel newPlayer = ServiceProvider.GetPlayerService().AddPlayer(idSignalR, playerId);
 
                 ServiceProvider.GetHookService().CallHookMethod(hook => hook.OnPlayerConnect(Clients, newPlayer));
@@ -420,7 +420,7 @@ namespace Wander.Server.ClassLibrary.Hubs
                 if (players[i].SignalRId == Context.ConnectionId) continue;
                 if (players[i].MapId == currentPlayer.MapId)
                 {
-                    playerList.Add(new { Pseudo = players[i].Pseudo, Position = players[i].Position, Direction = players[i].Direction });
+                    playerList.Add(new { Pseudo = players[i].Pseudo, Position = players[i].Position, Direction = players[i].Direction, players[i].Sex });
                 }
             }
             return playerList;

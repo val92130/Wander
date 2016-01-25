@@ -5,11 +5,11 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var ClientPlayer = (function (_super) {
     __extends(ClientPlayer, _super);
-    function ClientPlayer(state, game, pseudo, position) {
+    function ClientPlayer(state, game, pseudo, position, sex) {
         this.drugTime = 20000;
         this.updateTimeMs = 55;
         this.isDrugged = false;
-        _super.call(this, state, game, pseudo, position);
+        _super.call(this, state, game, pseudo, position, sex);
         this.drugStartTime = new Date().getTime();
         this.drugEndTime = new Date().getTime();
         this.drugFilter = this.game.add.filter('Gray');

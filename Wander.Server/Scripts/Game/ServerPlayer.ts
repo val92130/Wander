@@ -1,8 +1,8 @@
 ﻿class ServerPlayer extends Player {
     newPosition: Phaser.Point;
 
-    constructor(state: GameState, game: Phaser.Game, pseudo: string, position: Phaser.Point) {
-        super(state, game, pseudo, position);
+    constructor(state: GameState, game: Phaser.Game, pseudo: string, position: Phaser.Point, sex: number) {
+        super(state, game, pseudo, position, sex);
         this.newPosition = new Phaser.Point(this.position.x, this.position.y);
     }
 

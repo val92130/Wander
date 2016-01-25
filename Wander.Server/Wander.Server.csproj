@@ -99,6 +99,7 @@
     <Content Include="Content\background.jpg" />
     <Content Include="Content\Game\Images\blurred-circle.png" />
     <Content Include="Content\Game\Images\filter.png" />
+    <Content Include="Content\Game\Images\girl_playerSheet.png" />
     <Content Include="Content\Game\Images\player-spritesheet.png" />
     <Content Include="Content\Game\Images\player.png" />
     <Content Include="Content\Game\Images\rain.png" />

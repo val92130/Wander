@@ -12,6 +12,7 @@
         public Vector2 SavedPosition { get; set; }
         public EPlayerDirection Direction { get; set; }
         public int MapId { get; set; }
+        public int Sex { get; set; }
 
         public ServerPlayerModel()
         {
