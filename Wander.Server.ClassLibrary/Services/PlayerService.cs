@@ -32,7 +32,8 @@ namespace Wander.Server.ClassLibrary.Services
                         UserId = userId,
                         Position = lastPos,
                         Pseudo = ServiceProvider.GetUserService().GetUserLogin(userId),
-                        Direction = EPlayerDirection.Idle
+                        Direction = EPlayerDirection.Idle,
+                        Sex = ServiceProvider.GetUserService().GetUserSex(userId)
                     };
                     Players.Add(player);
                     return player;

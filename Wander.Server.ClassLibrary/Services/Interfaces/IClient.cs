@@ -12,7 +12,7 @@ namespace Wander.Server.ClassLibrary.Services.Interfaces
         void notify(ClientNotificationMessageModel message);
         void LoadMessages(List<ChatMessageModel> messages);
         void forceDisconnect();
-        void onConnected(string userPseudo);
+        void onConnected(object user);
         void playerConnected(object user);
         void playerDisconnected(object user);
         void MessageReceived(ChatMessageModel message);

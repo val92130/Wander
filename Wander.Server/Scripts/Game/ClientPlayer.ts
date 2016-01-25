@@ -7,12 +7,12 @@
     drugFilter: Phaser.Filter;
     drugTime:number;
 
-    constructor(state: GameState, game: Phaser.Game, pseudo: string, position: Phaser.Point) {
+    constructor(state: GameState, game: Phaser.Game, pseudo: string, position: Phaser.Point, sex: number) {
         this.drugTime = 20000;
         this.updateTimeMs = 55;
         this.isDrugged = false;
 
-        super(state, game, pseudo, position);
+        super(state, game, pseudo, position, sex);
 
         this.drugStartTime = new Date().getTime();
         this.drugEndTime = new Date().getTime();

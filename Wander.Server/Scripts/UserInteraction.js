@@ -2,6 +2,7 @@ console.log("loaded");
 var $;
 var isConnected = false;
 var userPseudo;
+var userSex;
 var currentUser;
 $(document).ready(function () {
     $("#logoutBtn").hide();
@@ -130,11 +131,12 @@ $(document).ready(function () {
     hub.on("notify", function (message) {
         $.notify(message.Content, message.MessageType);
     });
-    hub.on("onConnected", function (pseudo) {
+    hub.on("onConnected", function (user) {
         OnLogin();
         isConnected = true;
-        $("#labelPseudo").text(pseudo);
-        userPseudo = pseudo;
+        $("#labelPseudo").text(user.Pseudo);
+        userPseudo = user.Pseudo;
+        userSex = user.Sex;
     });
     hub.on("forceDisconnect", function () {
         OnLogout();

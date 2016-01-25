@@ -10,7 +10,7 @@
     game: Phaser.Game;
     startTime: any;
     endTime: any;
-
+    sex: number;
     textMessageContent: string;
     textMessage: any;
 
@@ -24,8 +24,9 @@
 
     animTexture: Phaser.Sprite;
 
-    constructor(state:GameState, game: Phaser.Game, pseudo: string, position: Phaser.Point) {
+    constructor(state:GameState, game: Phaser.Game, pseudo: string, position: Phaser.Point, sex: number) {
         this.game = game;
+        this.sex = sex;
         this.state = state;
         this.direction = EDirection.Idle;
         this.speed = 5;
@@ -37,7 +38,7 @@
         this.texture.visible = true;
         this.texture.autoCull = true;
 
-        this.animTexture = this.game.add.sprite(position.x, position.y, 'player-anim');
+        this.animTexture = this.game.add.sprite(position.x, position.y, (sex === 1 ? 'player-anim' :'player-girl-anim'));
 
         this.animTexture.animations.add('walk-up', Phaser.ArrayUtils.numberArray(105, 112));
         this.animTexture.animations.add('walk-left', Phaser.ArrayUtils.numberArray(118, 125));

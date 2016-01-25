@@ -52,7 +52,7 @@
 
 
         this.players = new Array<ServerPlayer>();
-        this.currentPlayer = new ClientPlayer(this.state, this.game, userPseudo, new Phaser.Point(10, 10));
+        this.currentPlayer = new ClientPlayer(this.state, this.game, userPseudo, new Phaser.Point(10, 10),userSex);
 
         var pos = hub.invoke("GetCurrentPosition").done(function (pos) {
             currentState.map.currentPlayer.texture.x = pos.X;
@@ -80,7 +80,7 @@
         }
     }
 
-    addPlayer(pseudo: string, position: Phaser.Point) {
+    addPlayer(pseudo: string, position: Phaser.Point, sex: number) {
         if (this.players == undefined) return;
         var flag: Boolean = false;
         for (var i = 0; i < this.players.length; i++) {
@@ -91,7 +91,7 @@
         }
 
         if (!flag) {
-            this.players.push(new ServerPlayer(this.state,this.game, pseudo, position));
+            this.players.push(new ServerPlayer(this.state,this.game, pseudo, position, sex));
         }
         this.game.world.bringToTop(currentState.dayNightCycle.overlay);
         this.game.world.bringToTop(currentState.dayNightCycle.rainOverlay);
