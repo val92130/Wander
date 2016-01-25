@@ -1,29 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Net;
+using System.Threading;
 using System.Timers;
 using Microsoft.AspNet.SignalR;
 using Wander.Server.ClassLibrary.Hubs;
-using Wander.Server.ClassLibrary.Model;
-using Wander.Server.ClassLibrary.Model.Players;
 using Wander.Server.ClassLibrary.Services;
-using System.Threading;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Collections;
+using Timer = System.Timers.Timer;
 
 namespace Wander.Server.ClassLibrary
 {
     public class GameManager
     {
-        IHubContext context;
-        bool _isDay;
-        System.Timers.Timer _updateTimer = new System.Timers.Timer();
-        System.Timers.Timer _randomRainTimer = new System.Timers.Timer();
         public static int DefaultUnemployedEarningPoints = 2;
-        bool _isRaining = false;
-        
+        private readonly Timer _randomRainTimer = new Timer();
+        private readonly Timer _updateTimer = new Timer();
+        private readonly IHubContext context;
+
 
         public GameManager()
         {
@@ -35,21 +27,20 @@ namespace Wander.Server.ClassLibrary
             _randomRainTimer.Interval = 2000;
             _randomRainTimer.Elapsed += RainEvent;
 
-            Thread tickThread = new Thread(() =>
+            var tickThread = new Thread(() =>
             {
-                System.Timers.Timer t = new System.Timers.Timer();
+                var t = new Timer();
                 t.Interval = 200;
-                t.Elapsed += (sender, e) =>
-                {
-                    ServiceProvider.GetHookService().GetHooks().ForEach(x => x.OnTick());
-                };
+                t.Elapsed += (sender, e) => { ServiceProvider.GetHookService().GetHooks().ForEach(x => x.OnTick()); };
                 t.Start();
-
-
             });
 
             tickThread.Start();
         }
+
+        public bool IsDay { get; private set; }
+
+        public bool IsRaining { get; private set; }
 
         private void RainEvent(object sender, ElapsedEventArgs e)
         {
@@ -58,27 +49,27 @@ namespace Wander.Server.ClassLibrary
 
         public void ToggleRain()
         {
-            List<ServerPlayerModel> connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
-            Random r = new Random();
+            var connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            var r = new Random();
 
-            int nextRain = 0;
-            if (_isRaining)
+            var nextRain = 0;
+            if (IsRaining)
             {
-                nextRain = r.Next(2 * 60 * 1000, 10 * 60 * 1000);
+                nextRain = r.Next(2*60*1000, 10*60*1000);
             }
             else
             {
-                nextRain = r.Next(30 * 1000, 2 * 60 * 1000);
+                nextRain = r.Next(30*1000, 2*60*1000);
             }
-            DateTime next = DateTime.Now.AddMilliseconds(nextRain);
-            _isRaining = !_isRaining;
-            Debug.Print((_isRaining
+            var next = DateTime.Now.AddMilliseconds(nextRain);
+            IsRaining = !IsRaining;
+            Debug.Print((IsRaining
                 ? "Its raining ! Stopping rain at :  " + next
                 : "Its not raining, next rain at : " + next));
 
-            for (int i = 0; i < connectedPlayers.Count; i++)
+            for (var i = 0; i < connectedPlayers.Count; i++)
             {
-                context.Clients.Client(connectedPlayers[i].SignalRId).setRain(_isRaining);
+                context.Clients.Client(connectedPlayers[i].SignalRId).setRain(IsRaining);
             }
 
             _randomRainTimer.Interval = nextRain;
@@ -88,12 +79,12 @@ namespace Wander.Server.ClassLibrary
         {
             if (seconds <= 0) return;
             Debug.Print("Forcing rain for : " + seconds + " seconds");
-            List<ServerPlayerModel> connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
-            int milli = seconds*1000;
-            _isRaining = true;
-            for (int i = 0; i < connectedPlayers.Count; i++)
+            var connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+            var milli = seconds*1000;
+            IsRaining = true;
+            for (var i = 0; i < connectedPlayers.Count; i++)
             {
-                context.Clients.Client(connectedPlayers[i].SignalRId).setRain(_isRaining);
+                context.Clients.Client(connectedPlayers[i].SignalRId).setRain(IsRaining);
             }
             _randomRainTimer.Stop();
             _randomRainTimer.Interval = milli;
@@ -103,27 +94,26 @@ namespace Wander.Server.ClassLibrary
         public void ForceStopRain()
         {
             Debug.Print("Forcing rain to stop");
-            if (_isRaining) ToggleRain();
+            if (IsRaining) ToggleRain();
         }
 
         public void ForceNight(int seconds)
-        {          
+        {
             if (seconds <= 0) return;
             Debug.Print("Forcing night for : " + seconds + " seconds");
-            _isDay = false;
+            IsDay = false;
             _updateTimer.Stop();
             _updateTimer.Interval = seconds*1000;
             _updateTimer.Start();
-
         }
 
         public void ForceDay(int seconds)
         {
             if (seconds <= 0) return;
             Debug.Print("Forcing day for : " + seconds + " seconds");
-            _isDay = true;
+            IsDay = true;
             _updateTimer.Stop();
-            _updateTimer.Interval = seconds * 1000;
+            _updateTimer.Interval = seconds*1000;
             _updateTimer.Start();
         }
 
@@ -137,25 +127,8 @@ namespace Wander.Server.ClassLibrary
 
         private void Update(object sender, ElapsedEventArgs e)
         {
-            DateTime now = DateTime.Now;
-            _isDay = (now.Hour < 18 && now.Hour >= 8);
+            var now = DateTime.Now;
+            IsDay = (now.Hour < 18 && now.Hour >= 8);
         }
-
-        public bool IsDay
-        {
-            get
-            {
-                return _isDay;
-            }
-        }
-
-        public bool IsRaining
-        {
-            get { return _isRaining; }
-        }
-
-
-
-
     }
 }

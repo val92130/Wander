@@ -17,9 +17,11 @@
        <script src="Scripts/app.js"></script>
       <link href='https://fonts.googleapis.com/css?family=Quicksand:700,400' rel='stylesheet' type='text/css'>
       <meta charset="utf-8" />
-   </head>
+   <meta name="description" content="Wander Multiplayer Game" />
+       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
    <body>
-      <nav class="navbar navbar-trans navbar-fixed-top" role="navigation" style="position: relative; margin-bottom: 0px">
+      <nav class="navbar navbar-trans navbar-fixed-top" role="navigation" style="position: relative; margin-bottom: 0">
          <div class="container">
             <div class="navbar-header">
                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapsible">
@@ -400,10 +402,10 @@
             </div>
          </div>
       </div>
-      <div class="container" id="box-message-container" style="display: none; height:0px">
+      <div class="container" id="box-message-container" style="display: none; height:0">
          <%Response.WriteFile("includes/message-box.html"); %>
       </div>
-      <div class="container" id="box-info-container" style="display: none;height:0px">
+      <div class="container" id="box-info-container" style="display: none;height:0">
          <%Response.WriteFile("includes/info-box.html"); %>
       </div>
       <nav class="navbar navbar-trans navbar-fixed-bottom" role="navigation" style="position: relative; display:none" id="bottom_navbar">

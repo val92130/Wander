@@ -1,43 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Wander.Server.ClassLibrary.Hooks
 {
     public class PluginInfo : Attribute
     {
-        private string _name, _description, _author, _version;
-        public PluginInfo(string name, string description, string author,string version)
+        public PluginInfo(string name, string description, string author, string version)
         {
-            this._name = name;
-            this._description = description;
-            this._author = author;
-            this._version = version;
+            Name = name;
+            Description = description;
+            Author = author;
+            Version = version;
         }
 
-        public string Name
-        {
-            get
-            {
-                return this._name;
-            }
-        }
+        public string Name { get; }
 
-        public string Description
-        {
-            get { return this._description; }
-        }
+        public string Description { get; }
 
-        public string Author
-        {
-            get { return this._author; }
-        }
+        public string Author { get; }
 
-        public string Version
-        {
-            get { return this._version; }
-        }
+        public string Version { get; }
     }
 }

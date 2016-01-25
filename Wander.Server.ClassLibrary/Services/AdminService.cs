@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -11,12 +10,12 @@ namespace Wander.Server.ClassLibrary.Services
 {
     public class AdminService : IAdminService
     {
-        private List<AdminModel> _admins = new List<AdminModel>();
+        private readonly List<AdminModel> _admins = new List<AdminModel>();
 
         public bool ConnectAdmin(string pseudo, string password, string connectionId)
         {
-            bool value = false;
-            int id = -1;
+            var value = false;
+            var id = -1;
             if (pseudo == null || password == null)
                 throw new ArgumentException("parameter user is null");
 
@@ -24,10 +23,11 @@ namespace Wander.Server.ClassLibrary.Services
             var candidate = _admins.FirstOrDefault(x => x.Pseudo == pseudo);
             if (candidate != null) DisconnectAdmin(candidate.ConnectionId);
 
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "SELECT UserId from dbo.Users WHERE UserLogin = @Login AND UserPassword = @Password AND Admin = 1";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query =
+                    "SELECT UserId from dbo.Users WHERE UserLogin = @Login AND UserPassword = @Password AND Admin = 1";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
@@ -37,18 +37,17 @@ namespace Wander.Server.ClassLibrary.Services
                     var data = cmd.ExecuteScalar();
                     if (data != null)
                     {
-                        id = (int)data;
+                        id = (int) data;
                         value = true;
-                    }                
-                    
+                    }
+
                     conn.Close();
-                   
                 }
             }
 
             if (value && id != -1)
             {
-                _admins.Add(new AdminModel() {ConnectionId = connectionId, Id = id, Pseudo = pseudo});
+                _admins.Add(new AdminModel {ConnectionId = connectionId, Id = id, Pseudo = pseudo});
             }
 
             return value;
@@ -63,15 +62,14 @@ namespace Wander.Server.ClassLibrary.Services
                 return true;
             }
             return false;
-
         }
 
         public bool IsAdmin(int userId)
         {
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "SELECT Admin from dbo.Users WHERE UserId = @id AND Admin = 1";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "SELECT Admin from dbo.Users WHERE UserId = @id AND Admin = 1";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
@@ -80,7 +78,6 @@ namespace Wander.Server.ClassLibrary.Services
                     var data = cmd.ExecuteReader();
                     conn.Close();
                     return data.HasRows;
-
                 }
             }
         }
@@ -92,10 +89,10 @@ namespace Wander.Server.ClassLibrary.Services
 
         public int GetPlayersTotalCount()
         {
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "SELECT Count(*) from dbo.Users";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "SELECT Count(*) from dbo.Users";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
@@ -106,7 +103,6 @@ namespace Wander.Server.ClassLibrary.Services
                         return (int) data;
                     }
                     return -1;
-
                 }
             }
         }
@@ -118,17 +114,17 @@ namespace Wander.Server.ClassLibrary.Services
 
         public bool BanPlayer(int playerId)
         {
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "UPDATE dbo.Users SET Banned = 1  WHERE UserId = @userId";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "UPDATE dbo.Users SET Banned = 1  WHERE UserId = @userId";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
                     cmd.Parameters.AddWithValue("@userId", playerId);
 
 
-                    int lines = cmd.ExecuteNonQuery();
+                    var lines = cmd.ExecuteNonQuery();
                     conn.Close();
                     return lines != 0;
                 }
@@ -137,17 +133,17 @@ namespace Wander.Server.ClassLibrary.Services
 
         public bool UnBanPlayer(int playerId)
         {
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "UPDATE dbo.Users SET Banned = 0  WHERE UserId = @userId";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "UPDATE dbo.Users SET Banned = 0  WHERE UserId = @userId";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
                     cmd.Parameters.AddWithValue("@userId", playerId);
 
 
-                    int lines = cmd.ExecuteNonQuery();
+                    var lines = cmd.ExecuteNonQuery();
                     conn.Close();
                     return lines != 0;
                 }
@@ -166,18 +162,18 @@ namespace Wander.Server.ClassLibrary.Services
 
         public int GetBoughtsHouseCount()
         {
-            int count = -1;
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            var count = -1;
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = string.Format("SELECT COUNT(*) from dbo.UserProperties");
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "SELECT COUNT(*) from dbo.UserProperties";
+                using (var cmd = new SqlCommand(query, conn))
                 {
-                    List<ServerPropertyModel> Properties = new List<ServerPropertyModel>();
+                    var Properties = new List<ServerPropertyModel>();
                     conn.Open();
                     var data = cmd.ExecuteScalar();
                     if (data != null)
                     {
-                        count = (int)data;
+                        count = (int) data;
                     }
                     conn.Close();
 
@@ -188,11 +184,11 @@ namespace Wander.Server.ClassLibrary.Services
 
         public List<AdminPlayerModel> GetAllPlayers()
         {
-            List<AdminPlayerModel> playerList = new List<AdminPlayerModel>();
+            var playerList = new List<AdminPlayerModel>();
             var connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
-            for (int i = 0; i < connectedPlayers.Count; i++)
+            for (var i = 0; i < connectedPlayers.Count; i++)
             {
-                AdminPlayerModel mdl = GetPlayerInfo(connectedPlayers[i].SignalRId);
+                var mdl = GetPlayerInfo(connectedPlayers[i].SignalRId);
                 playerList.Add(mdl);
             }
             return playerList;
@@ -201,11 +197,11 @@ namespace Wander.Server.ClassLibrary.Services
         public List<AdminUserModel> GetAllUsers()
         {
             var usersId = ServiceProvider.GetUserService().GetAllUsersId();
-            List<AdminUserModel> users = new List<AdminUserModel>();
-            for (int i = 0; i < usersId.Count; i++)
+            var users = new List<AdminUserModel>();
+            for (var i = 0; i < usersId.Count; i++)
             {
-                int id = usersId[i];
-                AdminUserModel u = new AdminUserModel();
+                var id = usersId[i];
+                var u = new AdminUserModel();
                 var model = ServiceProvider.GetUserService().GetAllUserInfos(id);
                 u.UserId = id;
                 u.Account = model.Account;
@@ -224,15 +220,15 @@ namespace Wander.Server.ClassLibrary.Services
 
         public AdminPlayerModel GetPlayerInfo(int userId)
         {
-            AdminPlayerModel mdl = new AdminPlayerModel();           
-            var candidate = ServiceProvider.GetPlayerService().GetPlayer(userId);            
+            var mdl = new AdminPlayerModel();
+            var candidate = ServiceProvider.GetPlayerService().GetPlayer(userId);
             return GetPlayerInfo(candidate.SignalRId);
         }
 
         public AdminPlayerModel GetPlayerInfo(string connectionId)
         {
-            AdminPlayerModel mdl = new AdminPlayerModel();
-            
+            var mdl = new AdminPlayerModel();
+
             var candidate = ServiceProvider.GetPlayerService().GetPlayer(connectionId);
             if (candidate == null) return null;
             var userInfo = ServiceProvider.GetUserService().GetAllUserInfos(connectionId);

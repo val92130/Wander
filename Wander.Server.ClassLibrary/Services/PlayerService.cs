@@ -10,10 +10,10 @@ namespace Wander.Server.ClassLibrary.Services
 {
     public class PlayerService : IPlayerService
     {
-        static List<ServerPlayerModel> Players = new List<ServerPlayerModel>();
+        private static readonly List<ServerPlayerModel> Players = new List<ServerPlayerModel>();
 
         /// <summary>
-        /// Add a new player to the Players list if it doesnt already exists
+        ///     Add a new player to the Players list if it doesnt already exists
         /// </summary>
         /// <param name="signalRId"></param>
         /// <param name="userId"></param>
@@ -21,12 +21,12 @@ namespace Wander.Server.ClassLibrary.Services
         {
             lock (Players)
             {
-                Vector2 lastPos = ServiceProvider.GetUserService().GetLastPosition(userId);
+                var lastPos = ServiceProvider.GetUserService().GetLastPosition(userId);
 
-                ServerPlayerModel p = Players.FirstOrDefault(x => x.SignalRId == signalRId);
+                var p = Players.FirstOrDefault(x => x.SignalRId == signalRId);
                 if (p == null)
                 {
-                    var player = new ServerPlayerModel()
+                    var player = new ServerPlayerModel
                     {
                         SignalRId = signalRId,
                         UserId = userId,
@@ -43,7 +43,7 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Checks whether a player exists
+        ///     Checks whether a player exists
         /// </summary>
         /// <param name="signalRId"></param>
         /// <returns>Returns true if the player exists and is connected, otherwise return false</returns>
@@ -58,14 +58,14 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Remove a specified player using the SignalRId if it exists
+        ///     Remove a specified player using the SignalRId if it exists
         /// </summary>
         /// <param name="SignalRId">User's Connection Id</param>
         public bool RemovePlayer(string SignalRId)
         {
             lock (Players)
             {
-                ServerPlayerModel p = GetPlayer(SignalRId);
+                var p = GetPlayer(SignalRId);
                 if (p != null)
                 {
                     Players.Remove(p);
@@ -76,7 +76,7 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Gets a player from a specified signalRId if it exists
+        ///     Gets a player from a specified signalRId if it exists
         /// </summary>
         /// <param name="signalRId"></param>
         /// <returns></returns>
@@ -89,7 +89,7 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Gets a player from a specified user id if it exists
+        ///     Gets a player from a specified user id if it exists
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -111,7 +111,7 @@ namespace Wander.Server.ClassLibrary.Services
 
 
         /// <summary>
-        /// Move a given user to the specified destination
+        ///     Move a given user to the specified destination
         /// </summary>
         /// <param name="player"></param>
         /// <param name="to"></param>
@@ -121,7 +121,7 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Move a given user to the specified destination (using the signalR connection Id)
+        ///     Move a given user to the specified destination (using the signalR connection Id)
         /// </summary>
         /// <param name="connectionId"></param>
         /// <param name="to"></param>
@@ -129,7 +129,7 @@ namespace Wander.Server.ClassLibrary.Services
         {
             lock (Players)
             {
-                ServerPlayerModel p = GetPlayer(connectionId);
+                var p = GetPlayer(connectionId);
                 if (p == null)
                     return false;
                 p.Position = to;
@@ -140,15 +140,15 @@ namespace Wander.Server.ClassLibrary.Services
 
 
         /// <summary>
-        /// Gets a copy of all the connected players'id
+        ///     Gets a copy of all the connected players'id
         /// </summary>
         /// <returns>Returns a List of connection Id of every connected Players</returns>
         public List<string> GetAllPlayersConnectionId()
         {
-            List<String> players = new List<string>();
+            var players = new List<string>();
             lock (Players)
             {
-                for (int i = 0; i < Players.Count; i++)
+                for (var i = 0; i < Players.Count; i++)
                 {
                     players.Add(Players[i].SignalRId);
                 }
@@ -157,25 +157,24 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Gets a copy of all the connected players, this list should NOT be communicated to the client
+        ///     Gets a copy of all the connected players, this list should NOT be communicated to the client
         /// </summary>
         /// <returns>Returns a List of ServerPlayerModel of every connected Players</returns>
         public List<ServerPlayerModel> GetAllPlayersServer()
         {
             lock (Players)
             {
-                List<ServerPlayerModel> players = new List<ServerPlayerModel>();
+                var players = new List<ServerPlayerModel>();
                 players = Players.ToList();
                 return players;
             }
-
         }
 
         public List<ServerPlayerModel> GetAllPlayersHouse(int houseId)
         {
             lock (Players)
             {
-                List<ServerPlayerModel> players = new List<ServerPlayerModel>();
+                var players = new List<ServerPlayerModel>();
                 players = Players.Where(x => x.MapId == houseId).ToList();
                 return players;
             }
@@ -187,7 +186,7 @@ namespace Wander.Server.ClassLibrary.Services
             if (player == null) return false;
             player.MapId = houseId;
             player.SavedPosition = new Vector2(player.Position.X, player.Position.Y);
-            player.Position = new Vector2(0,0);
+            player.Position = new Vector2(0, 0);
             SavePositionInDatabase(connectionId);
             return true;
         }
@@ -204,7 +203,7 @@ namespace Wander.Server.ClassLibrary.Services
         public bool SavePositionInDatabase(string connectionId, Vector2 newPos)
         {
             if (connectionId == null) return false;
-            ServerPlayerModel player = GetPlayer(connectionId);
+            var player = GetPlayer(connectionId);
             if (player == null) return false;
             return ServiceProvider.GetUserService().SetLastPosition(player.UserId, newPos);
         }
@@ -212,30 +211,32 @@ namespace Wander.Server.ClassLibrary.Services
         public bool SavePositionInDatabase(string connectionId)
         {
             if (connectionId == null) return false;
-            ServerPlayerModel player = GetPlayer(connectionId);
+            var player = GetPlayer(connectionId);
             if (player == null) return false;
             return ServiceProvider.GetUserService().SetLastPosition(player.UserId, player.Position);
         }
 
 
         /// <summary>
-        /// Gets a copy of all the connected players
+        ///     Gets a copy of all the connected players
         /// </summary>
         /// <returns>Returns a List of ClientPlayerModel of every connected Players</returns>
         public List<ClientPlayerModel> GetAllPlayersClient()
         {
-            List<ServerPlayerModel> players = GetAllPlayersServer();
-            List<ClientPlayerModel> clientPlayers = new List<ClientPlayerModel>();
+            var players = GetAllPlayersServer();
+            var clientPlayers = new List<ClientPlayerModel>();
 
-            for (int i = 0; i < players.Count; i++)
+            for (var i = 0; i < players.Count; i++)
             {
-                clientPlayers.Add(Helper.CreateClientPlayerModel(ServiceProvider.GetUserService().GetUserLogin(players[i]), ServiceProvider.GetUserService().GetUserSex(players[i]), players[i].Position));
+                clientPlayers.Add(
+                    Helper.CreateClientPlayerModel(ServiceProvider.GetUserService().GetUserLogin(players[i]),
+                        ServiceProvider.GetUserService().GetUserSex(players[i]), players[i].Position));
             }
             return clientPlayers;
         }
 
         /// <summary>
-        /// Get a ClientPlayerModel containing every informations about the specified connectionId
+        ///     Get a ClientPlayerModel containing every informations about the specified connectionId
         /// </summary>
         /// <param name="connectionId"></param>
         /// <returns></returns>
@@ -245,17 +246,16 @@ namespace Wander.Server.ClassLibrary.Services
                 throw new ArgumentException("Connection id is null ! ");
             lock (Players)
             {
-                ClientPlayerModel model = ServiceProvider.GetUserService().GetAllUserInfos(connectionId);
+                var model = ServiceProvider.GetUserService().GetAllUserInfos(connectionId);
                 model.Position = GetPlayer(connectionId).Position;
                 model.Job = ServiceProvider.GetJobService().GetUserJobInfos(connectionId);
                 model.Properties = ServiceProvider.GetPropertiesService().GetUserProperties(connectionId);
                 return model;
             }
-
         }
 
         /// <summary>
-        /// Try to move a player to a specified location
+        ///     Try to move a player to a specified location
         /// </summary>
         /// <param name="player"></param>
         /// <param name="to"></param>
@@ -267,7 +267,7 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Try to move a player to a specified location
+        ///     Try to move a player to a specified location
         /// </summary>
         /// <param name="player"></param>
         /// <param name="to"></param>
@@ -288,14 +288,14 @@ namespace Wander.Server.ClassLibrary.Services
         {
             lock (Players)
             {
-                ServerPlayerModel p = GetPlayer(userId);
+                var p = GetPlayer(userId);
                 if (p == null)
                     return false;
                 p.Position = newPos;
-                IHubContext context = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
+                var context = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
                 context.Clients.Client(p.SignalRId).notifyNewPosition(p.Position);
-                object posModel = new { Pseudo = p.Pseudo, Position = newPos, Direction = p.Direction };
-                for (int i = 0; i < Players.Count; i++)
+                object posModel = new {p.Pseudo, Position = newPos, p.Direction};
+                for (var i = 0; i < Players.Count; i++)
                 {
                     if (Players[i].SignalRId == p.SignalRId) continue;
 
@@ -310,14 +310,14 @@ namespace Wander.Server.ClassLibrary.Services
             if (connectionId == null) return false;
             lock (Players)
             {
-                ServerPlayerModel p = GetPlayer(connectionId);
+                var p = GetPlayer(connectionId);
                 if (p == null)
                     return false;
                 p.Position = newPos;
-                IHubContext context = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
+                var context = GlobalHost.ConnectionManager.GetHubContext<GameHub>();
                 context.Clients.Client(p.SignalRId).notifyNewPosition(p.Position);
-                object posModel = new { Pseudo = p.Pseudo, Position = newPos, Direction = p.Direction };
-                for (int i = 0; i < Players.Count; i++)
+                object posModel = new {p.Pseudo, Position = newPos, p.Direction};
+                for (var i = 0; i < Players.Count; i++)
                 {
                     if (Players[i].SignalRId == p.SignalRId) continue;
 

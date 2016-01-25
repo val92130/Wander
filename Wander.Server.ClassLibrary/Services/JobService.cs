@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using Microsoft.AspNet.SignalR;
-using Wander.Server.ClassLibrary.Hubs;
 using Wander.Server.ClassLibrary.Model;
 using Wander.Server.ClassLibrary.Model.Job;
 using Wander.Server.ClassLibrary.Model.Players;
@@ -13,14 +11,14 @@ namespace Wander.Server.ClassLibrary.Services
     public class JobService : IJobService
     {
         /// <summary>
-        /// Gets all the info relating the job of the User corresponding to the connectionId
+        ///     Gets all the info relating the job of the User corresponding to the connectionId
         /// </summary>
         /// <param name="connectionId"></param>
         /// <returns>Returns a job model containing all the infos</returns>
         public JobModel GetUserJobInfos(string connectionId)
         {
             if (connectionId == null) throw new ArgumentException("there is no id");
-            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(connectionId);
+            var user = ServiceProvider.GetPlayerService().GetPlayer(connectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
 
             return GetUserJobInfos(user.UserId);
@@ -30,16 +28,16 @@ namespace Wander.Server.ClassLibrary.Services
         {
             if (!ServiceProvider.GetUserService().UserExists(userId)) return null;
 
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "SELECT * from dbo.Users u JOIN dbo.Jobs j on j.JobId = u.JobId WHERE u.UserId = @id";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "SELECT * from dbo.Users u JOIN dbo.Jobs j on j.JobId = u.JobId WHERE u.UserId = @id";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
                     cmd.Parameters.AddWithValue("@id", userId);
 
-                    JobModel model = new JobModel();
+                    var model = new JobModel();
 
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -60,7 +58,7 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Gets all the info relating the job of the User corresponding to the provided ServerPlayerModel
+        ///     Gets all the info relating the job of the User corresponding to the provided ServerPlayerModel
         /// </summary>
         /// <param name="connectionId"></param>
         /// <returns>Returns a job model containing all the infos</returns>
@@ -71,24 +69,23 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
 
-
         /// <summary>
-        /// Gets a list of every possible jobs
+        ///     Gets a list of every possible jobs
         /// </summary>
         /// <returns></returns>
         public List<JobModel> GetAllJobs()
         {
-            List<JobModel> jobs = new List<JobModel>();
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            var jobs = new List<JobModel>();
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "SELECT * from dbo.Jobs";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "SELECT * from dbo.Jobs";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        JobModel model = new JobModel();
+                        var model = new JobModel();
                         model.JobDescription = reader["JobDescription"].ToString();
                         model.JobId = Convert.ToInt32(reader["JobId"]);
                         model.Salary = Convert.ToInt32(reader["Salary"]);
@@ -105,7 +102,7 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Change the Job of a User
+        ///     Change the Job of a User
         /// </summary>
         /// <param name="jobId">The new job Id</param>
         /// <param name="connectionId">The connection id of the user</param>
@@ -115,16 +112,15 @@ namespace Wander.Server.ClassLibrary.Services
             if (connectionId == null)
                 throw new ArgumentException("Connection id is null !");
 
-            ServerPlayerModel user = ServiceProvider.GetPlayerService().GetPlayer(connectionId);
+            var user = ServiceProvider.GetPlayerService().GetPlayer(connectionId);
             if (user == null) throw new ArgumentException("parameter user is null");
 
             return ChangeUserJob(jobId, user.UserId);
-
         }
 
         public bool ChangeUserJob(int jobId, int userId)
         {
-            JobModel job = GetAllJobs().FirstOrDefault(x => x.JobId == jobId);
+            var job = GetAllJobs().FirstOrDefault(x => x.JobId == jobId);
 
             if (job == null)
             {
@@ -138,12 +134,12 @@ namespace Wander.Server.ClassLibrary.Services
             }
 
 
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "UPDATE dbo.Users SET JobId = @Id WHERE UserId = @UserId";
-                string verifThresholdQuery = "SELECT COUNT(*) FROM dbo.Users u WHERE u.JobId = @Id";
-                int count = 0;
-                using (SqlCommand cmd = new SqlCommand(verifThresholdQuery, conn))
+                var query = "UPDATE dbo.Users SET JobId = @Id WHERE UserId = @UserId";
+                var verifThresholdQuery = "SELECT COUNT(*) FROM dbo.Users u WHERE u.JobId = @Id";
+                var count = 0;
+                using (var cmd = new SqlCommand(verifThresholdQuery, conn))
                 {
                     conn.Open();
                     cmd.Parameters.AddWithValue("@Id", jobId);
@@ -157,13 +153,13 @@ namespace Wander.Server.ClassLibrary.Services
                     return false;
                 }
 
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
                     cmd.Parameters.AddWithValue("@Id", jobId);
                     cmd.Parameters.AddWithValue("@UserId", userId);
 
-                    int lgn = cmd.ExecuteNonQuery();
+                    var lgn = cmd.ExecuteNonQuery();
                     conn.Close();
 
                     return lgn != 0;
@@ -173,7 +169,7 @@ namespace Wander.Server.ClassLibrary.Services
 
 
         /// <summary>
-        /// Change the Job of a User
+        ///     Change the Job of a User
         /// </summary>
         /// <param name="jobId">The new job Id</param>
         /// <param name="user">The user</param>
@@ -188,10 +184,11 @@ namespace Wander.Server.ClassLibrary.Services
         {
             if (model == null) throw new ArgumentException("parameter model is null");
 
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "INSERT INTO dbo.Jobs (JobDescription, Salary, Threshold, EarningPoints, NecessaryPoints) OUTPUT INSERTED.JobId values (@Des, @Salary, @Thres, @Earn, @Necessary)";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query =
+                    "INSERT INTO dbo.Jobs (JobDescription, Salary, Threshold, EarningPoints, NecessaryPoints) OUTPUT INSERTED.JobId values (@Des, @Salary, @Thres, @Earn, @Necessary)";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
                     cmd.Parameters.AddWithValue("@Des", model.JobDescription);
@@ -200,18 +197,17 @@ namespace Wander.Server.ClassLibrary.Services
                     cmd.Parameters.AddWithValue("@Earn", model.EarningPoints);
                     cmd.Parameters.AddWithValue("@Necessary", model.NecessaryPoints);
 
-                    int lgn = (int)cmd.ExecuteScalar();
+                    var lgn = (int) cmd.ExecuteScalar();
 
                     conn.Close();
 
                     return lgn;
                 }
             }
-
         }
 
         /// <summary>
-        /// Delete the job corresponding to the specified JobModel
+        ///     Delete the job corresponding to the specified JobModel
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -221,28 +217,28 @@ namespace Wander.Server.ClassLibrary.Services
 
             return DeleteJob(model.JobId);
         }
+
         public ServerNotificationMessage BuyDrugs(string seller, string buyer)
         {
-
             if (seller == null) throw new ArgumentException("parameter user is null");
             if (buyer == null) throw new ArgumentException("parameter user2 is null");
 
-            ServerNotificationMessage message = new ServerNotificationMessage();
+            var message = new ServerNotificationMessage();
             message.MessageType = EMessageType.error;
             message.Content = "Error";
 
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                int idSeller = ServiceProvider.GetPlayerService().GetPlayer(seller).UserId;
-                int idBuyer = ServiceProvider.GetPlayerService().GetPlayer(buyer).UserId;
-                int moneyBuyer = ServiceProvider.GetUserService().GetUserBankAccount(buyer);
-                int moneySeller = ServiceProvider.GetUserService().GetUserBankAccount(seller);
+                var idSeller = ServiceProvider.GetPlayerService().GetPlayer(seller).UserId;
+                var idBuyer = ServiceProvider.GetPlayerService().GetPlayer(buyer).UserId;
+                var moneyBuyer = ServiceProvider.GetUserService().GetUserBankAccount(buyer);
+                var moneySeller = ServiceProvider.GetUserService().GetUserBankAccount(seller);
 
-                string DealerJob = ServiceProvider.GetJobService().GetUserJobInfos(seller).JobDescription;
+                var DealerJob = ServiceProvider.GetJobService().GetUserJobInfos(seller).JobDescription;
                 if (DealerJob == "Dealer" && moneyBuyer > 30)
                 {
-                    int remainingMoneySeller = moneySeller + 30;
-                    int remainingMoneyBuyer = moneyBuyer - 30;
+                    var remainingMoneySeller = moneySeller + 30;
+                    var remainingMoneyBuyer = moneyBuyer - 30;
                     ServiceProvider.GetUserService().SetUserBankAccount(seller, remainingMoneySeller);
                     ServiceProvider.GetUserService().SetUserBankAccount(buyer, remainingMoneyBuyer);
 
@@ -260,17 +256,17 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Delete the job corresponding to the specified JobId
+        ///     Delete the job corresponding to the specified JobId
         /// </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
         public bool DeleteJob(int jobId)
         {
             // We put the user unemployed if he currently has the job we wish to delete
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "UPDATE dbo.Users SET JobId = 0 WHERE JobId = @Id";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "UPDATE dbo.Users SET JobId = 0 WHERE JobId = @Id";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
                     cmd.Parameters.AddWithValue("@Id", jobId);
@@ -280,22 +276,20 @@ namespace Wander.Server.ClassLibrary.Services
                 }
             }
 
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "DELETE from dbo.Jobs WHERE JobId = @Id";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "DELETE from dbo.Jobs WHERE JobId = @Id";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
                     cmd.Parameters.AddWithValue("@Id", jobId);
 
-                    int lgn = cmd.ExecuteNonQuery();
+                    var lgn = cmd.ExecuteNonQuery();
                     conn.Close();
 
                     return lgn != 0;
                 }
             }
         }
-
-
     }
 }
