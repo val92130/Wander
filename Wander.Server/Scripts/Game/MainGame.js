@@ -344,4 +344,3 @@ function Lerp(goal, current, time) {
     }
     return goal;
 }
-//# sourceMappingURL=MainGame.js.map

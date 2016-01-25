@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Wander.Server.ClassLibrary.Model;
 using Wander.Server.ClassLibrary.Model.Players;
 
@@ -54,7 +55,13 @@ namespace Wander.Server.ClassLibrary.Services
             string messageContent = chatMessage.Content;
             if (!messageContent.StartsWith("/")) return null;
             if (messageContent.Length <= 1) return null;
-            List<string> data = messageContent.Split(' ').ToList<string>();
+
+            messageContent = messageContent.Replace("&quot;", @"""");
+            List<string> data = Regex.Matches(messageContent, @"[\""].+?[\""]|[^ ]+")
+                .Cast<Match>()
+                .Select(m => m.Value)
+                .ToList();
+
             if (data.Count <= 0) return null;
             string cmd = data[0].Substring(1);
             data.RemoveAt(0);

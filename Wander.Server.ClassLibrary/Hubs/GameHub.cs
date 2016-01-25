@@ -293,7 +293,7 @@ namespace Wander.Server.ClassLibrary.Hubs
                     EMessageType.info));
             string caller = candidate.Pseudo;
             ChatMessageModel model = Helper.CreateChatMessage(caller, candidate.UserId, message,
-                ServiceProvider.GetUserService().GetUserSex(candidate.SignalRId), DateTime.Now.ToShortTimeString());
+               candidate.Sex, DateTime.Now.ToShortTimeString());
             ServiceProvider.GetHookService().CallHookMethod(hook => hook.OnPlayerSendPrivateMessage(Clients, candidate, dest, model));
             Clients.Client(dest.SignalRId).PrivateMessageReceived(model);
         }
