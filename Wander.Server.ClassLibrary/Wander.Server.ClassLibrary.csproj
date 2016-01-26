@@ -75,10 +75,12 @@
     <Compile Include="Model\ChatMessageModel.cs" />
     <Compile Include="Model\ClientNotificationMessageModel.cs" />
     <Compile Include="Model\CommandModel.cs" />
+    <Compile Include="Model\EKey.cs" />
     <Compile Include="Model\EMessageType.cs" />
     <Compile Include="Model\Forms\UserModel.cs" />
     <Compile Include="Model\Job\JobModel.cs" />
     <Compile Include="Model\Job\JobQuestionModel.cs" />
+    <Compile Include="Model\KeyModel.cs" />
     <Compile Include="Model\Players\AdminPlayerModel.cs" />
     <Compile Include="Model\Players\ClientPlayerModel.cs" />
     <Compile Include="Model\Players\EPlayerDirection.cs" />

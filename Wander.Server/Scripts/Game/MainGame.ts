@@ -398,6 +398,45 @@ $("#buyDrugsForm").submit(function (e) {
     e.preventDefault();
 });
 
+var keysUp = [];
+var keysDown = [];
+
+
+var availableKeys = [69, 37, 38, 39, 40];
+
+$(document).keydown(function (e) {
+    if ($.inArray(e.keyCode, keysDown) !== -1) {
+        return;
+    } else {
+        keysDown.push(e.keyCode);
+        if ($.inArray(e.keyCode, availableKeys) !== -1) {
+            hub.invoke("OnKeyDown", e.keyCode);
+        }
+    }
+
+    var index = $.inArray(e.keyCode, keysUp);
+
+    if (index != -1) {
+        keysUp.splice(index, 1);
+        return;
+    } 
+
+    
+});
+
+$(document).keyup(function (e) {
+    var index = $.inArray(e.keyCode, keysDown);
+
+    if (index !== -1) {
+        keysDown.splice(index, 1);
+        if ($.inArray(e.keyCode, availableKeys) !== -1) {
+            hub.invoke("OnKeyUp", e.keyCode);
+        }
+        return;
+    } 
+
+});
+
 $(document).keypress(function (event) { 
     if (isConnected) {
         if ($('input:focus').size() == 0) {

@@ -11,7 +11,7 @@ namespace Wander.Server.ClassLibrary
 {
     public abstract class GameHook
     {
-        public GameHook()
+        protected GameHook()
         {
             Init();
         }
@@ -31,6 +31,19 @@ namespace Wander.Server.ClassLibrary
             Vector2 position, EPlayerDirection direction)
         {
         }
+
+        public virtual void OnKeyDown(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player,
+            KeyModel key) {}
+
+        public virtual void OnKeyUp(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player,
+            KeyModel key) {}
+
+        public virtual void OnPlayerEnterHouse(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player,
+            int houseId)
+            => Debug.Print("Hook on player enter house works");
+
+        public virtual void OnPlayerExitHouse(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player)
+            => Debug.Print("Hook on player exit house works");
 
         #region User management
 
@@ -87,5 +100,8 @@ namespace Wander.Server.ClassLibrary
             ServerPropertyModel property, int price) => Debug.Print("Hook on player sell property works");
 
         #endregion
+
+        public virtual void OnRainStart() => Debug.Print("Hook on rain start works");
+        public virtual void OnRainStop() => Debug.Print("Hook on rain stop works");
     }
 }
