@@ -29,6 +29,12 @@ namespace Wander.Server.ClassLibrary.Plugins
                                 Helper.CreateNotificationMessage("Cannot teleport to yourself",
                                     EMessageType.info));
                         }
+                        else if (candidate.MapId != player.MapId)
+                        {
+                            clients.Caller.notify(
+                                Helper.CreateNotificationMessage("Cannot teleport : this player isnt on the same map as yours",
+                                    EMessageType.success));
+                        }
                         else
                         {
                             ServiceProvider.GetPlayerService().ForcePlayerNewPosition(player, candidate.Position);
@@ -40,7 +46,7 @@ namespace Wander.Server.ClassLibrary.Plugins
                     else
                     {
                         clients.Caller.notify(
-                            Helper.CreateNotificationMessage("Can't find player" + player.Pseudo,
+                            Helper.CreateNotificationMessage("Can't find player : " + candidate.Pseudo,
                                 EMessageType.error));
                     }
                 }
