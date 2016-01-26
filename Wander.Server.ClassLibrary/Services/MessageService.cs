@@ -9,11 +9,12 @@ namespace Wander.Server.ClassLibrary.Services
     {
         public List<ChatMessageModel> GetAllMessages()
         {
-            List<ChatMessageModel> msg = new List<ChatMessageModel>();
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            var msg = new List<ChatMessageModel>();
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "SELECT u.UserId, u.Sex, m.Message, m.Time, u.UserLogin FROM MessageLogs m JOIN Users u on u.UserId = m.UserId ORDER BY m.MessageId DESC ";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query =
+                    "SELECT u.UserId, u.Sex, m.Message, m.Time, u.UserLogin FROM MessageLogs m JOIN Users u on u.UserId = m.UserId ORDER BY m.MessageId DESC ";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
@@ -21,7 +22,9 @@ namespace Wander.Server.ClassLibrary.Services
 
                     while (reader.Read())
                     {
-                        msg.Add(Helper.CreateChatMessage(reader["UserLogin"].ToString(), Convert.ToInt32(reader["UserId"]), reader["Message"].ToString(), Convert.ToInt32(reader["Sex"]), reader["Time"].ToString()));
+                        msg.Add(Helper.CreateChatMessage(reader["UserLogin"].ToString(),
+                            Convert.ToInt32(reader["UserId"]), reader["Message"].ToString(),
+                            Convert.ToInt32(reader["Sex"]), reader["Time"].ToString()));
                     }
 
                     conn.Close();
@@ -33,13 +36,16 @@ namespace Wander.Server.ClassLibrary.Services
 
         public List<ChatMessageModel> GetMessagesLimit(int limit)
         {
-            List<ChatMessageModel> msg = new List<ChatMessageModel>();
+            var msg = new List<ChatMessageModel>();
 
             if (limit < 0) limit = 0;
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = String.Format("SELECT TOP {0} u.UserId, u.Sex, m.Message, m.Time, u.UserLogin FROM MessageLogs m JOIN Users u on u.UserId = m.UserId ORDER BY m.MessageId DESC ", limit);
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query =
+                    string.Format(
+                        "SELECT TOP {0} u.UserId, u.Sex, m.Message, m.Time, u.UserLogin FROM MessageLogs m JOIN Users u on u.UserId = m.UserId ORDER BY m.MessageId DESC ",
+                        limit);
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
@@ -47,7 +53,9 @@ namespace Wander.Server.ClassLibrary.Services
 
                     while (reader.Read())
                     {
-                        msg.Add(Helper.CreateChatMessage(reader["UserLogin"].ToString(), Convert.ToInt32(reader["UserId"]), reader["Message"].ToString(), Convert.ToInt32(reader["Sex"]), reader["Time"].ToString()));
+                        msg.Add(Helper.CreateChatMessage(reader["UserLogin"].ToString(),
+                            Convert.ToInt32(reader["UserId"]), reader["Message"].ToString(),
+                            Convert.ToInt32(reader["Sex"]), reader["Time"].ToString()));
                     }
 
                     conn.Close();
@@ -61,10 +69,10 @@ namespace Wander.Server.ClassLibrary.Services
         {
             if (message == null) throw new ArgumentException("parameter message is null in function LogMessage");
 
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = string.Format("INSERT INTO MessageLogs (UserId, Message, Time) values (@Id, @Message, @Time)");
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "INSERT INTO MessageLogs (UserId, Message, Time) values (@Id, @Message, @Time)";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
@@ -73,7 +81,7 @@ namespace Wander.Server.ClassLibrary.Services
                     cmd.Parameters.AddWithValue("@Time", DateTime.Now);
 
 
-                    int lines = cmd.ExecuteNonQuery();
+                    var lines = cmd.ExecuteNonQuery();
                     conn.Close();
                     return lines != 0;
                 }

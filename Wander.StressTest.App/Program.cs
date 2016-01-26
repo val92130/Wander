@@ -34,7 +34,6 @@ namespace Wander.StressTest.App
     class Starter
     {
         Simulation _simulation;
-        bool _useDistantHost = true;
         public Starter()
         {
             Console.WriteLine(
@@ -49,7 +48,7 @@ namespace Wander.StressTest.App
                     input = Console.ReadKey().KeyChar;
                     
                 }
-                catch (System.FormatException f)
+                catch (System.FormatException)
                 {
 
                 }
@@ -75,7 +74,7 @@ namespace Wander.StressTest.App
                                     Console.WriteLine("Invalid port");
                                 }
                             }
-                            catch (System.FormatException f)
+                            catch (System.FormatException)
                             {
                                 port = -1;
                                 Console.WriteLine("Invalid port");
@@ -105,7 +104,7 @@ namespace Wander.StressTest.App
                     nbr = Convert.ToInt32(Console.ReadLine());
                     valid = true;
                 }
-                catch (System.FormatException f)
+                catch (System.FormatException)
                 {
                     valid = false;
                 }

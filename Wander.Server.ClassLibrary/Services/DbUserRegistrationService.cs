@@ -11,7 +11,7 @@ namespace Wander.Server.ClassLibrary.Services
         public static int MinLoginLength = 4;
 
         /// <summary>
-        /// Checks whether the UserModel fields matches the condition for the form validation
+        ///     Checks whether the UserModel fields matches the condition for the form validation
         /// </summary>
         /// <param name="user"></param>
         /// <returns>Returns true if the UserModel is valid, otherwise returns false</returns>
@@ -24,10 +24,11 @@ namespace Wander.Server.ClassLibrary.Services
                 return false;
             if (user.Login != null && user.Email != null && user.Password != null)
             {
-                if (!String.IsNullOrWhiteSpace(user.Login) && !String.IsNullOrWhiteSpace(user.Email) &&
-                    !String.IsNullOrWhiteSpace(user.Password) && Helper.IsValidEmail(user.Email))
+                if (!string.IsNullOrWhiteSpace(user.Login) && !string.IsNullOrWhiteSpace(user.Email) &&
+                    !string.IsNullOrWhiteSpace(user.Password) && Helper.IsValidEmail(user.Email))
                 {
-                    if (user.Login.Length >= MinLoginLength && user.Email.Contains("@") && user.Password.Length >= MinPasswordLength)
+                    if (user.Login.Length >= MinLoginLength && user.Email.Contains("@") &&
+                        user.Password.Length >= MinPasswordLength)
                     {
                         if (user.Sex == 1 || user.Sex == 0)
                         {
@@ -35,7 +36,6 @@ namespace Wander.Server.ClassLibrary.Services
                             {
                                 return true;
                             }
-
                         }
                     }
                 }
@@ -44,7 +44,7 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Check if the password and login from the UserModel correspond to a User in the database
+        ///     Check if the password and login from the UserModel correspond to a User in the database
         /// </summary>
         /// <param name="user"></param>
         /// <returns>Returns true if the login and password correspond to a User, otherwise returns false</returns>
@@ -53,10 +53,10 @@ namespace Wander.Server.ClassLibrary.Services
             if (user == null)
                 throw new ArgumentException("parameter user is null");
 
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "SELECT UserId from dbo.Users WHERE UserLogin = @Login AND UserPassword = @Password";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "SELECT UserId from dbo.Users WHERE UserLogin = @Login AND UserPassword = @Password";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
@@ -64,7 +64,7 @@ namespace Wander.Server.ClassLibrary.Services
                     cmd.Parameters.AddWithValue("@Password", Helper.Sha1Encode(user.Password));
 
                     var data = cmd.ExecuteReader();
-                    bool value = data.HasRows;
+                    var value = data.HasRows;
                     conn.Close();
                     return value;
                 }
@@ -72,7 +72,7 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Check if the provided UserModel's login already exists in the database
+        ///     Check if the provided UserModel's login already exists in the database
         /// </summary>
         /// <param name="user"></param>
         /// <returns>Returns true if the UserModel's login already exists, otherwise return false</returns>
@@ -81,17 +81,17 @@ namespace Wander.Server.ClassLibrary.Services
             if (user == null)
                 throw new ArgumentException("parameter user is null");
 
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "SELECT UserId from dbo.Users WHERE UserLogin = @Login";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "SELECT UserId from dbo.Users WHERE UserLogin = @Login";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
                     cmd.Parameters.AddWithValue("@Login", user.Login);
 
                     var data = cmd.ExecuteReader();
-                    bool value = data.HasRows;
+                    var value = data.HasRows;
                     conn.Close();
                     return value;
                 }
@@ -99,7 +99,7 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Check if the provided UserModel's email already exists in the database
+        ///     Check if the provided UserModel's email already exists in the database
         /// </summary>
         /// <param name="user"></param>
         /// <returns>Returns true if the UserModel's email already exists, otherwise return false</returns>
@@ -108,17 +108,17 @@ namespace Wander.Server.ClassLibrary.Services
             if (user == null)
                 throw new ArgumentException("parameter user is null");
 
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "SELECT UserId from dbo.Users WHERE Email = @Email";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "SELECT UserId from dbo.Users WHERE Email = @Email";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
                     cmd.Parameters.AddWithValue("@Email", user.Email);
 
                     var data = cmd.ExecuteReader();
-                    bool value = data.HasRows;
+                    var value = data.HasRows;
                     conn.Close();
                     return value;
                 }
@@ -126,7 +126,7 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Change the Connected state of the provided UserModel to 1
+        ///     Change the Connected state of the provided UserModel to 1
         /// </summary>
         /// <param name="user"></param>
         /// <returns>Returns the UserId of the user if it exists, otherwise returns -1</returns>
@@ -135,10 +135,10 @@ namespace Wander.Server.ClassLibrary.Services
             if (user == null)
                 throw new ArgumentException("parameter user is null, cannot connect");
 
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "update dbo.Users set Connected = 1 where UserLogin = @Login";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "update dbo.Users set Connected = 1 where UserLogin = @Login";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
@@ -148,15 +148,14 @@ namespace Wander.Server.ClassLibrary.Services
 
 
                 query = "select UserId from dbo.Users WHERE UserLogin = @Login";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (var cmd = new SqlCommand(query, conn))
                 {
-
                     cmd.Parameters.AddWithValue("@Login", user.Login);
                     var data = cmd.ExecuteReader();
 
                     while (data.Read())
                     {
-                        return Int32.Parse(data["UserId"].ToString());
+                        return int.Parse(data["UserId"].ToString());
                     }
                 }
                 conn.Close();
@@ -165,7 +164,7 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Register the UserModel in the database
+        ///     Register the UserModel in the database
         /// </summary>
         /// <param name="user"></param>
         public void Register(UserModel user)
@@ -173,11 +172,11 @@ namespace Wander.Server.ClassLibrary.Services
             if (user == null)
                 throw new ArgumentException("parameter user is null, cannot register");
 
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query =
+                var query =
                     "INSERT INTO dbo.Users (UserLogin, Email, UserPassword, Sex, Account, Points, Connected, Activated) values ( @Login, @Email, @Password, @Sex, @Account, @Points, @Connected, @Activated) ";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
@@ -198,17 +197,17 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Change the Connected state of the provided UserModel to 0
+        ///     Change the Connected state of the provided UserModel to 0
         /// </summary>
         /// <param name="user"></param>
         public void LogOut(UserModel user)
         {
             if (user == null)
                 throw new ArgumentException("parameter user is null, cannot log him out");
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "update dbo.Users set Connected = 0 where UserLogin = @Login";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "update dbo.Users set Connected = 0 where UserLogin = @Login";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
@@ -220,17 +219,17 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Change the Connected state of the provided ServerPlayerModel to 0
+        ///     Change the Connected state of the provided ServerPlayerModel to 0
         /// </summary>
         /// <param name="user"></param>
         public void LogOut(ServerPlayerModel user)
         {
             if (user == null)
                 throw new ArgumentException("parameter user is null, cannot log him out");
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "update dbo.Users set Connected = 0 where UserId = @Id";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "update dbo.Users set Connected = 0 where UserId = @Id";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
@@ -242,7 +241,7 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Checks whether a user is banned or not
+        ///     Checks whether a user is banned or not
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
@@ -251,10 +250,10 @@ namespace Wander.Server.ClassLibrary.Services
             if (user == null)
                 throw new ArgumentException("parameter user is null");
 
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "SELECT Banned from dbo.Users WHERE UserLogin = @Login";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "SELECT Banned from dbo.Users WHERE UserLogin = @Login";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 
@@ -262,7 +261,7 @@ namespace Wander.Server.ClassLibrary.Services
 
                     var data = cmd.ExecuteScalar();
                     if (data == null) return false;
-                    bool value = Convert.ToBoolean(data);
+                    var value = Convert.ToBoolean(data);
                     conn.Close();
                     return value;
                 }
@@ -270,17 +269,17 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         /// <summary>
-        /// Remove a player from the database
+        ///     Remove a player from the database
         /// </summary>
         /// <param name="user"></param>
         public void Delete(ServerPlayerModel user)
         {
             if (user == null)
                 throw new ArgumentException("parameter user is null");
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "delete from dbo.Users WHERE UserLogin = @Login";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "delete from dbo.Users WHERE UserLogin = @Login";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
 

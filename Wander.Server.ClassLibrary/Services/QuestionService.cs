@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using Wander.Server.ClassLibrary.Model.Job;
 using Wander.Server.ClassLibrary.Model.Players;
 
 namespace Wander.Server.ClassLibrary.Services
 {
-    class QuestionService : IQuestionService
+    internal class QuestionService : IQuestionService
     {
         public JobQuestionModel GetRandomQuestion(string connectionId)
         {
@@ -20,12 +19,12 @@ namespace Wander.Server.ClassLibrary.Services
         {
             if (!ServiceProvider.GetUserService().UserExists(userId)) return null;
 
-            int jobId = ServiceProvider.GetJobService().GetUserJobInfos(userId).JobId;
+            var jobId = ServiceProvider.GetJobService().GetUserJobInfos(userId).JobId;
             JobQuestionModel randomQuestion = null;
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "SELECT top 1 * FROM  dbo.Questions WHERE dbo.Questions.JobId = @JobId ORDER BY newid()";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "SELECT top 1 * FROM  dbo.Questions WHERE dbo.Questions.JobId = @JobId ORDER BY newid()";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
                     cmd.Parameters.AddWithValue("@JobId",
@@ -56,19 +55,19 @@ namespace Wander.Server.ClassLibrary.Services
         public bool CheckAnswer(JobQuestionModel questionModel)
         {
             if (questionModel == null) throw new ArgumentNullException("QuestionModel");
-            bool answer = questionModel.Answer;
-            int idQuestion = questionModel.QuestionId;
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            var answer = questionModel.Answer;
+            var idQuestion = questionModel.QuestionId;
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "SELECT Answer FROM dbo.Questions WHERE QuestionId = @idQuestion ";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "SELECT Answer FROM dbo.Questions WHERE QuestionId = @idQuestion ";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
                     cmd.Parameters.AddWithValue("@idQuestion", idQuestion);
                     var data = cmd.ExecuteScalar();
                     if (data == null) throw new ArgumentNullException("Question not found");
 
-                    bool t = Convert.ToBoolean(data);
+                    var t = Convert.ToBoolean(data);
 
                     conn.Close();
                     return t == answer;
@@ -78,17 +77,17 @@ namespace Wander.Server.ClassLibrary.Services
 
         public List<JobQuestionModel> GetAllQuestions()
         {
-            List<JobQuestionModel> questions = new List<JobQuestionModel>();
-            using (SqlConnection conn = SqlConnectionService.GetConnection())
+            var questions = new List<JobQuestionModel>();
+            using (var conn = SqlConnectionService.GetConnection())
             {
-                string query = "SELECT * from dbo.Questions";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                var query = "SELECT * from dbo.Questions";
+                using (var cmd = new SqlCommand(query, conn))
                 {
                     conn.Open();
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        JobQuestionModel questionModel = new JobQuestionModel();
+                        var questionModel = new JobQuestionModel();
                         questionModel.QuestionId = Convert.ToInt32(reader["QuestionId"]);
                         questionModel.Question = reader["Question"].ToString();
                         questionModel.Answer = bool.Parse(reader["Answer"].ToString());

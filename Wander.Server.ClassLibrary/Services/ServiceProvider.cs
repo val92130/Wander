@@ -2,7 +2,6 @@
 
 namespace Wander.Server.ClassLibrary.Services
 {
-
     public class ServiceProvider
     {
         private static IUserRegistrationService RegistrationService;
@@ -39,6 +38,7 @@ namespace Wander.Server.ClassLibrary.Services
 
             return UserService;
         }
+
         public static IPropertyService GetPropertiesService()
         {
             if (PropertyService == null)
@@ -62,6 +62,7 @@ namespace Wander.Server.ClassLibrary.Services
 
             return JobService;
         }
+
         public static IQuestionService GetQuestionService()
         {
             if (QuestionService == null)
@@ -82,6 +83,7 @@ namespace Wander.Server.ClassLibrary.Services
         {
             return HookService.Instance;
         }
+
         public static GameManager GetGameManager()
         {
             if (GameManager == null)
@@ -92,13 +94,10 @@ namespace Wander.Server.ClassLibrary.Services
 
         public static IMapService GetMapService()
         {
-            if(MapService == null)
+            if (MapService == null)
                 MapService = new MapService();
 
             return MapService;
         }
-
-
-
     }
 }
