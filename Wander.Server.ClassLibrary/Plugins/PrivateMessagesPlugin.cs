@@ -6,17 +6,17 @@ using Wander.Server.ClassLibrary.Model.Players;
 using Wander.Server.ClassLibrary.Services;
 using Wander.Server.ClassLibrary.Services.Interfaces;
 using static System.String;
+using System.Diagnostics;
 
 namespace Wander.Server.ClassLibrary.Plugins
 {
     [PluginInfo("Private messages", "Send private messages by command", "Wander", "1.0")]
     public class PrivateMessagesPlugin : GameHook
     {
-        public override void OnPlayerSendCommand(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player,
+        [ChatCommand("mp")]
+        public void SendPrivateMessage(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player,
             CommandModel command)
         {
-            if (command.Command == "mp")
-            {
                 if (command.Args != null)
                 {
                     if (command.Args.Length == 2)
@@ -35,8 +35,7 @@ namespace Wander.Server.ClassLibrary.Plugins
                         }
                     }
                 }
-            }
-            base.OnPlayerSendCommand(clients, player, command);
         }
+
     }
 }

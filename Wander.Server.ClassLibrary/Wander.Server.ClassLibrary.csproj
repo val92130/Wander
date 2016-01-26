@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Hooks\ChatCommand.cs" />
     <Compile Include="Hooks\GameHook.cs" />
     <Compile Include="Game\GameManager.cs" />
     <Compile Include="Hooks\PluginInfo.cs" />

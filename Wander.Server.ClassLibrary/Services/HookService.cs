@@ -3,7 +3,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.AspNet.SignalR.Hubs;
 using Wander.Server.ClassLibrary.Hooks;
+using Wander.Server.ClassLibrary.Model;
+using Wander.Server.ClassLibrary.Model.Players;
 using Wander.Server.ClassLibrary.Services.Interfaces;
 
 namespace Wander.Server.ClassLibrary.Services
@@ -12,6 +15,10 @@ namespace Wander.Server.ClassLibrary.Services
     {
         private readonly ConcurrentBag<GameHook> hooks;
         private readonly List<PluginInfo> pluginsInfos = new List<PluginInfo>();
+        private readonly Dictionary<string, CommandDelegate> methods = new Dictionary<string, CommandDelegate>();
+
+        public delegate void CommandDelegate(
+            IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player, CommandModel command);
 
         private HookService()
         {
@@ -42,6 +49,28 @@ namespace Wander.Server.ClassLibrary.Services
                 }
                 Debug.Print("Plugin loaded : " + pluginName);
             }
+
+
+            foreach (GameHook g in hooks)
+            {
+                g.GetType()
+                    .GetMethods()
+                    .Where(x => x.GetCustomAttributes(typeof (ChatCommand), false).Length > 0)
+                    .ForEach(m =>
+                    {
+                        m.GetCustomAttributes(false).ForEach(a =>
+                        {
+                            ChatCommand commandInfo = a as ChatCommand;
+                            if (commandInfo != null)
+                            {
+                                methods.Add(commandInfo.Command, (CommandDelegate)Delegate.CreateDelegate(typeof (CommandDelegate),g, m));
+                            }
+                        });
+                    });
+
+            }
+
+
         }
 
         public static HookService Instance { get; } = new HookService();
@@ -54,5 +83,16 @@ namespace Wander.Server.ClassLibrary.Services
         }
 
         public void CallHookMethod(Action<GameHook> action) => hooks.ForEach(action);
+
+        public void CallHookCommand(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player, CommandModel command)
+        {
+            methods.ForEach(m =>
+            {
+                if (m.Key == command.Command)
+                {
+                    m.Value(clients, player, command);
+                }
+            });
+        }
     }
 }

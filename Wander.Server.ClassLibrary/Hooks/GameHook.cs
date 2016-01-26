@@ -86,8 +86,6 @@ namespace Wander.Server.ClassLibrary
             ServerPlayerModel sender, ServerPlayerModel target, ChatMessageModel message)
             => Debug.Print("Hook on player send private message works");
 
-        public virtual void OnPlayerSendCommand(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player,
-            CommandModel command) => Debug.Print("Hook on player send command works");
 
         #endregion
 
