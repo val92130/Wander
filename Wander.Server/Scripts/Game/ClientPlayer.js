@@ -112,3 +112,4 @@ var ClientPlayer = (function (_super) {
     };
     return ClientPlayer;
 })(Player);
+//# sourceMappingURL=ClientPlayer.js.map

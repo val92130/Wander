@@ -83,7 +83,6 @@ class GameState extends Phaser.State {
             this.map = new Map(this, this.game, "Map", "Tiles", "tileset3", 1);
         }
         
-
         this.game.load.spritesheet('rain', 'Content/Game/Images/rain.png', 17, 17);
         this.soundManager = new SoundManager(this.game, this);
         this.soundManager.preload();

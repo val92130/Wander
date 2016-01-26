@@ -103,6 +103,7 @@
     <Content Include="Content\Game\Images\player-spritesheet.png" />
     <Content Include="Content\Game\Images\player.png" />
     <Content Include="Content\Game\Images\rain.png" />
+    <Content Include="Content\Game\Images\tileHouse.png" />
     <Content Include="Content\Game\Images\tileset3.png" />
     <Content Include="Content\Game\Sounds\ambient-day.mp3" />
     <Content Include="Content\Game\Sounds\ambient-night.mp3" />
