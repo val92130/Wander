@@ -8,6 +8,7 @@ using Wander.Server.ClassLibrary.Hooks;
 using Wander.Server.ClassLibrary.Model;
 using Wander.Server.ClassLibrary.Model.Players;
 using Wander.Server.ClassLibrary.Services.Interfaces;
+using System.Reflection;
 
 namespace Wander.Server.ClassLibrary.Services
 {
@@ -17,7 +18,7 @@ namespace Wander.Server.ClassLibrary.Services
         private readonly List<PluginInfo> pluginsInfos = new List<PluginInfo>();
         private readonly Dictionary<string, CommandDelegate> methods = new Dictionary<string, CommandDelegate>();
 
-        public delegate void CommandDelegate(
+        public delegate bool CommandDelegate(
             IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player, CommandModel command);
 
         internal HookService()
@@ -98,7 +99,14 @@ namespace Wander.Server.ClassLibrary.Services
             {
                 if (m.Key == command.Command)
                 {
-                    m.Value(clients, player, command);
+                    bool success = m.Value(clients, player, command);
+                    if (!success)
+                    {
+                        ChatCommand method = (ChatCommand)m.Value.Method.GetCustomAttributes(typeof(ChatCommand), true)[0];
+                        clients.Caller.notify(Helper.CreateNotificationMessage("Command error : " + method.Info,
+                            EMessageType.info));
+                    }
+                    
                 }
             });
         }

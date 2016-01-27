@@ -76,8 +76,9 @@ namespace Wander.Server.ClassLibrary.Services
                     cmd.Parameters.AddWithValue("@id", userId);
 
                     var data = cmd.ExecuteReader();
+                    var value = data.HasRows;
                     conn.Close();
-                    return data.HasRows;
+                    return value;
                 }
             }
         }
