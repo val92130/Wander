@@ -59,11 +59,9 @@ namespace Wander.Server.ClassLibrary
         public virtual void OnPlayerConnect(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player)
             => Debug.Print("Hook on player connect works");
 
-        public virtual void OnClientDisconnect(IHubCallerConnectionContext<IClient> clients)
-            => Debug.Print("Hook on client disconnect works");
+        public virtual void OnClientDisconnect(IHubCallerConnectionContext<IClient> clients) { }
 
-        public virtual void OnClientConnect(IHubCallerConnectionContext<IClient> clients)
-            => Debug.Print("Hook on client connect works");
+        public virtual void OnClientConnect(IHubCallerConnectionContext<IClient> clients) { }
 
         public virtual void OnPlayerDisconnect(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player)
             => Debug.Print("Hook on player disconnect works");

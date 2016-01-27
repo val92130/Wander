@@ -11,6 +11,7 @@ using Wander.Server.ClassLibrary.Hooks;
 
 namespace Wander.Server.ClassLibrary.Plugins
 {
+    [PluginInfo("GiveMoney", "Allow players to give money to each others", "Wander", "1.0")]
     public class GiveMoneyPlugin : GameHook
     {
         [ChatCommand("give")]

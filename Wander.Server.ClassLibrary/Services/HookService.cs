@@ -20,7 +20,7 @@ namespace Wander.Server.ClassLibrary.Services
         public delegate void CommandDelegate(
             IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player, CommandModel command);
 
-        private HookService()
+        internal HookService()
         {
             var h = typeof (GameHook)
                 .Assembly.GetTypes()
@@ -28,10 +28,11 @@ namespace Wander.Server.ClassLibrary.Services
                 .Select(t => (GameHook) Activator.CreateInstance(t)).ToList();
             hooks = new ConcurrentBag<GameHook>(h);
 
-            foreach (var v in hooks)
+
+            foreach (GameHook g in hooks)
             {
-                var pluginName = v.ToString();
-                foreach (var attr in Attribute.GetCustomAttributes(v.GetType()))
+                var pluginName = g.ToString();
+                foreach (var attr in Attribute.GetCustomAttributes(g.GetType()))
                 {
                     var info = attr as PluginInfo;
                     if (info != null)
@@ -42,17 +43,12 @@ namespace Wander.Server.ClassLibrary.Services
                     }
                     else
                     {
-                        pluginName = v.ToString();
                         var pluginInfo = new PluginInfo(pluginName, "Unnamed", "Unnamed", "No version found");
                         pluginsInfos.Add(pluginInfo);
                     }
                 }
                 Debug.Print("Plugin loaded : " + pluginName);
-            }
 
-
-            foreach (GameHook g in hooks)
-            {
                 g.GetType()
                     .GetMethods()
                     .Where(x => x.GetCustomAttributes(typeof (ChatCommand), false).Length > 0)
@@ -63,17 +59,29 @@ namespace Wander.Server.ClassLibrary.Services
                             ChatCommand commandInfo = a as ChatCommand;
                             if (commandInfo != null)
                             {
-                                methods.Add(commandInfo.Command, (CommandDelegate)Delegate.CreateDelegate(typeof (CommandDelegate),g, m));
+
+                                var necessaryParameters = typeof (CommandDelegate).GetMethod("Invoke").GetParameters().Select(x => x.ParameterType).ToList();
+                                var currentParameters = m.GetParameters().Select( x => x.ParameterType).ToList();
+
+                                var correct = necessaryParameters.All(currentParameters.Contains) && necessaryParameters.Count == currentParameters.Count;
+
+                                if (correct)
+                                {
+                                    methods.Add(commandInfo.Command,
+                                        (CommandDelegate) Delegate.CreateDelegate(typeof (CommandDelegate), g, m));
+                                }
+                                else
+                                {
+                                    throw new Exception(string.Format("Method {0} dit not match the parameters of the delegate CommandDelegate ({1})", m.Name, string.Join(",", necessaryParameters.Select(x => x.Name).ToArray())));
+                                }
+
                             }
                         });
                     });
-
             }
-
 
         }
 
-        public static HookService Instance { get; } = new HookService();
 
         public IEnumerable<GameHook> GetHooks() => hooks;
 
