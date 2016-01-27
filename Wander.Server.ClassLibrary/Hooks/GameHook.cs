@@ -11,7 +11,7 @@ namespace Wander.Server.ClassLibrary
 {
     public abstract class GameHook
     {
-        public GameHook()
+        protected GameHook()
         {
             Init();
         }
@@ -32,6 +32,19 @@ namespace Wander.Server.ClassLibrary
         {
         }
 
+        public virtual void OnKeyDown(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player,
+            KeyModel key) {}
+
+        public virtual void OnKeyUp(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player,
+            KeyModel key) {}
+
+        public virtual void OnPlayerEnterHouse(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player,
+            int houseId)
+            => Debug.Print("Hook on player enter house works");
+
+        public virtual void OnPlayerExitHouse(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player)
+            => Debug.Print("Hook on player exit house works");
+
         #region User management
 
         public virtual void OnUserTyLogin(IHubCallerConnectionContext<IClient> clients, UserModel user)
@@ -46,11 +59,9 @@ namespace Wander.Server.ClassLibrary
         public virtual void OnPlayerConnect(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player)
             => Debug.Print("Hook on player connect works");
 
-        public virtual void OnClientDisconnect(IHubCallerConnectionContext<IClient> clients)
-            => Debug.Print("Hook on client disconnect works");
+        public virtual void OnClientDisconnect(IHubCallerConnectionContext<IClient> clients) { }
 
-        public virtual void OnClientConnect(IHubCallerConnectionContext<IClient> clients)
-            => Debug.Print("Hook on client connect works");
+        public virtual void OnClientConnect(IHubCallerConnectionContext<IClient> clients) { }
 
         public virtual void OnPlayerDisconnect(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player)
             => Debug.Print("Hook on player disconnect works");
@@ -73,8 +84,6 @@ namespace Wander.Server.ClassLibrary
             ServerPlayerModel sender, ServerPlayerModel target, ChatMessageModel message)
             => Debug.Print("Hook on player send private message works");
 
-        public virtual void OnPlayerSendCommand(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player,
-            CommandModel command) => Debug.Print("Hook on player send command works");
 
         #endregion
 
@@ -87,5 +96,8 @@ namespace Wander.Server.ClassLibrary
             ServerPropertyModel property, int price) => Debug.Print("Hook on player sell property works");
 
         #endregion
+
+        public virtual void OnRainStart() => Debug.Print("Hook on rain start works");
+        public virtual void OnRainStop() => Debug.Print("Hook on rain stop works");
     }
 }

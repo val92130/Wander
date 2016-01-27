@@ -55,10 +55,12 @@ namespace Wander.Server.ClassLibrary
             var nextRain = 0;
             if (IsRaining)
             {
+                ServiceProvider.GetHookService().CallHookMethod(x => x.OnRainStop());
                 nextRain = r.Next(2*60*1000, 10*60*1000);
             }
             else
             {
+                ServiceProvider.GetHookService().CallHookMethod(x => x.OnRainStart());
                 nextRain = r.Next(30*1000, 2*60*1000);
             }
             var next = DateTime.Now.AddMilliseconds(nextRain);
@@ -89,12 +91,18 @@ namespace Wander.Server.ClassLibrary
             _randomRainTimer.Stop();
             _randomRainTimer.Interval = milli;
             _randomRainTimer.Start();
+            ServiceProvider.GetHookService().CallHookMethod(x => x.OnRainStart());
         }
 
         public void ForceStopRain()
         {
             Debug.Print("Forcing rain to stop");
-            if (IsRaining) ToggleRain();
+            if (IsRaining)
+            {
+                ServiceProvider.GetHookService().CallHookMethod(x => x.OnRainStop());
+                ToggleRain();
+            }
+            
         }
 
         public void ForceNight(int seconds)

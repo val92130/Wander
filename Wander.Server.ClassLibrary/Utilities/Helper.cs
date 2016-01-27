@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
@@ -81,5 +82,17 @@ namespace Wander.Server.ClassLibrary.Services
             command.Command = cmd;
             return command;
         }
+
+        public static List<KeyModel> AvailableKeys()
+        {
+            return new List<KeyModel>()
+            {
+                new KeyModel() {Key=EKey.Up,KeyCode = 38},
+                new KeyModel() {Key=EKey.Down,KeyCode = 40},
+                new KeyModel() {Key=EKey.Left,KeyCode = 37},
+                new KeyModel() {Key=EKey.Right,KeyCode = 39},
+                new KeyModel() {Key=EKey.Action,KeyCode = 69}
+            };
+        } 
     }
 }

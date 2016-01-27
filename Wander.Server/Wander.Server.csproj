@@ -103,6 +103,7 @@
     <Content Include="Content\Game\Images\player-spritesheet.png" />
     <Content Include="Content\Game\Images\player.png" />
     <Content Include="Content\Game\Images\rain.png" />
+    <Content Include="Content\Game\Images\tileHouse.png" />
     <Content Include="Content\Game\Images\tileset3.png" />
     <Content Include="Content\Game\Sounds\ambient-day.mp3" />
     <Content Include="Content\Game\Sounds\ambient-night.mp3" />
@@ -129,7 +130,7 @@
     <Content Include="Content\Game\Sounds\footstep.ogg" />
     <Content Include="Content\Game\Sounds\action.ogg" />
     <Content Include="Content\Game\Sounds\chat.ogg" />
-    <Content Include="Content\Game\Maps\mapHouse.json" />
+    <Content Include="Content\Game\Maps\house.json" />
     <None Include="Properties\PublishProfiles\FTP.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

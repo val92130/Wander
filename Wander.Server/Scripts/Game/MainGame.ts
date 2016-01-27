@@ -83,7 +83,6 @@ class GameState extends Phaser.State {
             this.map = new Map(this, this.game, "Map", "Tiles", "tileset3", 1);
         }
         
-
         this.game.load.spritesheet('rain', 'Content/Game/Images/rain.png', 17, 17);
         this.soundManager = new SoundManager(this.game, this);
         this.soundManager.preload();
@@ -396,6 +395,45 @@ $("#buyDrugsForm").submit(function (e) {
     });
     $("#buyDrugModal").modal("hide");
     e.preventDefault();
+});
+
+var keysUp = [];
+var keysDown = [];
+
+
+var availableKeys = [69, 37, 38, 39, 40];
+
+$(document).keydown(function (e) {
+    if ($.inArray(e.keyCode, keysDown) !== -1) {
+        return;
+    } else {
+        keysDown.push(e.keyCode);
+        if ($.inArray(e.keyCode, availableKeys) !== -1) {
+            hub.invoke("OnKeyDown", e.keyCode);
+        }
+    }
+
+    var index = $.inArray(e.keyCode, keysUp);
+
+    if (index != -1) {
+        keysUp.splice(index, 1);
+        return;
+    } 
+
+    
+});
+
+$(document).keyup(function (e) {
+    var index = $.inArray(e.keyCode, keysDown);
+
+    if (index !== -1) {
+        keysDown.splice(index, 1);
+        if ($.inArray(e.keyCode, availableKeys) !== -1) {
+            hub.invoke("OnKeyUp", e.keyCode);
+        }
+        return;
+    } 
+
 });
 
 $(document).keypress(function (event) { 

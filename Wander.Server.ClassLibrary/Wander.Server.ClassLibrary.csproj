@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Hooks\ChatCommand.cs" />
     <Compile Include="Hooks\GameHook.cs" />
     <Compile Include="Game\GameManager.cs" />
     <Compile Include="Hooks\PluginInfo.cs" />
@@ -75,10 +76,12 @@
     <Compile Include="Model\ChatMessageModel.cs" />
     <Compile Include="Model\ClientNotificationMessageModel.cs" />
     <Compile Include="Model\CommandModel.cs" />
+    <Compile Include="Model\EKey.cs" />
     <Compile Include="Model\EMessageType.cs" />
     <Compile Include="Model\Forms\UserModel.cs" />
     <Compile Include="Model\Job\JobModel.cs" />
     <Compile Include="Model\Job\JobQuestionModel.cs" />
+    <Compile Include="Model\KeyModel.cs" />
     <Compile Include="Model\Players\AdminPlayerModel.cs" />
     <Compile Include="Model\Players\ClientPlayerModel.cs" />
     <Compile Include="Model\Players\EPlayerDirection.cs" />
@@ -87,6 +90,7 @@
     <Compile Include="Model\Players\ServerPropertyUserModel.cs" />
     <Compile Include="Model\ServerNotificationMessage.cs" />
     <Compile Include="Model\Vector2.cs" />
+    <Compile Include="Plugins\GiveMoneyPlugin.cs" />
     <Compile Include="Plugins\PayPlugin.cs" />
     <Compile Include="Plugins\PrivateMessagesPlugin.cs" />
     <Compile Include="Plugins\RandomQuestionsPlugin.cs" />

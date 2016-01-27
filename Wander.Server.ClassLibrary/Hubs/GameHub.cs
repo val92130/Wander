@@ -236,8 +236,7 @@ namespace Wander.Server.ClassLibrary.Hubs
             var command = Helper.ParseCommand(messageModel);
             if (command != null)
             {
-                ServiceProvider.GetHookService()
-                    .CallHookMethod(hook => hook.OnPlayerSendCommand(Clients, candidate, command));
+                ServiceProvider.GetHookService().CallHookCommand(Clients,candidate, command);
                 return;
             }
             ServiceProvider.GetMessageService().LogMessage(messageModel);
@@ -724,8 +723,10 @@ namespace Wander.Server.ClassLibrary.Hubs
             var value = ServiceProvider.GetPlayerService().EnterHouse(Context.ConnectionId, propertyId);
             if (value)
             {
+                
                 var player = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
                 if (player == null) return false;
+                ServiceProvider.GetHookService().CallHookMethod(x => x.OnPlayerEnterHouse(Clients,player, propertyId ));
                 foreach (var p in ServiceProvider.GetPlayerService().GetAllPlayersServer())
                 {
                     if (p.MapId == player.MapId)
@@ -750,6 +751,7 @@ namespace Wander.Server.ClassLibrary.Hubs
             var value = ServiceProvider.GetPlayerService().ExitHouse(player.SignalRId);
             if (value)
             {
+                ServiceProvider.GetHookService().CallHookMethod(x => x.OnPlayerExitHouse(Clients, player));
                 foreach (var p in ServiceProvider.GetPlayerService().GetAllPlayersServer())
                 {
                     if (p.MapId == player.MapId)
@@ -763,6 +765,30 @@ namespace Wander.Server.ClassLibrary.Hubs
                 }
             }
             return value;
+        }
+
+        public void OnKeyDown(int keyCode)
+        {
+            var player = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            if (player != null)
+            {
+                var key = Helper.AvailableKeys().FirstOrDefault(x => x.KeyCode == keyCode);
+                if (key == null) return;
+                ServiceProvider.GetHookService().CallHookMethod(x => x.OnKeyDown(Clients, player, key));
+                Debug.Print("On key down : " + key.Key);
+            }
+        }
+
+        public void OnKeyUp(int keyCode)
+        {
+            var player = ServiceProvider.GetPlayerService().GetPlayer(Context.ConnectionId);
+            if (player != null)
+            {
+                var key = Helper.AvailableKeys().FirstOrDefault(x => x.KeyCode == keyCode);
+                if (key == null) return;
+                ServiceProvider.GetHookService().CallHookMethod(x => x.OnKeyUp(Clients, player, key));
+                Debug.Print("On key up : " + key.Key);
+            }
         }
 
         #region admin
