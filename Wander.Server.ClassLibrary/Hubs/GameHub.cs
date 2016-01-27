@@ -236,8 +236,7 @@ namespace Wander.Server.ClassLibrary.Hubs
             var command = Helper.ParseCommand(messageModel);
             if (command != null)
             {
-                ServiceProvider.GetHookService()
-                    .CallHookMethod(hook => hook.OnPlayerSendCommand(Clients, candidate, command));
+                ServiceProvider.GetHookService().CallHookCommand(Clients,candidate, command);
                 return;
             }
             ServiceProvider.GetMessageService().LogMessage(messageModel);
