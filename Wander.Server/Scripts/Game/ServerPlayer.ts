@@ -30,7 +30,6 @@
             this.texture.position.y = newPosition.y;
             this.direction = newDirection;
         }
-        console.log("DistX : " + distX + " DistY : " + distY);
         this.newPosition = newPosition;
         if (this.direction != newDirection) {
             this.direction = newDirection;

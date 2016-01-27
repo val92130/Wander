@@ -41,4 +41,3 @@ var Light = (function (_super) {
     };
     return Light;
 })(Phaser.Sprite);
-//# sourceMappingURL=Torch.js.map

@@ -28,7 +28,6 @@ var ServerPlayer = (function (_super) {
             this.texture.position.y = newPosition.y;
             this.direction = newDirection;
         }
-        console.log("DistX : " + distX + " DistY : " + distY);
         this.newPosition = newPosition;
         if (this.direction != newDirection) {
             this.direction = newDirection;
@@ -37,4 +36,3 @@ var ServerPlayer = (function (_super) {
     };
     return ServerPlayer;
 })(Player);
-//# sourceMappingURL=ServerPlayer.js.map
