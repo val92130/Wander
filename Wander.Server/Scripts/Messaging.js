@@ -101,7 +101,7 @@ function disableQuickChat() {
 $("#quickChatForm").submit(function (e) {
     var msg = $("#quickChatInput").val();
     if (msg != "" && msg.length <= 95) {
-        if ($("#privateMessagePseudo").val() != "") {
+        if ($("#privateMessagePseudo").val() !== "") {
             sendMessagePrivate(msg, $("#privateMessagePseudo").val());
         }
         else {
@@ -115,6 +115,7 @@ function sendMessagePrivate(msg, pseudo) {
     console.log("sending message to : " + pseudo);
     hub.invoke("SendPrivateMessage", msg, pseudo).done(function () {
         $.notify("Message sent to : " + pseudo, "success");
+        $("#privateMessagePseudo").val("");
     });
 }
 function buildChatMessage(sex, username, content, hour) {
@@ -132,3 +133,4 @@ function sendPrivateMessage(pseudo) {
     $("#privateMessagePseudo").val(pseudo);
     openQuickChat();
 }
+//# sourceMappingURL=Messaging.js.map

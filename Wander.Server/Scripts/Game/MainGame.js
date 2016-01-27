@@ -325,7 +325,7 @@ $("#buyDrugsForm").submit(function (e) {
 });
 var keysUp = [];
 var keysDown = [];
-var availableKeys = [69, 37, 38, 39, 40];
+var availableKeys = [69];
 $(document).keydown(function (e) {
     if ($.inArray(e.keyCode, keysDown) !== -1) {
         return;
@@ -373,3 +373,4 @@ function Lerp(goal, current, time) {
     }
     return goal;
 }
+//# sourceMappingURL=MainGame.js.map

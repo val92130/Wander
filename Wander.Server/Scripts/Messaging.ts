@@ -131,7 +131,7 @@ $("#quickChatForm").submit(function (e) {
     var msg = $("#quickChatInput").val();
 
     if (msg != "" && msg.length <= 95) {
-        if ($("#privateMessagePseudo").val() != "") {
+        if ($("#privateMessagePseudo").val() !== "") {
             sendMessagePrivate(msg, $("#privateMessagePseudo").val());
         } else {
             sendMessage(msg);
@@ -145,6 +145,7 @@ function sendMessagePrivate(msg, pseudo) {
     console.log("sending message to : " + pseudo);
     hub.invoke("SendPrivateMessage", msg, pseudo).done(function() {
         $.notify("Message sent to : " + pseudo, "success");
+        $("#privateMessagePseudo").val("");
     });
 }
 

@@ -613,6 +613,7 @@ namespace Wander.Server.ClassLibrary.Hubs
                 .BuyDrugs(candidate.SignalRId, Context.ConnectionId);
             if (mess.MessageType == EMessageType.success)
             {
+                Clients.Client(candidate.SignalRId).notify(Helper.CreateNotificationMessage("Someone bought you drugs ! ", EMessageType.success));
                 return true;
             }
             Clients.Caller.notify(Helper.CreateNotificationMessage(mess.Content, mess.MessageType));

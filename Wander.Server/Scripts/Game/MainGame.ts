@@ -401,7 +401,7 @@ var keysUp = [];
 var keysDown = [];
 
 
-var availableKeys = [69, 37, 38, 39, 40];
+var availableKeys = [69];
 
 $(document).keydown(function (e) {
     if ($.inArray(e.keyCode, keysDown) !== -1) {

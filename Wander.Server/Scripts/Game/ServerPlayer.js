@@ -36,3 +36,4 @@ var ServerPlayer = (function (_super) {
     };
     return ServerPlayer;
 })(Player);
+//# sourceMappingURL=ServerPlayer.js.map
