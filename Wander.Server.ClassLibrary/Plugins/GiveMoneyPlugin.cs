@@ -45,7 +45,12 @@ namespace Wander.Server.ClassLibrary.Plugins
                                     Helper.CreateNotificationMessage(
                                         String.Format("Sent {0} to {1}", ammount, dest.Pseudo),
                                         EMessageType.success));
-                            return true;
+                        }
+                        else
+                        {
+                            Context.Clients.Client(player.SignalRId)
+                                .notify(
+                                    Helper.CreateNotificationMessage("You don't have enought money",EMessageType.error));
                         }
                     }
                     else
@@ -56,10 +61,17 @@ namespace Wander.Server.ClassLibrary.Plugins
                 }
                 else
                 {
-                    clients.Caller.notify(Helper.CreateNotificationMessage((dest == null? "Cannot find this player" : "Error"), EMessageType.error));
+                    clients.Caller.notify(
+                        Helper.CreateNotificationMessage((dest == null ? "Cannot find this player" : "Error"),
+                            EMessageType.error));
                 }
+                
             }
-            return false;
+            else
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

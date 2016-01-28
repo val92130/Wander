@@ -31,7 +31,8 @@ namespace Wander.Server.ClassLibrary.Plugins
                     else if (candidate.MapId != player.MapId)
                     {
                         clients.Caller.notify(
-                            Helper.CreateNotificationMessage("Cannot teleport : this player isnt on the same map as yours",
+                            Helper.CreateNotificationMessage(
+                                "Cannot teleport : this player isnt on the same map as yours",
                                 EMessageType.success));
                     }
                     else
@@ -40,7 +41,6 @@ namespace Wander.Server.ClassLibrary.Plugins
                         clients.Caller.notify(
                             Helper.CreateNotificationMessage("Teleporting you to player : " + candidate.Pseudo,
                                 EMessageType.success));
-                        return true;
                     }
                 }
                 else
@@ -49,8 +49,13 @@ namespace Wander.Server.ClassLibrary.Plugins
                         Helper.CreateNotificationMessage("Can't find player : " + candidate.Pseudo,
                             EMessageType.error));
                 }
+                return true;
             }
-            return false;
+            else
+            {
+                return false;
+            }
+            
 
         }
     }

@@ -95,11 +95,13 @@ namespace Wander.Server.ClassLibrary.Services
 
         public void CallHookCommand(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player, CommandModel command)
         {
+            bool found = false;
             methods.ForEach(m =>
             {
                 if (m.Key == command.Command)
                 {
                     bool success = m.Value(clients, player, command);
+                    found = true;
                     if (!success)
                     {
                         ChatCommand method = (ChatCommand)m.Value.Method.GetCustomAttributes(typeof(ChatCommand), true)[0];
@@ -109,6 +111,10 @@ namespace Wander.Server.ClassLibrary.Services
                     
                 }
             });
+            if (!found)
+            {
+                clients.Caller.notify(Helper.CreateNotificationMessage("Command not found", EMessageType.info));
+            }
         }
     }
 }

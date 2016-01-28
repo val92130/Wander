@@ -44,15 +44,16 @@ namespace Wander.Server.ClassLibrary.Plugins
             if (ServiceProvider.GetAdminService().IsAdmin(player.UserId))
             {
                 var connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+                clients.Caller.notify(Helper.CreateNotificationMessage(
+                    "Sending questions to every players", EMessageType.info));
                 SendQuestion(connectedPlayers);
-                return true;
             }
             else
             {
                 clients.Caller.notify(Helper.CreateNotificationMessage(
                     "You have to be an admin to perform this action", EMessageType.error));
             }
-            return false;
+            return true;
             
         }
     }
