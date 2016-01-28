@@ -90,6 +90,7 @@
     <Compile Include="Model\Players\ServerPropertyUserModel.cs" />
     <Compile Include="Model\ServerNotificationMessage.cs" />
     <Compile Include="Model\Vector2.cs" />
+    <Compile Include="Plugins\AdminPlugins.cs" />
     <Compile Include="Plugins\GiveMoneyPlugin.cs" />
     <Compile Include="Plugins\PayPlugin.cs" />
     <Compile Include="Plugins\PrivateMessagesPlugin.cs" />
