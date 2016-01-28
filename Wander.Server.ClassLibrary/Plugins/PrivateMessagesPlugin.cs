@@ -14,7 +14,7 @@ namespace Wander.Server.ClassLibrary.Plugins
     public class PrivateMessagesPlugin : GameHook
     {
         [ChatCommand("mp")]
-        public void SendPrivateMessage(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player,
+        public bool SendPrivateMessage(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player,
             CommandModel command)
         {
                 if (command.Args != null)
@@ -31,10 +31,12 @@ namespace Wander.Server.ClassLibrary.Plugins
                                 var model = Helper.CreateChatMessage(player.Pseudo, candidate.UserId, message,
                                     candidate.Sex, DateTime.Now.ToShortTimeString());
                                 Context.Clients.Client(candidate.SignalRId).PrivateMessageReceived(model);
+                            return true;
                             }
                         }
                     }
                 }
+            return false;
         }
 
     }

@@ -1,6 +1,10 @@
-﻿using Wander.Server.ClassLibrary.Hooks;
+﻿using System.Collections.Generic;
+using Microsoft.AspNet.SignalR.Hubs;
+using Wander.Server.ClassLibrary.Hooks;
 using Wander.Server.ClassLibrary.Model;
+using Wander.Server.ClassLibrary.Model.Players;
 using Wander.Server.ClassLibrary.Services;
+using Wander.Server.ClassLibrary.Services.Interfaces;
 using Wander.Server.ClassLibrary.Utilities;
 
 namespace Wander.Server.ClassLibrary.Plugins
@@ -15,18 +19,41 @@ namespace Wander.Server.ClassLibrary.Plugins
             Timer.RepeatAfter(() =>
             {
                 var connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+                SendQuestion(connectedPlayers);
 
-                for (var i = 0; i < connectedPlayers.Count; i++)
-                {
-                    var question = ServiceProvider.GetQuestionService().GetRandomQuestion(connectedPlayers[i].SignalRId);
-                    if (question == null) continue;
-                    Context.Clients.Client(connectedPlayers[i].SignalRId)
-                        .notify(Helper.CreateNotificationMessage("We have to test your Competence ", EMessageType.info));
-                    Context.Clients.Client(connectedPlayers[i].SignalRId)
-                        .sendQuestionToClient(new {question.Question, question.QuestionId});
-                }
             }, 60*_intervalMinutes, 60*_intervalMinutes);
             base.Init();
+        }
+
+        private void SendQuestion(List<ServerPlayerModel> players)
+        {
+            for (var i = 0; i < players.Count; i++)
+            {
+                var question = ServiceProvider.GetQuestionService().GetRandomQuestion(players[i].SignalRId);
+                if (question == null) continue;
+                Context.Clients.Client(players[i].SignalRId)
+                    .notify(Helper.CreateNotificationMessage("We have to test your Competence ", EMessageType.info));
+                Context.Clients.Client(players[i].SignalRId)
+                    .sendQuestionToClient(new { question.Question, question.QuestionId });
+            }
+        }
+
+        [ChatCommand("forceQuestion")]
+        public bool ForceQuestion(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player, CommandModel command)
+        {
+            if (ServiceProvider.GetAdminService().IsAdmin(player.UserId))
+            {
+                var connectedPlayers = ServiceProvider.GetPlayerService().GetAllPlayersServer();
+                SendQuestion(connectedPlayers);
+                return true;
+            }
+            else
+            {
+                clients.Caller.notify(Helper.CreateNotificationMessage(
+                    "You have to be an admin to perform this action", EMessageType.error));
+            }
+            return false;
+            
         }
     }
 }

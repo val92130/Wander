@@ -10,11 +10,11 @@ namespace Wander.Server.ClassLibrary.Plugins
     [PluginInfo("Teleportation", "Teleports a player to another player", "Wander", "1.0")]
     public class TeleportationPlugin : GameHook
     {
-        [ChatCommand("tp")]
-        public void Teleport(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player,
+        [ChatCommand("tp", "Use like this : /tp 'targetPseudo'")]
+        public bool Teleport(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player,
             CommandModel command)
         {
-            if (command == null || player == null || clients == null) return;
+            if (command == null || player == null || clients == null) return false;
             if (command.Args.Length != 0)
             {
                 var toPlayer = command.Args[0];
@@ -40,6 +40,7 @@ namespace Wander.Server.ClassLibrary.Plugins
                         clients.Caller.notify(
                             Helper.CreateNotificationMessage("Teleporting you to player : " + candidate.Pseudo,
                                 EMessageType.success));
+                        return true;
                     }
                 }
                 else
@@ -49,6 +50,7 @@ namespace Wander.Server.ClassLibrary.Plugins
                             EMessageType.error));
                 }
             }
+            return false;
 
         }
     }
