@@ -27,7 +27,7 @@ namespace Wander.Server.ClassLibrary
         {
         }
 
-        public void OnPlayerUpdatePosition(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player,
+        public virtual void OnPlayerUpdatePosition(IHubCallerConnectionContext<IClient> clients, ServerPlayerModel player,
             Vector2 position, EPlayerDirection direction)
         {
         }

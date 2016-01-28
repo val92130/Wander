@@ -23,7 +23,7 @@ var ServerPlayer = (function (_super) {
     ServerPlayer.prototype.updateInfos = function (newPosition, newDirection) {
         var distX = Math.abs(this.texture.position.x - newPosition.x);
         var distY = Math.abs(this.texture.position.y - newPosition.y);
-        if (distX >= 10 || distY >= 10) {
+        if (distX >= 15 || distY >= 15) {
             this.texture.position.x = newPosition.x;
             this.texture.position.y = newPosition.y;
             this.direction = newDirection;

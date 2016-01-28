@@ -9,7 +9,7 @@
 
     constructor(state: GameState, game: Phaser.Game, pseudo: string, position: Phaser.Point, sex: number) {
         this.drugTime = 20000;
-        this.updateTimeMs = 55;
+        this.updateTimeMs = 65;
         this.isDrugged = false;
 
         super(state, game, pseudo, position, sex);

@@ -281,13 +281,11 @@ hub.on("MessageReceived", function (msg) {
 hub.on("playerEnterMap", function (player) {
     if (typeof (currentState) == "undefined" || typeof (currentState.map) === "undefined") return;
     currentState.map.addPlayer(player.Pseudo, new Phaser.Point(player.Position.X, player.Position.Y), player.Sex);
-    $.notify("Player entered map");
 });
 
 hub.on("playerExitMap", function (player) {
     if (typeof (currentState) == "undefined" || typeof (currentState.map) === "undefined") return;
     currentState.map.removePlayer(player.Pseudo);
-    $.notify("Player exited map");
 });
 
 hub.on("sendQuestionToClient", function (question) {
@@ -397,44 +395,6 @@ $("#buyDrugsForm").submit(function (e) {
     e.preventDefault();
 });
 
-var keysUp = [];
-var keysDown = [];
-
-
-var availableKeys = [69];
-
-$(document).keydown(function (e) {
-    if ($.inArray(e.keyCode, keysDown) !== -1) {
-        return;
-    } else {
-        keysDown.push(e.keyCode);
-        if ($.inArray(e.keyCode, availableKeys) !== -1) {
-            hub.invoke("OnKeyDown", e.keyCode);
-        }
-    }
-
-    var index = $.inArray(e.keyCode, keysUp);
-
-    if (index != -1) {
-        keysUp.splice(index, 1);
-        return;
-    } 
-
-    
-});
-
-$(document).keyup(function (e) {
-    var index = $.inArray(e.keyCode, keysDown);
-
-    if (index !== -1) {
-        keysDown.splice(index, 1);
-        if ($.inArray(e.keyCode, availableKeys) !== -1) {
-            hub.invoke("OnKeyUp", e.keyCode);
-        }
-        return;
-    } 
-
-});
 
 $(document).keypress(function (event) { 
     if (isConnected) {

@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.google.gson.Gson;
 import com.wander.game.models.WanderVector;
 import com.wander.game.player.ClientPlayer;
 import com.wander.game.models.MessageModel;
@@ -140,7 +141,30 @@ public class GameMap {
 
         this.moneyDecal = new Texture(Gdx.files.internal("images/money-decal.png"));
         this.mairieDecal = new Texture(Gdx.files.internal("images/job-decal.png"));
-        this.game.getMainGame().getHubService().getHub().invoke("GetAllPlayers");
+
+        try {
+            this.game.getMainGame().getHubService().getHub().invoke(Object.class, "GetAllPlayersMap", -1).done(new Action<Object>() {
+                @Override
+                public void run(Object players) throws Exception {
+                    final Object _players = players;
+                    Gdx.app.postRunnable(new Runnable() {
+                        @Override
+                        public void run() {
+                            Gson g = new Gson();
+                            ArrayList<PlayerModel> _p = g.fromJson(_players.toString(), ArrayList.class);
+                            for (Object player : _p) {
+                                PlayerModel model = g.fromJson(player.toString(), PlayerModel.class);
+                                addPlayer(model);
+                            }
+                        }
+                    });
+                }
+            }).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
     }
 
